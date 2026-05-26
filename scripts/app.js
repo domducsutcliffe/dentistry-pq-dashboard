@@ -7,8 +7,6 @@ const state = {
   answer: "",
   includeFrom2023: false,
   searchQuestionOnly: false,
-  minMps: "2",
-  partyChartMode: "absolute",
 };
 
 const CURRENT_PARLIAMENT_START = "2024-07-09";
@@ -78,8 +76,6 @@ const elements = {
   monthlyChart: document.querySelector("#monthly-chart"),
   partyChart: document.querySelector("#party-chart"),
   regionChart: document.querySelector("#region-chart"),
-  minMps: document.querySelector("#min-mps-filter"),
-  partyChartMode: document.querySelector("#party-chart-mode"),
   resultsCount: document.querySelector("#results-count"),
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
@@ -200,9 +196,9 @@ function renderScopeStatus(filteredCount) {
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
   const scopeStart = state.includeFrom2023 ? EXTENDED_RESULTS_START : CURRENT_PARLIAMENT_START;
   const scopeLabel = state.includeFrom2023 ? "questions from 2023 shown" : "current Parliament questions shown";
-  elements.status.textContent = `${formatNumber.format(filteredCount)} ${scopeLabel} · ${formatNumber.format(
+  elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(filteredCount)} ${scopeLabel} &middot; ${formatNumber.format(
     state.summary.totals.questions,
-  )} committed questions · refreshed ${generated}`;
+  )} committed questions &middot; refreshed ${generated}`;
   elements.footer.textContent = `Committed source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,
   )}; this view includes questions tabled from ${shortDate(scopeStart)}.`;
@@ -221,16 +217,22 @@ function renderSelects() {
   elements.partyFilter.innerHTML =
     '<option value="">All parties</option>' +
     parties
-      .map((party) => `<option value="${escapeHtml(party.key)}">${escapeHtml(party.key)} (${party.count})</option>`)
+      .map((party) => `<option value="${escapeHtml(party.key)}">${escapeHtml(party.key)}</option>`)
       .join("");
   elements.regionFilter.innerHTML =
     '<option value="">All NHS regions</option>' +
     regions
-      .map((region) => `<option value="${escapeHtml(region.key)}">${escapeHtml(region.key)} (${region.count})</option>`)
+      .map((region) => `<option value="${escapeHtml(region.key)}">${escapeHtml(region.key)}</option>`)
       .join("");
   elements.partyFilter.value = state.party;
   elements.regionFilter.value = state.region;
 }
+
+const MONTH_NAMES = {
+  "01": "January", "02": "February", "03": "March", "04": "April",
+  "05": "May", "06": "June", "07": "July", "08": "August",
+  "09": "September", "10": "October", "11": "November", "12": "December"
+};
 
 function renderLineChart(items) {
   const byMonth = new Map();
@@ -248,8 +250,8 @@ function renderLineChart(items) {
   }
 
   const width = 760;
-  const height = 220;
-  const pad = 24;
+  const height = 230;
+  const pad = 28;
   const max = Math.max(...months.map(([, count]) => count), 1);
   const step = months.length > 1 ? (width - pad * 2) / (months.length - 1) : 0;
   const points = months.map(([month, count], index) => {
@@ -259,19 +261,30 @@ function renderLineChart(items) {
   });
   const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
   const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
-  const yearTicks = [];
+  
   const monthTicks = [];
-  let seenYear = "";
-
-  for (const point of points) {
-    const [year, month] = point.month.split("-");
-    if (year !== seenYear) {
-      yearTicks.push({ year, x: point.x });
-      seenYear = year;
+  const totalPoints = points.length;
+  const numTicks = 6;
+  const tickStep = (totalPoints - 1) / (numTicks - 1);
+  
+  let lastYear = "";
+  for (let i = 0; i < numTicks; i++) {
+    const idx = Math.min(totalPoints - 1, Math.round(i * tickStep));
+    if (idx < 0) continue;
+    const point = points[idx];
+    const [year, monthNum] = point.month.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    
+    let showYear = "";
+    if (year !== lastYear) {
+      showYear = year;
+      lastYear = year;
     }
+    
     monthTicks.push({
-      label: month,
+      label: monthName,
       x: point.x,
+      year: showYear
     });
   }
 
@@ -283,16 +296,11 @@ function renderLineChart(items) {
       <path class="trend-area" d="${area}"></path>
       <path class="trend-line" d="${path}"></path>
       ${monthTicks
-        .filter((_, index) => index % Math.max(1, Math.ceil(monthTicks.length / 14)) === 0)
         .map(
-          (tick) =>
-            `<text x="${tick.x}" y="${height - 12}" text-anchor="middle" font-size="9" fill="#777">${tick.label}</text>`,
-        )
-        .join("")}
-      ${yearTicks
-        .map(
-          (tick) =>
-            `<text x="${tick.x}" y="${height - 1}" text-anchor="start" font-size="10" fill="#555">${tick.year}</text>`,
+          (tick) => `
+            <text x="${tick.x}" y="${height - 15}" text-anchor="middle" font-size="9" fill="#777">${tick.label}</text>
+            ${tick.year ? `<text x="${tick.x}" y="${height - 3}" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">${tick.year}</text>` : ""}
+          `,
         )
         .join("")}
       <text x="${pad + 3}" y="${pad - 7}" font-size="10" fill="#666">${max}</text>
@@ -308,28 +316,20 @@ function renderPartyChart(filtered) {
     return { ...row, seats, ratio };
   });
 
-  const minMps = Number(state.minMps) || 0;
+  const minMps = 2;
   let visible = processed.filter((row) => row.seats >= minMps);
 
-  const isRatio = state.partyChartMode === "ratio";
-  if (isRatio) {
-    visible.sort((a, b) => b.ratio - a.ratio || a.key.localeCompare(b.key));
-  } else {
-    visible.sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
-  }
-
+  visible.sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
   visible = visible.slice(0, 30);
-  const max = Math.max(...visible.map((row) => isRatio ? row.ratio : row.count), 1);
+  const max = Math.max(...visible.map((row) => row.count), 1);
 
   elements.partyChart.innerHTML = visible.length
     ? visible
         .map(
           (row) => {
-            const val = isRatio ? row.ratio : row.count;
-            const displayVal = isRatio ? val.toFixed(1) : formatNumber.format(val);
-            const titleText = isRatio 
-              ? `${escapeHtml(row.key)}: ${formatNumber.format(row.count)} questions / ${row.seats.toFixed(1)} seats = ${displayVal} per MP`
-              : `${escapeHtml(row.key)}: ${displayVal} questions`;
+            const val = row.count;
+            const displayVal = `${formatNumber.format(val)} (${row.ratio.toFixed(1)}/MP)`;
+            const titleText = `${escapeHtml(row.key)}: ${formatNumber.format(val)} questions / ${row.seats.toFixed(1)} seats = ${row.ratio.toFixed(1)} per MP`;
             return `
               <div class="bar-row" title="${titleText}">
                 <span class="bar-label" title="${escapeHtml(row.key)}">${escapeHtml(row.key)}</span>
@@ -381,7 +381,10 @@ function renderTable(items) {
           <td>
             <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
             <div class="question-text">${escapeHtml(question.questionText).slice(0, 220)}${question.questionText.length > 220 ? "..." : ""}</div>
-            <span class="status-pill">${question.answered ? "answered" : "unanswered"}</span>
+            <span class="status-pill ${question.answered ? "answered" : "unanswered"}">
+              <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
+              ${question.answered ? "answered" : "unanswered"}
+            </span>
           </td>
         </tr>
       `,
@@ -446,20 +449,10 @@ elements.answerFilter.addEventListener("change", (event) => {
   render();
 });
 
-elements.minMps.addEventListener("change", (event) => {
-  state.minMps = event.target.value;
-  render();
-});
-
-elements.partyChartMode.addEventListener("change", (event) => {
-  state.partyChartMode = event.target.value;
-  render();
-});
+// Controls removed
 
 loadData()
   .then(() => {
-    elements.minMps.value = state.minMps;
-    elements.partyChartMode.value = state.partyChartMode;
     elements.searchQuestionOnly.checked = state.searchQuestionOnly;
     renderSelects();
     render();
