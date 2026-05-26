@@ -128,7 +128,7 @@ h2 {
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 190px 150px 210px 170px;
+  grid-template-columns: minmax(180px, 1fr) 220px 210px 120px 180px 140px;
   gap: 6px;
   align-items: end;
   margin-bottom: 10px;
@@ -196,6 +196,22 @@ select:focus {
   justify-content: space-between;
   gap: 8px;
   align-items: center;
+}
+
+.panel-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.panel-controls select {
+  font-size: 11px;
+  min-height: 20px;
+  height: 20px;
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 0;
+  width: auto;
 }
 
 .chart {

@@ -6,10 +6,60 @@ const state = {
   region: "",
   answer: "",
   includeFrom2023: false,
+  searchQuestionOnly: false,
+  minMps: "2",
+  partyChartMode: "absolute",
 };
 
 const CURRENT_PARLIAMENT_START = "2024-07-09";
 const EXTENDED_RESULTS_START = "2023-01-01";
+
+const PARTY_SEATS_2024 = {
+  Lab: 411,
+  Con: 121,
+  LD: 72,
+  SNP: 9,
+  SF: 7,
+  RUK: 5,
+  DUP: 5,
+  Green: 4,
+  PC: 4,
+  SDLP: 2,
+  APNI: 1,
+  UUP: 1,
+  TUV: 1,
+  Ind: 7,
+};
+
+const PARTY_SEATS_2019 = {
+  Con: 365,
+  Lab: 202,
+  SNP: 48,
+  LD: 11,
+  DUP: 8,
+  PC: 4,
+  SDLP: 2,
+  Green: 1,
+  APNI: 1,
+  UUP: 0,
+  TUV: 0,
+  SF: 7,
+  Ind: 9,
+};
+
+function getPartySeats(partyKey) {
+  const seats2024 = PARTY_SEATS_2024[partyKey];
+  const seats2019 = PARTY_SEATS_2019[partyKey];
+  if (seats2024 === undefined && seats2019 === undefined) {
+    return 1;
+  }
+  if (!state.includeFrom2023) {
+    return seats2024 || 1;
+  }
+  const s24 = seats2024 !== undefined ? seats2024 : 1;
+  const s19 = seats2019 !== undefined ? seats2019 : 1;
+  return (s24 + s19) / 2;
+}
 
 const elements = {
   status: document.querySelector("#data-status"),
@@ -20,6 +70,7 @@ const elements = {
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
   include2023: document.querySelector("#include-2023"),
+  searchQuestionOnly: document.querySelector("#search-question-only"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
   answerFilter: document.querySelector("#answer-filter"),
@@ -27,6 +78,8 @@ const elements = {
   monthlyChart: document.querySelector("#monthly-chart"),
   partyChart: document.querySelector("#party-chart"),
   regionChart: document.querySelector("#region-chart"),
+  minMps: document.querySelector("#min-mps-filter"),
+  partyChartMode: document.querySelector("#party-chart-mode"),
   resultsCount: document.querySelector("#results-count"),
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
@@ -113,7 +166,14 @@ function getFilteredQuestions() {
       return String(question.uin || "") === exactUin;
     }
 
-    if (query && !questionText(question).includes(query)) return false;
+    if (query) {
+      if (state.searchQuestionOnly) {
+        const textToSearch = (question.questionText || "").toLowerCase();
+        if (!textToSearch.includes(query)) return false;
+      } else {
+        if (!questionText(question).includes(query)) return false;
+      }
+    }
     return true;
   });
 }
@@ -240,15 +300,54 @@ function renderLineChart(items) {
   `;
 }
 
-function getPartyRowsAboveSnp(rows) {
-  const snp = rows.find((row) => row.key === "SNP");
-  if (!snp) return rows;
-  return rows.filter((row) => row.count >= snp.count);
+function renderPartyChart(filtered) {
+  const rows = countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party);
+  const processed = rows.map((row) => {
+    const seats = getPartySeats(row.key);
+    const ratio = row.count / seats;
+    return { ...row, seats, ratio };
+  });
+
+  const minMps = Number(state.minMps) || 0;
+  let visible = processed.filter((row) => row.seats >= minMps);
+
+  const isRatio = state.partyChartMode === "ratio";
+  if (isRatio) {
+    visible.sort((a, b) => b.ratio - a.ratio || a.key.localeCompare(b.key));
+  } else {
+    visible.sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
+  }
+
+  visible = visible.slice(0, 30);
+  const max = Math.max(...visible.map((row) => isRatio ? row.ratio : row.count), 1);
+
+  elements.partyChart.innerHTML = visible.length
+    ? visible
+        .map(
+          (row) => {
+            const val = isRatio ? row.ratio : row.count;
+            const displayVal = isRatio ? val.toFixed(1) : formatNumber.format(val);
+            const titleText = isRatio 
+              ? `${escapeHtml(row.key)}: ${formatNumber.format(row.count)} questions / ${row.seats.toFixed(1)} seats = ${displayVal} per MP`
+              : `${escapeHtml(row.key)}: ${displayVal} questions`;
+            return `
+              <div class="bar-row" title="${titleText}">
+                <span class="bar-label" title="${escapeHtml(row.key)}">${escapeHtml(row.key)}</span>
+                <span class="bar-track">
+                  <span class="bar-fill" style="width:${Math.max(3, (val / max) * 100)}%"></span>
+                </span>
+                <span class="bar-value">${displayVal}</span>
+              </div>
+            `;
+          }
+        )
+        .join("")
+    : '<p class="chart-note">No matching data.</p>';
 }
 
 function renderBars(container, rows, options = {}) {
-  const { limit = 10, snpFloor = false } = options;
-  const visible = (snpFloor ? getPartyRowsAboveSnp(rows) : rows).slice(0, limit);
+  const { limit = 10 } = options;
+  const visible = rows.slice(0, limit);
   const max = Math.max(...visible.map((row) => row.count), 1);
   container.innerHTML = visible.length
     ? visible
@@ -295,10 +394,7 @@ function render() {
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
   renderLineChart(filtered);
-  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
-    limit: 30,
-    snpFloor: true,
-  });
+  renderPartyChart(filtered);
   renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion), { limit: 12 });
   renderTable(filtered);
 }
@@ -330,6 +426,11 @@ elements.include2023.addEventListener("change", (event) => {
   render();
 });
 
+elements.searchQuestionOnly.addEventListener("change", (event) => {
+  state.searchQuestionOnly = event.target.checked;
+  render();
+});
+
 elements.partyFilter.addEventListener("change", (event) => {
   state.party = event.target.value;
   render();
@@ -345,8 +446,21 @@ elements.answerFilter.addEventListener("change", (event) => {
   render();
 });
 
+elements.minMps.addEventListener("change", (event) => {
+  state.minMps = event.target.value;
+  render();
+});
+
+elements.partyChartMode.addEventListener("change", (event) => {
+  state.partyChartMode = event.target.value;
+  render();
+});
+
 loadData()
   .then(() => {
+    elements.minMps.value = state.minMps;
+    elements.partyChartMode.value = state.partyChartMode;
+    elements.searchQuestionOnly.checked = state.searchQuestionOnly;
     renderSelects();
     render();
   })

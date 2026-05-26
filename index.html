@@ -52,6 +52,10 @@
           <input id="include-2023" type="checkbox" />
           <span>Include results from 2023</span>
         </label>
+        <label class="checkbox-label">
+          <input id="search-question-only" type="checkbox" />
+          <span>Search question text only</span>
+        </label>
         <select id="party-filter" aria-label="Party filter">
           <option value="">All parties</option>
         </select>
@@ -76,7 +80,18 @@
         <article class="panel">
           <div class="panel-head">
             <h2>Parties</h2>
-            <span>relative to leader</span>
+            <div class="panel-controls">
+              <select id="min-mps-filter" aria-label="Minimum MPs filter" title="Filter by minimum MPs">
+                <option value="0">All parties</option>
+                <option value="2" selected>Min 2 MPs</option>
+                <option value="5">Min 5 MPs</option>
+                <option value="10">Min 10 MPs</option>
+              </select>
+              <select id="party-chart-mode" aria-label="Chart mode" title="Toggle chart mode">
+                <option value="absolute">Absolute volume</option>
+                <option value="ratio">Questions per MP</option>
+              </select>
+            </div>
           </div>
           <div id="party-chart" class="chart chart-bars"></div>
         </article>
