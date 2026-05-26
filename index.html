@@ -48,6 +48,10 @@
       <section class="controls" aria-label="Dashboard filters">
         <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
         <input id="search" type="search" autocomplete="off" />
+        <label class="checkbox-label">
+          <input id="include-2023" type="checkbox" />
+          <span>Include results from 2023</span>
+        </label>
         <select id="party-filter" aria-label="Party filter">
           <option value="">All parties</option>
         </select>
@@ -72,14 +76,14 @@
         <article class="panel">
           <div class="panel-head">
             <h2>Parties</h2>
-            <span>question count</span>
+            <span>relative to leader</span>
           </div>
           <div id="party-chart" class="chart chart-bars"></div>
         </article>
         <article class="panel">
           <div class="panel-head">
             <h2>NHS regions</h2>
-            <span>constituency bucket</span>
+            <span>relative to leader</span>
           </div>
           <div id="region-chart" class="chart chart-bars"></div>
         </article>
@@ -107,6 +111,8 @@
           </table>
         </div>
       </section>
+
+      <footer class="data-footer" id="data-footer"></footer>
     </main>
 
     <script src="scripts/app.js" type="module"></script>

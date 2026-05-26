@@ -5,7 +5,11 @@ const state = {
   party: "",
   region: "",
   answer: "",
+  includeFrom2023: false,
 };
+
+const CURRENT_PARLIAMENT_START = "2024-07-09";
+const EXTENDED_RESULTS_START = "2023-01-01";
 
 const elements = {
   status: document.querySelector("#data-status"),
@@ -15,6 +19,7 @@ const elements = {
   partyMetric: document.querySelector("#metric-party"),
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
+  include2023: document.querySelector("#include-2023"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
   answerFilter: document.querySelector("#answer-filter"),
@@ -24,6 +29,7 @@ const elements = {
   regionChart: document.querySelector("#region-chart"),
   resultsCount: document.querySelector("#results-count"),
   table: document.querySelector("#question-table"),
+  footer: document.querySelector("#data-footer"),
 };
 
 const formatNumber = new Intl.NumberFormat("en-GB");
@@ -80,11 +86,20 @@ function questionText(question) {
     .toLowerCase();
 }
 
+function getScopeStart() {
+  return state.includeFrom2023 ? EXTENDED_RESULTS_START : CURRENT_PARLIAMENT_START;
+}
+
+function getScopedQuestions() {
+  const start = getScopeStart();
+  return state.questions.filter((question) => question.dateTabled >= start);
+}
+
 function getFilteredQuestions() {
   const query = state.query.trim().toLowerCase();
   const exactUin = query.match(/^(?:uin:?\s*)?(\d{2,})$/)?.[1] || "";
 
-  return state.questions.filter((question) => {
+  return getScopedQuestions().filter((question) => {
     if (state.party) {
       const party = question.member.partyAbbreviation || question.member.party || "Unknown";
       if (party !== state.party) return false;
@@ -120,22 +135,41 @@ function renderMetrics(items) {
     : "-";
 }
 
-function renderSelects() {
-  const parties = countBy(state.questions, (question) => question.member.partyAbbreviation || question.member.party);
-  const regions = countBy(state.questions, (question) => question.region.nhsRegion);
+function renderScopeStatus(filteredCount) {
+  if (!state.summary) return;
+  const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
+  const scopeStart = state.includeFrom2023 ? EXTENDED_RESULTS_START : CURRENT_PARLIAMENT_START;
+  const scopeLabel = state.includeFrom2023 ? "questions from 2023 shown" : "current Parliament questions shown";
+  elements.status.textContent = `${formatNumber.format(filteredCount)} ${scopeLabel} · ${formatNumber.format(
+    state.summary.totals.questions,
+  )} committed questions · refreshed ${generated}`;
+  elements.footer.textContent = `Committed source data goes back to ${shortDate(
+    state.summary.dateRange.oldestTabled,
+  )}; this view includes questions tabled from ${shortDate(scopeStart)}.`;
+}
 
-  elements.partyFilter.insertAdjacentHTML(
-    "beforeend",
+function renderSelects() {
+  const scoped = getScopedQuestions();
+  const parties = countBy(scoped, (question) => question.member.partyAbbreviation || question.member.party);
+  const regions = countBy(scoped, (question) => question.region.nhsRegion);
+
+  const partyStillPresent = !state.party || parties.some((party) => party.key === state.party);
+  const regionStillPresent = !state.region || regions.some((region) => region.key === state.region);
+  if (!partyStillPresent) state.party = "";
+  if (!regionStillPresent) state.region = "";
+
+  elements.partyFilter.innerHTML =
+    '<option value="">All parties</option>' +
     parties
       .map((party) => `<option value="${escapeHtml(party.key)}">${escapeHtml(party.key)} (${party.count})</option>`)
-      .join(""),
-  );
-  elements.regionFilter.insertAdjacentHTML(
-    "beforeend",
+      .join("");
+  elements.regionFilter.innerHTML =
+    '<option value="">All NHS regions</option>' +
     regions
       .map((region) => `<option value="${escapeHtml(region.key)}">${escapeHtml(region.key)} (${region.count})</option>`)
-      .join(""),
-  );
+      .join("");
+  elements.partyFilter.value = state.party;
+  elements.regionFilter.value = state.region;
 }
 
 function renderLineChart(items) {
@@ -165,6 +199,21 @@ function renderLineChart(items) {
   });
   const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
   const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
+  const yearTicks = [];
+  const monthTicks = [];
+  let seenYear = "";
+
+  for (const point of points) {
+    const [year, month] = point.month.split("-");
+    if (year !== seenYear) {
+      yearTicks.push({ year, x: point.x });
+      seenYear = year;
+    }
+    monthTicks.push({
+      label: month,
+      x: point.x,
+    });
+  }
 
   elements.monthlyRange.textContent = `${months[0][0]} to ${months.at(-1)[0]}`;
   elements.monthlyChart.innerHTML = `
@@ -173,11 +222,17 @@ function renderLineChart(items) {
       <line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}"></line>
       <path class="trend-area" d="${area}"></path>
       <path class="trend-line" d="${path}"></path>
-      ${points
-        .filter((_, index) => index % Math.max(1, Math.ceil(points.length / 12)) === 0)
+      ${monthTicks
+        .filter((_, index) => index % Math.max(1, Math.ceil(monthTicks.length / 14)) === 0)
         .map(
-          (point) =>
-            `<text x="${point.x}" y="${height - 5}" text-anchor="middle" font-size="10" fill="#666">${point.month.slice(2)}</text>`,
+          (tick) =>
+            `<text x="${tick.x}" y="${height - 12}" text-anchor="middle" font-size="9" fill="#777">${tick.label}</text>`,
+        )
+        .join("")}
+      ${yearTicks
+        .map(
+          (tick) =>
+            `<text x="${tick.x}" y="${height - 1}" text-anchor="start" font-size="10" fill="#555">${tick.year}</text>`,
         )
         .join("")}
       <text x="${pad + 3}" y="${pad - 7}" font-size="10" fill="#666">${max}</text>
@@ -185,8 +240,15 @@ function renderLineChart(items) {
   `;
 }
 
-function renderBars(container, rows, limit = 10) {
-  const visible = rows.slice(0, limit);
+function getPartyRowsAboveSnp(rows) {
+  const snp = rows.find((row) => row.key === "SNP");
+  if (!snp) return rows;
+  return rows.filter((row) => row.count >= snp.count);
+}
+
+function renderBars(container, rows, options = {}) {
+  const { limit = 10, snpFloor = false } = options;
+  const visible = (snpFloor ? getPartyRowsAboveSnp(rows) : rows).slice(0, limit);
   const max = Math.max(...visible.map((row) => row.count), 1);
   container.innerHTML = visible.length
     ? visible
@@ -230,10 +292,14 @@ function renderTable(items) {
 
 function render() {
   const filtered = getFilteredQuestions();
+  renderScopeStatus(filtered.length);
   renderMetrics(filtered);
   renderLineChart(filtered);
-  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party));
-  renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion));
+  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
+    limit: 30,
+    snpFloor: true,
+  });
+  renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion), { limit: 12 });
   renderTable(filtered);
 }
 
@@ -251,14 +317,16 @@ async function loadData() {
   const questionsPayload = await questionsResponse.json();
   state.questions = questionsPayload.questions || [];
 
-  const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
-  elements.status.textContent = `${formatNumber.format(state.summary.totals.questions)} committed questions · ${shortDate(
-    state.summary.dateRange.oldestTabled,
-  )} to ${shortDate(state.summary.dateRange.newestTabled)} · refreshed ${generated}`;
 }
 
 elements.search.addEventListener("input", (event) => {
   state.query = event.target.value;
+  render();
+});
+
+elements.include2023.addEventListener("change", (event) => {
+  state.includeFrom2023 = event.target.checked;
+  renderSelects();
   render();
 });
 
