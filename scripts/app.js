@@ -391,19 +391,10 @@ function render() {
   renderTable(filtered);
 }
 
-function getBaseUrl() {
-  const path = window.location.pathname;
-  if (path.endsWith('.html') || path.endsWith('.htm')) {
-    return path.substring(0, path.lastIndexOf('/') + 1);
-  }
-  return path.endsWith('/') ? path : path + '/';
-}
-
 async function loadData() {
-  const basePath = getBaseUrl();
   const [summaryResponse, questionsResponse] = await Promise.all([
-    fetch(`${basePath}data/summary.json`, { cache: "no-store" }),
-    fetch(`${basePath}data/questions.json`, { cache: "no-store" }),
+    fetch("data/summary.json", { cache: "no-store" }),
+    fetch("data/questions.json", { cache: "no-store" }),
   ]);
 
   if (!summaryResponse.ok || !questionsResponse.ok) {
