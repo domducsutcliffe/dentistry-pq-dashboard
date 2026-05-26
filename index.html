@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dentistry PQ Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./">Dentistry PQ Dashboard</a>
+        <span>Commons</span>
+        <span>DHSC</span>
+        <span>dent*</span>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="intro">
+        <h1>Parliamentary interest in dentistry</h1>
+        <p id="data-status">Loading committed dashboard data...</p>
+      </section>
+
+      <section class="metrics" aria-label="Summary metrics">
+        <article class="metric">
+          <span>Total dentistry PQs</span>
+          <strong id="metric-total">-</strong>
+        </article>
+        <article class="metric">
+          <span>Answered / unanswered</span>
+          <strong id="metric-answered">-</strong>
+        </article>
+        <article class="metric">
+          <span>Latest tabled</span>
+          <strong id="metric-latest">-</strong>
+        </article>
+        <article class="metric">
+          <span>Most active party</span>
+          <strong id="metric-party">-</strong>
+        </article>
+        <article class="metric">
+          <span>Most active region</span>
+          <strong id="metric-region">-</strong>
+        </article>
+      </section>
+
+      <section class="controls" aria-label="Dashboard filters">
+        <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
+        <input id="search" type="search" autocomplete="off" />
+        <select id="party-filter" aria-label="Party filter">
+          <option value="">All parties</option>
+        </select>
+        <select id="region-filter" aria-label="NHS region filter">
+          <option value="">All NHS regions</option>
+        </select>
+        <select id="answer-filter" aria-label="Answer status filter">
+          <option value="">All answer states</option>
+          <option value="answered">Answered</option>
+          <option value="unanswered">Unanswered</option>
+        </select>
+      </section>
+
+      <section class="charts" aria-label="Dashboard charts">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Monthly volume</h2>
+            <span id="monthly-range"></span>
+          </div>
+          <div id="monthly-chart" class="chart chart-line"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Parties</h2>
+            <span>question count</span>
+          </div>
+          <div id="party-chart" class="chart chart-bars"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
+            <h2>NHS regions</h2>
+            <span>constituency bucket</span>
+          </div>
+          <div id="region-chart" class="chart chart-bars"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Questions</h2>
+          <span id="results-count">-</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>UIN</th>
+                <th>Tabled</th>
+                <th>Member</th>
+                <th>Party</th>
+                <th>Constituency</th>
+                <th>NHS region</th>
+                <th>Heading</th>
+              </tr>
+            </thead>
+            <tbody id="question-table"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="scripts/app.js" type="module"></script>
+  </body>
+</html>
