@@ -98,11 +98,11 @@ const MONTH_NAMES = {
 };
 
 const THEME_LABELS = {
-  workforce: "Workforce",
-  udc: "Urgent Dental Care (UDC)",
-  education: "Education & Training",
-  access: "Access & Geography",
-  contract: "Dental Contract",
+  access: "Access & Appointments",
+  workforce: "Workforce & Education",
+  contract: "Contract & Commissioning",
+  prevention: "Oral Health & Prevention",
+  funding: "Funding & Charges",
 };
 
 function parseDate(value) {
@@ -128,20 +128,29 @@ function getQuestionThemes(question) {
   const text = `${question.heading} ${question.questionText}`.toLowerCase();
   const themes = [];
 
-  if (/\b(workforce|dentists?|nurses?|hygienists?|therapists?|recruit\w*|retain\w*|retention|staff\w*|pay|salary|salaries|manpower)\b/.test(text)) {
-    themes.push("workforce");
-  }
-  if (/\b(udc|urgent|emergency|emergencies)\b/.test(text)) {
-    themes.push("udc");
-  }
-  if (/\b(education|student\w*|train\w*|school\w*|exam\w*|ore|gdc|overseas|degree\w*|universit\w*|qualific\w*)\b/.test(text)) {
-    themes.push("education");
-  }
-  if (/\b(access\w*|geograph\w*|rural\w*|local\w*|area\w*|region\w*|constituenc\w*|wait\w*|queue\w*|appointment\w*)\b/.test(text)) {
+  // 1. Access & Appointments (wait lists, appointments, geography, urgent care, hubs, provision)
+  if (/\b(access\w*|geograph\w*|rural\w*|local\w*|area\w*|region\w*|constituenc\w*|wait\w*|queue\w*|appointment\w*|udc|urgent|emergency|emergencies|hub\w*|finder|provision\w*)\b/.test(text)) {
     themes.push("access");
   }
-  if (/\b(contract\w*|uda\w*|unit\w* of dental activity|reform\w*|remunerat\w*)\b/.test(text)) {
+
+  // 2. Workforce & Education (dentists, nurses, recruitment, retention, pay, training, education, exams, registration, overseas, careers, jobs, professions)
+  if (/\b(workforce|dentists?|nurses?|hygienists?|therapists?|recruit\w*|retain\w*|retention|staff\w*|pay|salary|salaries|manpower|education|student\w*|train\w*|school\w*|exam\w*|ore|gdc|overseas|degree\w*|universit\w*|qualific\w*|career\w*|job\w*|profession\w*)\b/.test(text)) {
+    themes.push("workforce");
+  }
+
+  // 3. Contract & Commissioning (contract reform, UDAs, banding, commissioning bodies like ICBs, returns, regulation/CQC/GDC)
+  if (/\b(contract\w*|uda\w*|unit\w* of dental activity|reform\w*|remunerat\w*|commission\w*|icb\w*|integrated care board|underspend\w*|returned money|regulat\w*|cqc|gdc)\b/.test(text)) {
     themes.push("contract");
+  }
+
+  // 4. Oral Health & Prevention (children, tooth decay, prevention, fluoridation, brushing, sugar, diet)
+  if (/\b(child\w*|baby|babies|young|prevent\w*|fluorid\w*|decay|toothache|brushing|oral health|hygiene|sugar|diet|obesity)\b/.test(text)) {
+    themes.push("prevention");
+  }
+
+  // 5. Funding & Patient Charges (patient costs, fees, charges, banding fees, budget, funding, finance)
+  if (/\b(funding|finance|budget|cost\w*|charges?|fees?|pricing|price|pay\s+charge|exempt\w*|afford\w*)\b/.test(text)) {
+    themes.push("funding");
   }
 
   return themes;
@@ -149,16 +158,18 @@ function getQuestionThemes(question) {
 
 function getThemeCounts(questions) {
   const counts = {
-    workforce: 0,
-    udc: 0,
-    education: 0,
     access: 0,
+    workforce: 0,
     contract: 0,
+    prevention: 0,
+    funding: 0,
   };
   for (const q of questions) {
     const themes = getQuestionThemes(q);
     for (const t of themes) {
-      counts[t]++;
+      if (counts.hasOwnProperty(t)) {
+        counts[t]++;
+      }
     }
   }
   return Object.entries(counts)
