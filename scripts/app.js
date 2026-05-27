@@ -7,6 +7,8 @@ const state = {
   answer: "",
   periods: ["current"],
   searchQuestionOnly: false,
+  searchAnswerMatch: false,
+  chartPoints: [],
 };
 
 const PERIODS = {
@@ -58,6 +60,7 @@ const elements = {
   search: document.querySelector("#search"),
   periodCheckboxes: document.querySelectorAll('input[name="period"]'),
   searchQuestionOnly: document.querySelector("#search-question-only"),
+  searchAnswerMatch: document.querySelector("#search-answer-match"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
   answerFilter: document.querySelector("#answer-filter"),
@@ -65,9 +68,11 @@ const elements = {
   monthlyChart: document.querySelector("#monthly-chart"),
   partyChart: document.querySelector("#party-chart"),
   regionChart: document.querySelector("#region-chart"),
+  themeChart: document.querySelector("#theme-chart"),
   resultsCount: document.querySelector("#results-count"),
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
+  tooltip: document.querySelector("#chart-tooltip"),
 };
 
 const formatNumber = new Intl.NumberFormat("en-GB");
@@ -92,6 +97,14 @@ const MONTH_NAMES = {
   "12": "December",
 };
 
+const THEME_LABELS = {
+  workforce: "Workforce",
+  udc: "Urgent Dental Care (UDC)",
+  education: "Education & Training",
+  access: "Access & Geography",
+  contract: "Dental Contract",
+};
+
 function parseDate(value) {
   if (!value) return null;
   const date = new Date(`${value}T00:00:00Z`);
@@ -111,6 +124,48 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
+function getQuestionThemes(question) {
+  const text = `${question.heading} ${question.questionText}`.toLowerCase();
+  const themes = [];
+
+  if (/\b(workforce|dentists?|nurses?|hygienists?|therapists?|recruit\w*|retain\w*|retention|staff\w*|pay|salary|salaries|manpower)\b/.test(text)) {
+    themes.push("workforce");
+  }
+  if (/\b(udc|urgent|emergency|emergencies)\b/.test(text)) {
+    themes.push("udc");
+  }
+  if (/\b(education|student\w*|train\w*|school\w*|exam\w*|ore|gdc|overseas|degree\w*|universit\w*|qualific\w*)\b/.test(text)) {
+    themes.push("education");
+  }
+  if (/\b(access\w*|geograph\w*|rural\w*|local\w*|area\w*|region\w*|constituenc\w*|wait\w*|queue\w*|appointment\w*)\b/.test(text)) {
+    themes.push("access");
+  }
+  if (/\b(contract\w*|uda\w*|unit\w* of dental activity|reform\w*|remunerat\w*)\b/.test(text)) {
+    themes.push("contract");
+  }
+
+  return themes;
+}
+
+function getThemeCounts(questions) {
+  const counts = {
+    workforce: 0,
+    udc: 0,
+    education: 0,
+    access: 0,
+    contract: 0,
+  };
+  for (const q of questions) {
+    const themes = getQuestionThemes(q);
+    for (const t of themes) {
+      counts[t]++;
+    }
+  }
+  return Object.entries(counts)
+    .map(([key, count]) => ({ key: THEME_LABELS[key], count }))
+    .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
+}
+
 function countBy(items, getKey) {
   const counts = new Map();
   for (const item of items) {
@@ -128,12 +183,12 @@ function questionText(question) {
     question.heading,
     question.questionText,
     question.answerText,
-    question.member.name,
-    question.member.party,
-    question.member.partyAbbreviation,
-    question.member.constituency,
-    question.region.nhsRegion,
-    question.region.nation,
+    question.member?.name,
+    question.member?.party,
+    question.member?.partyAbbreviation,
+    question.member?.constituency,
+    question.region?.nhsRegion,
+    question.region?.nation,
   ]
     .join(" ")
     .toLowerCase();
@@ -168,17 +223,34 @@ function getScopedQuestions() {
   const allKeys = Object.keys(PERIODS);
   const selectedKeys = allKeys.filter(k => state.periods.includes(k));
   
-  if (state.periods.includes("all") || selectedKeys.length === 0) {
-    return state.questions;
-  }
-  
-  return state.questions.filter((question) => {
-    return selectedKeys.some((key) => {
-      const period = PERIODS[key];
-      if (question.dateTabled < period.start) return false;
-      if (period.end && question.dateTabled >= period.end) return false;
-      return true;
+  let scoped = state.questions;
+  if (!state.periods.includes("all") && selectedKeys.length > 0) {
+    scoped = state.questions.filter((question) => {
+      return selectedKeys.some((key) => {
+        const period = PERIODS[key];
+        if (question.dateTabled < period.start) return false;
+        if (period.end && question.dateTabled >= period.end) return false;
+        return true;
+      });
     });
+  }
+
+  return scoped.filter((question) => {
+    const heading = (question.heading || "").toLowerCase();
+    const questionTextVal = (question.questionText || "").toLowerCase();
+    
+    if (heading.includes("dent") || questionTextVal.includes("dent")) {
+      return true;
+    }
+    
+    if (state.searchAnswerMatch) {
+      const answer = (question.answerText || "").toLowerCase();
+      if (answer.includes("dent")) {
+        return true;
+      }
+    }
+    
+    return false;
   });
 }
 
@@ -201,11 +273,13 @@ function getFilteredQuestions() {
     }
 
     if (query) {
+      const words = query.split(/\s+/).filter(Boolean);
       if (state.searchQuestionOnly) {
         const textToSearch = (question.questionText || "").toLowerCase();
-        if (!textToSearch.includes(query)) return false;
-      } else if (!questionText(question).includes(query)) {
-        return false;
+        if (!words.every((word) => textToSearch.includes(word))) return false;
+      } else {
+        const textToSearch = questionText(question);
+        if (!words.every((word) => textToSearch.includes(word))) return false;
       }
     }
 
@@ -270,11 +344,15 @@ function renderLineChart(items) {
   for (const question of items) {
     if (!question.dateTabled) continue;
     const month = question.dateTabled.slice(0, 7);
-    byMonth.set(month, (byMonth.get(month) || 0) + 1);
+    if (!byMonth.has(month)) {
+      byMonth.set(month, []);
+    }
+    byMonth.get(month).push(question);
   }
 
   const months = [...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   if (!months.length) {
+    state.chartPoints = [];
     elements.monthlyChart.innerHTML = '<p class="chart-note">No matching monthly data.</p>';
     elements.monthlyRange.textContent = "";
     return;
@@ -283,13 +361,17 @@ function renderLineChart(items) {
   const width = 760;
   const height = 230;
   const pad = 28;
-  const max = Math.max(...months.map(([, count]) => count), 1);
+  const max = Math.max(...months.map(([, monthQuestions]) => monthQuestions.length), 1);
   const step = months.length > 1 ? (width - pad * 2) / (months.length - 1) : 0;
-  const points = months.map(([month, count], index) => {
+  const points = months.map(([month, monthQuestions], index) => {
+    const count = monthQuestions.length;
     const x = pad + index * step;
     const y = height - pad - (count / max) * (height - pad * 2);
-    return { month, count, x, y };
+    const themeCounts = getThemeCounts(monthQuestions);
+    return { month, count, x, y, themeCounts };
   });
+  state.chartPoints = points;
+
   const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
   const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
   const monthTicks = [];
@@ -315,6 +397,13 @@ function renderLineChart(items) {
       <line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}"></line>
       <path class="trend-area" d="${area}"></path>
       <path class="trend-line" d="${path}"></path>
+      ${points
+        .map(
+          (point, index) => `
+            <circle class="data-point" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4" data-index="${index}"></circle>
+          `
+        )
+        .join("")}
       ${monthTicks
         .map(
           (tick) => `
@@ -386,6 +475,7 @@ function render() {
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
   renderLineChart(filtered);
+  renderBars(elements.themeChart, getThemeCounts(filtered), { limit: 5 });
   renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
     limit: 30,
     snpFloor: true,
@@ -453,6 +543,11 @@ elements.searchQuestionOnly.addEventListener("change", (event) => {
   render();
 });
 
+elements.searchAnswerMatch.addEventListener("change", (event) => {
+  state.searchAnswerMatch = event.target.checked;
+  render();
+});
+
 elements.partyFilter.addEventListener("change", (event) => {
   state.party = event.target.value;
   render();
@@ -468,11 +563,81 @@ elements.answerFilter.addEventListener("change", (event) => {
   render();
 });
 
+elements.monthlyChart.addEventListener("mouseover", (event) => {
+  const dot = event.target.closest(".data-point");
+  if (!dot) return;
+  const index = parseInt(dot.getAttribute("data-index"), 10);
+  const point = state.chartPoints[index];
+  if (!point) return;
+
+  const [year, monthNum] = point.month.split("-");
+  const monthName = MONTH_NAMES[monthNum] || monthNum;
+  const titleText = `${monthName} ${year}`;
+
+  const rowsHtml = point.themeCounts
+    .map(
+      (theme) => `
+      <div class="chart-tooltip-row">
+        <span class="chart-tooltip-label">${escapeHtml(theme.key)}</span>
+        <span class="chart-tooltip-value">${formatNumber.format(theme.count)}</span>
+      </div>
+    `
+    )
+    .join("");
+
+  elements.tooltip.innerHTML = `
+    <div class="chart-tooltip-title">${titleText}</div>
+    <div class="chart-tooltip-row" style="border-bottom: 1px dashed var(--line); padding-bottom: 3px; margin-bottom: 5px;">
+      <span class="chart-tooltip-label" style="font-weight: bold; color: var(--text);">Total PQs</span>
+      <span class="chart-tooltip-value">${formatNumber.format(point.count)}</span>
+    </div>
+    ${rowsHtml}
+  `;
+  elements.tooltip.style.opacity = "1";
+});
+
+elements.monthlyChart.addEventListener("mousemove", (event) => {
+  elements.tooltip.style.left = `${event.pageX + 12}px`;
+  elements.tooltip.style.top = `${event.pageY + 12}px`;
+});
+
+elements.monthlyChart.addEventListener("mouseout", (event) => {
+  const dot = event.target.closest(".data-point");
+  if (!dot) return;
+  elements.tooltip.style.opacity = "0";
+});
+
 loadData()
   .then(() => {
     elements.searchQuestionOnly.checked = state.searchQuestionOnly;
+    elements.searchAnswerMatch.checked = state.searchAnswerMatch;
     renderSelects();
     render();
+
+    // Test hook for headless screenshots
+    if (window.location.search.includes("test-tooltip=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          const rect = dot.getBoundingClientRect();
+          const clientX = rect.left + window.scrollX;
+          const clientY = rect.top + window.scrollY;
+
+          dot.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, cancelable: true, view: window }));
+          dot.dispatchEvent(
+            new MouseEvent("mousemove", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+              clientX: clientX + 10,
+              clientY: clientY + 10,
+              pageX: clientX + 10,
+              pageY: clientY + 10,
+            })
+          );
+        }
+      }, 300);
+    }
   })
   .catch((error) => {
     console.error(error);
