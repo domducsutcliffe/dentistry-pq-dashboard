@@ -716,18 +716,55 @@ elements.monthlyChart.addEventListener("mouseout", (event) => {
 });
 
 elements.monthlyChart.addEventListener("click", (event) => {
-  const dot = event.target.closest(".data-point");
-  if (!dot) return;
-  const index = parseInt(dot.getAttribute("data-index"), 10);
-  const point = state.chartPoints[index];
-  if (!point) return;
+  if (state.chartPoints.length === 0) return;
 
-  if (state.selectedMonth === point.month) {
-    state.selectedMonth = "";
-  } else {
-    state.selectedMonth = point.month;
+  // Direct dot click (or programmatic test events)
+  const dot = event.target.closest(".data-point");
+  if (dot) {
+    const index = parseInt(dot.getAttribute("data-index"), 10);
+    const point = state.chartPoints[index];
+    if (point) {
+      if (state.selectedMonth === point.month) {
+        state.selectedMonth = "";
+      } else {
+        state.selectedMonth = point.month;
+      }
+      render();
+      return;
+    }
   }
-  render();
+
+  // Fallback: Click anywhere on column coordinates
+  const svg = elements.monthlyChart.querySelector("svg");
+  if (!svg) return;
+
+  const rect = svg.getBoundingClientRect();
+  const clickXRel = event.clientX - rect.left;
+  const viewBoxWidth = 760;
+  const svgX = (clickXRel / rect.width) * viewBoxWidth;
+
+  let closestPoint = null;
+  let minDistance = Infinity;
+
+  for (const point of state.chartPoints) {
+    const dist = Math.abs(point.x - svgX);
+    if (dist < minDistance) {
+      minDistance = dist;
+      closestPoint = point;
+    }
+  }
+
+  if (closestPoint) {
+    const pad = 28;
+    if (svgX >= pad - 10 && svgX <= (viewBoxWidth - pad) + 10) {
+      if (state.selectedMonth === closestPoint.month) {
+        state.selectedMonth = "";
+      } else {
+        state.selectedMonth = closestPoint.month;
+      }
+      render();
+    }
+  }
 });
 
 loadData()
