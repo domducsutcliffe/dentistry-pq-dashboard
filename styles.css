@@ -540,7 +540,13 @@ table th {
   transition: r 0.1s, fill 0.1s;
 }
 
-.data-point:hover {
+.data-point:hover,
+.data-point.active {
   r: 6px;
   fill: var(--orange);
+}
+
+.data-point.active {
+  stroke: #000;
+  stroke-width: 2.5px;
 }

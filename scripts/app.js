@@ -9,6 +9,7 @@ const state = {
   searchQuestionOnly: false,
   searchAnswerMatch: false,
   chartPoints: [],
+  selectedMonth: "",
 };
 
 const PERIODS = {
@@ -265,7 +266,7 @@ function getScopedQuestions() {
   });
 }
 
-function getFilteredQuestions() {
+function getFilteredQuestions(excludeMonth = false) {
   const query = state.query.trim().toLowerCase();
   const exactUin = query.match(/^(?:uin:?\s*)?(\d{2,})$/)?.[1] || "";
 
@@ -294,6 +295,26 @@ function getFilteredQuestions() {
       }
     }
 
+    if (!excludeMonth && state.selectedMonth) {
+      const m = (question.dateTabled || "").slice(0, 7);
+      if (m !== state.selectedMonth) return false;
+    }
+
+    return true;
+  });
+}
+
+function isMonthInPeriods(month) {
+  if (state.periods.includes("all")) return true;
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  if (selectedKeys.length === 0) return true;
+  
+  return selectedKeys.some(key => {
+    const period = PERIODS[key];
+    const monthStart = `${month}-01`;
+    if (monthStart < period.start.slice(0, 7) + "-01") return false;
+    if (period.end && monthStart >= period.end.slice(0, 7) + "-01") return false;
     return true;
   });
 }
@@ -320,14 +341,34 @@ function renderScopeStatus(filteredCount) {
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
   const info = getPeriodInfo();
 
-  elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(
-    filteredCount,
-  )} ${info.statusLabel} &middot; ${formatNumber.format(
+  let statusText = `${formatNumber.format(filteredCount)} ${info.statusLabel}`;
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    statusText = `${formatNumber.format(filteredCount)} questions from ${monthName} ${year} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-month-filter">(clear filter)</span>`;
+  }
+
+  elements.status.innerHTML = `<span class="pulsing-dot"></span>${statusText} &middot; ${formatNumber.format(
     state.summary.totals.questions,
   )} total stored questions &middot; refreshed ${generated}`;
-  elements.footer.textContent = `Stored source data goes back to ${shortDate(
+  
+  let footerText = `Stored source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,
   )} and includes DHSC plus its predecessor Department of Health. This view ${info.dates}.`;
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    footerText += ` Filtered to show only questions from ${monthName} ${year}.`;
+  }
+  elements.footer.textContent = footerText;
+
+  const clearBtn = document.querySelector("#clear-month-filter");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      state.selectedMonth = "";
+      render();
+    });
+  }
 }
 
 function renderSelects() {
@@ -410,9 +451,12 @@ function renderLineChart(items) {
       <path class="trend-line" d="${path}"></path>
       ${points
         .map(
-          (point, index) => `
-            <circle class="data-point" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4" data-index="${index}"></circle>
-          `
+          (point, index) => {
+            const isActive = point.month === state.selectedMonth;
+            return `
+              <circle class="data-point${isActive ? " active" : ""}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${isActive ? 6 : 4}" data-index="${index}"></circle>
+            `;
+          }
         )
         .join("")}
       ${monthTicks
@@ -482,10 +526,16 @@ function renderTable(items) {
 }
 
 function render() {
+  if (state.selectedMonth && !isMonthInPeriods(state.selectedMonth)) {
+    state.selectedMonth = "";
+  }
+
   const filtered = getFilteredQuestions();
+  const lineChartFiltered = getFilteredQuestions(true);
+
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
-  renderLineChart(filtered);
+  renderLineChart(lineChartFiltered);
   renderBars(elements.themeChart, getThemeCounts(filtered), { limit: 5 });
   renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
     limit: 30,
@@ -618,6 +668,21 @@ elements.monthlyChart.addEventListener("mouseout", (event) => {
   elements.tooltip.style.opacity = "0";
 });
 
+elements.monthlyChart.addEventListener("click", (event) => {
+  const dot = event.target.closest(".data-point");
+  if (!dot) return;
+  const index = parseInt(dot.getAttribute("data-index"), 10);
+  const point = state.chartPoints[index];
+  if (!point) return;
+
+  if (state.selectedMonth === point.month) {
+    state.selectedMonth = "";
+  } else {
+    state.selectedMonth = point.month;
+  }
+  render();
+});
+
 loadData()
   .then(() => {
     elements.searchQuestionOnly.checked = state.searchQuestionOnly;
@@ -646,6 +711,13 @@ loadData()
               pageY: clientY + 10,
             })
           );
+        }
+      }, 300);
+    } else if (window.location.search.includes("test-click=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
         }
       }, 300);
     }
