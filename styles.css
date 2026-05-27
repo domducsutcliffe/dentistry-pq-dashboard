@@ -533,6 +533,7 @@ table th {
 }
 
 .data-point {
+  r: var(--dot-r, 4px);
   fill: #fff;
   stroke: var(--orange);
   stroke-width: 2px;
@@ -542,7 +543,7 @@ table th {
 
 .data-point:hover,
 .data-point.active {
-  r: 6px;
+  r: var(--dot-r-active, 6px);
   fill: var(--orange);
 }
 

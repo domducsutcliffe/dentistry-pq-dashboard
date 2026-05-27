@@ -391,6 +391,38 @@ function renderSelects() {
   elements.regionFilter.value = state.region;
 }
 
+const getLineProps = (pointA, pointB) => {
+  const lengthX = pointB.x - pointA.x;
+  const lengthY = pointB.y - pointA.y;
+  return {
+    length: Math.sqrt(lengthX * lengthX + lengthY * lengthY),
+    angle: Math.atan2(lengthY, lengthX),
+  };
+};
+
+const getControlPoint = (current, previous, next, reverse) => {
+  const p = previous || current;
+  const n = next || current;
+  const smoothing = 0.15;
+  const o = getLineProps(p, n);
+  const angle = o.angle + (reverse ? Math.PI : 0);
+  const length = o.length * smoothing;
+  const x = current.x + Math.cos(angle) * length;
+  const y = current.y + Math.sin(angle) * length;
+  return [x, y];
+};
+
+const getBezierPath = (points) => {
+  return points.reduce((acc, point, i, a) => {
+    if (i === 0) {
+      return `M ${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+    }
+    const [cpsX, cpsY] = getControlPoint(a[i - 1], a[i - 2], point, false);
+    const [cpeX, cpeY] = getControlPoint(point, a[i - 1], a[i + 1], true);
+    return `${acc} C ${cpsX.toFixed(1)} ${cpsY.toFixed(1)}, ${cpeX.toFixed(1)} ${cpeY.toFixed(1)}, ${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+  }, "");
+};
+
 function renderLineChart(items) {
   const byMonth = new Map();
   for (const question of items) {
@@ -424,8 +456,23 @@ function renderLineChart(items) {
   });
   state.chartPoints = points;
 
-  const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
-  const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
+  // Generate smooth spline path and area
+  const path = getBezierPath(points);
+  const area = points.length > 1 
+    ? `${path} L ${points.at(-1).x.toFixed(1)} ${height - pad} L ${points[0].x.toFixed(1)} ${height - pad} Z`
+    : "";
+
+  // Dynamically calculate dot radius based on the number of points (longer time frames = smaller dots)
+  let dotR = 4;
+  if (points.length > 60) {
+    dotR = 1.2;
+  } else if (points.length > 30) {
+    dotR = 2.0;
+  } else if (points.length > 15) {
+    dotR = 3.0;
+  }
+  const dotRActive = Math.max(3.5, dotR + 2);
+
   const monthTicks = [];
   const totalPoints = points.length;
   const numTicks = Math.min(6, totalPoints);
@@ -444,17 +491,17 @@ function renderLineChart(items) {
 
   elements.monthlyRange.textContent = `${months[0][0]} to ${months.at(-1)[0]}`;
   elements.monthlyChart.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly dentistry PQ volume">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly dentistry PQ volume" style="--dot-r: ${dotR}px; --dot-r-active: ${dotRActive}px;">
       <line class="axis" x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}"></line>
       <line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}"></line>
-      <path class="trend-area" d="${area}"></path>
-      <path class="trend-line" d="${path}"></path>
+      ${area ? `<path class="trend-area" d="${area}"></path>` : ""}
+      ${path ? `<path class="trend-line" d="${path}"></path>` : ""}
       ${points
         .map(
           (point, index) => {
             const isActive = point.month === state.selectedMonth;
             return `
-              <circle class="data-point${isActive ? " active" : ""}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${isActive ? 6 : 4}" data-index="${index}"></circle>
+              <circle class="data-point${isActive ? " active" : ""}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" data-index="${index}"></circle>
             `;
           }
         )
@@ -718,6 +765,14 @@ loadData()
         const dot = document.querySelector(".data-point");
         if (dot) {
           dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+        }
+      }, 300);
+    } else if (window.location.search.includes("test-all-parliaments=true")) {
+      setTimeout(() => {
+        const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+        if (allCb) {
+          allCb.checked = true;
+          allCb.dispatchEvent(new Event("change", { bubbles: true }));
         }
       }, 300);
     }
