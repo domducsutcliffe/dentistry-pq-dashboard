@@ -5,59 +5,48 @@ const state = {
   party: "",
   region: "",
   answer: "",
-  includeFrom2023: false,
+  period: "current",
   searchQuestionOnly: false,
 };
 
-const CURRENT_PARLIAMENT_START = "2024-07-09";
-const EXTENDED_RESULTS_START = "2023-01-01";
-
-const PARTY_SEATS_2024 = {
-  Lab: 411,
-  Con: 121,
-  LD: 72,
-  SNP: 9,
-  SF: 7,
-  RUK: 5,
-  DUP: 5,
-  Green: 4,
-  PC: 4,
-  SDLP: 2,
-  APNI: 1,
-  UUP: 1,
-  TUV: 1,
-  Ind: 7,
+const PERIODS = {
+  current: {
+    label: "current Parliament",
+    statusLabel: "current Parliament questions shown",
+    start: "2024-07-09",
+    end: "",
+  },
+  cameron: {
+    label: "Cameron government",
+    statusLabel: "Cameron government questions shown",
+    start: "2010-05-11",
+    end: "2016-07-13",
+  },
+  may: {
+    label: "May government",
+    statusLabel: "May government questions shown",
+    start: "2016-07-13",
+    end: "2019-07-24",
+  },
+  boris: {
+    label: "Boris Johnson government",
+    statusLabel: "Boris government questions shown",
+    start: "2019-07-24",
+    end: "2022-09-06",
+  },
+  truss: {
+    label: "Truss government",
+    statusLabel: "Truss government questions shown",
+    start: "2022-09-06",
+    end: "2022-10-25",
+  },
+  sunak: {
+    label: "Sunak government",
+    statusLabel: "Sunak government questions shown",
+    start: "2022-10-25",
+    end: "2024-07-05",
+  },
 };
-
-const PARTY_SEATS_2019 = {
-  Con: 365,
-  Lab: 202,
-  SNP: 48,
-  LD: 11,
-  DUP: 8,
-  PC: 4,
-  SDLP: 2,
-  Green: 1,
-  APNI: 1,
-  UUP: 0,
-  TUV: 0,
-  SF: 7,
-  Ind: 9,
-};
-
-function getPartySeats(partyKey) {
-  const seats2024 = PARTY_SEATS_2024[partyKey];
-  const seats2019 = PARTY_SEATS_2019[partyKey];
-  if (seats2024 === undefined && seats2019 === undefined) {
-    return 1;
-  }
-  if (!state.includeFrom2023) {
-    return seats2024 || 1;
-  }
-  const s24 = seats2024 !== undefined ? seats2024 : 1;
-  const s19 = seats2019 !== undefined ? seats2019 : 1;
-  return (s24 + s19) / 2;
-}
 
 const elements = {
   status: document.querySelector("#data-status"),
@@ -67,7 +56,7 @@ const elements = {
   partyMetric: document.querySelector("#metric-party"),
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
-  include2023: document.querySelector("#include-2023"),
+  periodRadios: document.querySelectorAll('input[name="period"]'),
   searchQuestionOnly: document.querySelector("#search-question-only"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
@@ -87,6 +76,21 @@ const formatDate = new Intl.DateTimeFormat("en-GB", {
   month: "short",
   year: "numeric",
 });
+
+const MONTH_NAMES = {
+  "01": "January",
+  "02": "February",
+  "03": "March",
+  "04": "April",
+  "05": "May",
+  "06": "June",
+  "07": "July",
+  "08": "August",
+  "09": "September",
+  "10": "October",
+  "11": "November",
+  "12": "December",
+};
 
 function parseDate(value) {
   if (!value) return null;
@@ -135,13 +139,13 @@ function questionText(question) {
     .toLowerCase();
 }
 
-function getScopeStart() {
-  return state.includeFrom2023 ? EXTENDED_RESULTS_START : CURRENT_PARLIAMENT_START;
-}
-
 function getScopedQuestions() {
-  const start = getScopeStart();
-  return state.questions.filter((question) => question.dateTabled >= start);
+  const period = PERIODS[state.period] || PERIODS.current;
+  return state.questions.filter((question) => {
+    if (question.dateTabled < period.start) return false;
+    if (period.end && question.dateTabled >= period.end) return false;
+    return true;
+  });
 }
 
 function getFilteredQuestions() {
@@ -166,10 +170,11 @@ function getFilteredQuestions() {
       if (state.searchQuestionOnly) {
         const textToSearch = (question.questionText || "").toLowerCase();
         if (!textToSearch.includes(query)) return false;
-      } else {
-        if (!questionText(question).includes(query)) return false;
+      } else if (!questionText(question).includes(query)) {
+        return false;
       }
     }
+
     return true;
   });
 }
@@ -194,14 +199,19 @@ function renderMetrics(items) {
 function renderScopeStatus(filteredCount) {
   if (!state.summary) return;
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
-  const scopeStart = state.includeFrom2023 ? EXTENDED_RESULTS_START : CURRENT_PARLIAMENT_START;
-  const scopeLabel = state.includeFrom2023 ? "questions from 2023 shown" : "current Parliament questions shown";
-  elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(filteredCount)} ${scopeLabel} &middot; ${formatNumber.format(
+  const period = PERIODS[state.period] || PERIODS.current;
+  const periodDates = period.end
+    ? `${shortDate(period.start)} to ${shortDate(period.end)}`
+    : `from ${shortDate(period.start)}`;
+
+  elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(
+    filteredCount,
+  )} ${period.statusLabel} &middot; ${formatNumber.format(
     state.summary.totals.questions,
-  )} committed questions &middot; refreshed ${generated}`;
-  elements.footer.textContent = `Committed source data goes back to ${shortDate(
+  )} total stored questions &middot; refreshed ${generated}`;
+  elements.footer.textContent = `Stored source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,
-  )}; this view includes questions tabled from ${shortDate(scopeStart)}.`;
+  )} and includes DHSC plus its predecessor Department of Health. This view covers ${period.label}, ${periodDates}.`;
 }
 
 function renderSelects() {
@@ -216,23 +226,13 @@ function renderSelects() {
 
   elements.partyFilter.innerHTML =
     '<option value="">All parties</option>' +
-    parties
-      .map((party) => `<option value="${escapeHtml(party.key)}">${escapeHtml(party.key)}</option>`)
-      .join("");
+    parties.map((party) => `<option value="${escapeHtml(party.key)}">${escapeHtml(party.key)}</option>`).join("");
   elements.regionFilter.innerHTML =
     '<option value="">All NHS regions</option>' +
-    regions
-      .map((region) => `<option value="${escapeHtml(region.key)}">${escapeHtml(region.key)}</option>`)
-      .join("");
+    regions.map((region) => `<option value="${escapeHtml(region.key)}">${escapeHtml(region.key)}</option>`).join("");
   elements.partyFilter.value = state.party;
   elements.regionFilter.value = state.region;
 }
-
-const MONTH_NAMES = {
-  "01": "January", "02": "February", "03": "March", "04": "April",
-  "05": "May", "06": "June", "07": "July", "08": "August",
-  "09": "September", "10": "October", "11": "November", "12": "December"
-};
 
 function renderLineChart(items) {
   const byMonth = new Map();
@@ -261,31 +261,20 @@ function renderLineChart(items) {
   });
   const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
   const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
-  
   const monthTicks = [];
   const totalPoints = points.length;
-  const numTicks = 6;
-  const tickStep = (totalPoints - 1) / (numTicks - 1);
-  
+  const numTicks = Math.min(6, totalPoints);
+  const tickStep = totalPoints > 1 ? (totalPoints - 1) / Math.max(1, numTicks - 1) : 0;
   let lastYear = "";
-  for (let i = 0; i < numTicks; i++) {
-    const idx = Math.min(totalPoints - 1, Math.round(i * tickStep));
-    if (idx < 0) continue;
-    const point = points[idx];
+
+  for (let i = 0; i < numTicks; i += 1) {
+    const index = Math.min(totalPoints - 1, Math.round(i * tickStep));
+    const point = points[index];
     const [year, monthNum] = point.month.split("-");
     const monthName = MONTH_NAMES[monthNum] || monthNum;
-    
-    let showYear = "";
-    if (year !== lastYear) {
-      showYear = year;
-      lastYear = year;
-    }
-    
-    monthTicks.push({
-      label: monthName,
-      x: point.x,
-      year: showYear
-    });
+    const showYear = year !== lastYear ? year : "";
+    lastYear = year;
+    monthTicks.push({ label: monthName, x: point.x, year: showYear });
   }
 
   elements.monthlyRange.textContent = `${months[0][0]} to ${months.at(-1)[0]}`;
@@ -308,46 +297,15 @@ function renderLineChart(items) {
   `;
 }
 
-function renderPartyChart(filtered) {
-  const rows = countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party);
-  const processed = rows.map((row) => {
-    const seats = getPartySeats(row.key);
-    const ratio = row.count / seats;
-    return { ...row, seats, ratio };
-  });
-
-  const minMps = 2;
-  let visible = processed.filter((row) => row.seats >= minMps);
-
-  visible.sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
-  visible = visible.slice(0, 30);
-  const max = Math.max(...visible.map((row) => row.count), 1);
-
-  elements.partyChart.innerHTML = visible.length
-    ? visible
-        .map(
-          (row) => {
-            const val = row.count;
-            const displayVal = `${formatNumber.format(val)} (${row.ratio.toFixed(1)}/MP)`;
-            const titleText = `${escapeHtml(row.key)}: ${formatNumber.format(val)} questions / ${row.seats.toFixed(1)} seats = ${row.ratio.toFixed(1)} per MP`;
-            return `
-              <div class="bar-row" title="${titleText}">
-                <span class="bar-label" title="${escapeHtml(row.key)}">${escapeHtml(row.key)}</span>
-                <span class="bar-track">
-                  <span class="bar-fill" style="width:${Math.max(3, (val / max) * 100)}%"></span>
-                </span>
-                <span class="bar-value">${displayVal}</span>
-              </div>
-            `;
-          }
-        )
-        .join("")
-    : '<p class="chart-note">No matching data.</p>';
+function getRowsAtLeastSnp(rows) {
+  const snp = rows.find((row) => row.key === "SNP");
+  if (!snp) return rows;
+  return rows.filter((row) => row.count >= snp.count);
 }
 
 function renderBars(container, rows, options = {}) {
-  const { limit = 10 } = options;
-  const visible = rows.slice(0, limit);
+  const { limit = 10, snpFloor = false } = options;
+  const visible = (snpFloor ? getRowsAtLeastSnp(rows) : rows).slice(0, limit);
   const max = Math.max(...visible.map((row) => row.count), 1);
   container.innerHTML = visible.length
     ? visible
@@ -397,7 +355,10 @@ function render() {
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
   renderLineChart(filtered);
-  renderPartyChart(filtered);
+  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
+    limit: 30,
+    snpFloor: true,
+  });
   renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion), { limit: 12 });
   renderTable(filtered);
 }
@@ -415,7 +376,6 @@ async function loadData() {
   state.summary = await summaryResponse.json();
   const questionsPayload = await questionsResponse.json();
   state.questions = questionsPayload.questions || [];
-
 }
 
 elements.search.addEventListener("input", (event) => {
@@ -423,11 +383,13 @@ elements.search.addEventListener("input", (event) => {
   render();
 });
 
-elements.include2023.addEventListener("change", (event) => {
-  state.includeFrom2023 = event.target.checked;
-  renderSelects();
-  render();
-});
+for (const radio of elements.periodRadios) {
+  radio.addEventListener("change", (event) => {
+    state.period = event.target.value;
+    renderSelects();
+    render();
+  });
+}
 
 elements.searchQuestionOnly.addEventListener("change", (event) => {
   state.searchQuestionOnly = event.target.checked;
@@ -448,8 +410,6 @@ elements.answerFilter.addEventListener("change", (event) => {
   state.answer = event.target.value;
   render();
 });
-
-// Controls removed
 
 loadData()
   .then(() => {

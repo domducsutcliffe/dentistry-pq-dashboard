@@ -7,14 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=current-parliament-1" />
+    <link rel="stylesheet" href="styles.css?v=government-periods-1" />
   </head>
   <body>
     <header class="topbar">
       <div class="topbar-inner">
         <a class="brand" href="./">Dentistry PQ Dashboard</a>
         <span>Commons</span>
-        <span>DHSC</span>
+        <span>DHSC / predecessor Department of Health</span>
         <span>dent*</span>
       </div>
     </header>
@@ -51,10 +51,15 @@
       <section class="controls" aria-label="Dashboard filters">
         <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
         <input id="search" type="search" autocomplete="off" />
-        <label class="checkbox-label">
-          <input id="include-2023" type="checkbox" />
-          <span>Include results from 2023</span>
-        </label>
+        <fieldset class="period-radios" aria-label="Time period">
+          <legend>Period</legend>
+          <label><input type="radio" name="period" value="current" checked /> Current Parliament</label>
+          <label><input type="radio" name="period" value="cameron" /> Cameron</label>
+          <label><input type="radio" name="period" value="may" /> May</label>
+          <label><input type="radio" name="period" value="boris" /> Boris</label>
+          <label><input type="radio" name="period" value="truss" /> Truss</label>
+          <label><input type="radio" name="period" value="sunak" /> Sunak</label>
+        </fieldset>
         <label class="checkbox-label">
           <input id="search-question-only" type="checkbox" />
           <span>Search question text only</span>
@@ -122,6 +127,6 @@
       <footer class="data-footer" id="data-footer"></footer>
     </main>
 
-    <script src="scripts/app.js?v=current-parliament-1" type="module"></script>
+    <script src="scripts/app.js?v=government-periods-1" type="module"></script>
   </body>
 </html>
