@@ -740,8 +740,27 @@ elements.monthlyChart.addEventListener("click", (event) => {
 
   const rect = svg.getBoundingClientRect();
   const clickXRel = event.clientX - rect.left;
+  const clickYRel = event.clientY - rect.top;
   const viewBoxWidth = 760;
+  const viewBoxHeight = 230;
+  
   const svgX = (clickXRel / rect.width) * viewBoxWidth;
+  const svgY = (clickYRel / rect.height) * viewBoxHeight;
+
+  const pad = 28;
+  const buffer = 10;
+
+  // Check if click is outside plot area boundaries (e.g., margins/padding)
+  if (
+    svgX < pad - buffer ||
+    svgX > (viewBoxWidth - pad) + buffer ||
+    svgY < pad - buffer ||
+    svgY > (viewBoxHeight - pad) + buffer
+  ) {
+    state.selectedMonth = "";
+    render();
+    return;
+  }
 
   let closestPoint = null;
   let minDistance = Infinity;
@@ -755,7 +774,6 @@ elements.monthlyChart.addEventListener("click", (event) => {
   }
 
   if (closestPoint) {
-    const pad = 28;
     if (svgX >= pad - 10 && svgX <= (viewBoxWidth - pad) + 10) {
       if (state.selectedMonth === closestPoint.month) {
         state.selectedMonth = "";
@@ -796,14 +814,33 @@ loadData()
             })
           );
         }
-      }, 300);
+      }, 50);
     } else if (window.location.search.includes("test-click=true")) {
       setTimeout(() => {
         const dot = document.querySelector(".data-point");
         if (dot) {
           dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
         }
-      }, 300);
+      }, 50);
+    } else if (window.location.search.includes("test-outside-click=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          // Select the month
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          
+          // Click outside the plot area boundaries after 100ms
+          setTimeout(() => {
+            elements.monthlyChart.dispatchEvent(new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+              clientX: 0,
+              clientY: 0
+            }));
+          }, 100);
+        }
+      }, 50);
     } else if (window.location.search.includes("test-all-parliaments=true")) {
       setTimeout(() => {
         const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
@@ -811,7 +848,7 @@ loadData()
           allCb.checked = true;
           allCb.dispatchEvent(new Event("change", { bubbles: true }));
         }
-      }, 300);
+      }, 50);
     }
   })
   .catch((error) => {
