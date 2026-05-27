@@ -5,7 +5,7 @@ const state = {
   party: "",
   region: "",
   answer: "",
-  period: "current",
+  periods: ["current"],
   searchQuestionOnly: false,
 };
 
@@ -56,7 +56,7 @@ const elements = {
   partyMetric: document.querySelector("#metric-party"),
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
-  periodRadios: document.querySelectorAll('input[name="period"]'),
+  periodCheckboxes: document.querySelectorAll('input[name="period"]'),
   searchQuestionOnly: document.querySelector("#search-question-only"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
@@ -139,12 +139,46 @@ function questionText(question) {
     .toLowerCase();
 }
 
+function getPeriodInfo() {
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  
+  if (state.periods.includes("all") || selectedKeys.length === 0 || selectedKeys.length === allKeys.length) {
+    return {
+      statusLabel: "questions from all Parliaments shown",
+      label: "all Parliaments",
+      dates: `covers all Parliaments from ${shortDate(state.summary?.dateRange?.oldestTabled)} to ${shortDate(state.summary?.dateRange?.newestTabled)}`
+    };
+  }
+  
+  const labels = selectedKeys.map(k => PERIODS[k].label);
+  let labelText = labels.join(" and ");
+  if (labels.length > 2) {
+    labelText = labels.slice(0, -1).join(", ") + ", and " + labels.at(-1);
+  }
+  
+  return {
+    statusLabel: `questions from selected periods shown`,
+    label: labelText,
+    dates: `covers selected periods (${labelText})`
+  };
+}
+
 function getScopedQuestions() {
-  const period = PERIODS[state.period] || PERIODS.current;
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  
+  if (state.periods.includes("all") || selectedKeys.length === 0) {
+    return state.questions;
+  }
+  
   return state.questions.filter((question) => {
-    if (question.dateTabled < period.start) return false;
-    if (period.end && question.dateTabled >= period.end) return false;
-    return true;
+    return selectedKeys.some((key) => {
+      const period = PERIODS[key];
+      if (question.dateTabled < period.start) return false;
+      if (period.end && question.dateTabled >= period.end) return false;
+      return true;
+    });
   });
 }
 
@@ -199,19 +233,16 @@ function renderMetrics(items) {
 function renderScopeStatus(filteredCount) {
   if (!state.summary) return;
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
-  const period = PERIODS[state.period] || PERIODS.current;
-  const periodDates = period.end
-    ? `${shortDate(period.start)} to ${shortDate(period.end)}`
-    : `from ${shortDate(period.start)}`;
+  const info = getPeriodInfo();
 
   elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(
     filteredCount,
-  )} ${period.statusLabel} &middot; ${formatNumber.format(
+  )} ${info.statusLabel} &middot; ${formatNumber.format(
     state.summary.totals.questions,
   )} total stored questions &middot; refreshed ${generated}`;
   elements.footer.textContent = `Stored source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,
-  )} and includes DHSC plus its predecessor Department of Health. This view covers ${period.label}, ${periodDates}.`;
+  )} and includes DHSC plus its predecessor Department of Health. This view ${info.dates}.`;
 }
 
 function renderSelects() {
@@ -383,9 +414,35 @@ elements.search.addEventListener("input", (event) => {
   render();
 });
 
-for (const radio of elements.periodRadios) {
-  radio.addEventListener("change", (event) => {
-    state.period = event.target.value;
+for (const checkbox of elements.periodCheckboxes) {
+  checkbox.addEventListener("change", (event) => {
+    const value = event.target.value;
+    const checked = event.target.checked;
+
+    if (value === "all") {
+      for (const cb of elements.periodCheckboxes) {
+        if (cb.value !== "all") {
+          cb.checked = checked;
+        }
+      }
+    } else {
+      if (!checked) {
+        const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+        if (allCb) allCb.checked = false;
+      } else {
+        const individualCbs = [...elements.periodCheckboxes].filter((cb) => cb.value !== "all");
+        const allChecked = individualCbs.every((cb) => cb.checked);
+        if (allChecked) {
+          const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+          if (allCb) allCb.checked = true;
+        }
+      }
+    }
+
+    state.periods = [...elements.periodCheckboxes]
+      .filter((cb) => cb.checked)
+      .map((cb) => cb.value);
+
     renderSelects();
     render();
   });

@@ -51,14 +51,15 @@
       <section class="controls" aria-label="Dashboard filters">
         <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
         <input id="search" type="search" autocomplete="off" />
-        <fieldset class="period-radios" aria-label="Time period">
+        <fieldset class="period-filters" aria-label="Time period">
           <legend>Period</legend>
-          <label><input type="radio" name="period" value="current" checked /> Current Parliament</label>
-          <label><input type="radio" name="period" value="cameron" /> Cameron</label>
-          <label><input type="radio" name="period" value="may" /> May</label>
-          <label><input type="radio" name="period" value="boris" /> Boris</label>
-          <label><input type="radio" name="period" value="truss" /> Truss</label>
-          <label><input type="radio" name="period" value="sunak" /> Sunak</label>
+          <label><input type="checkbox" name="period" value="all" /> All Parliaments</label>
+          <label><input type="checkbox" name="period" value="current" checked /> Current Parliament</label>
+          <label><input type="checkbox" name="period" value="cameron" /> Cameron</label>
+          <label><input type="checkbox" name="period" value="may" /> May</label>
+          <label><input type="checkbox" name="period" value="boris" /> Boris</label>
+          <label><input type="checkbox" name="period" value="truss" /> Truss</label>
+          <label><input type="checkbox" name="period" value="sunak" /> Sunak</label>
         </fieldset>
         <label class="checkbox-label">
           <input id="search-question-only" type="checkbox" />

@@ -174,7 +174,7 @@ input[type="radio"] {
   accent-color: var(--orange);
 }
 
-.period-radios {
+.period-filters {
   grid-column: 1 / -1;
   border: 1px solid var(--line);
   background: #fff;
@@ -186,13 +186,13 @@ input[type="radio"] {
   padding: 6px 7px;
 }
 
-.period-radios legend {
+.period-filters legend {
   color: var(--muted);
   font-size: 11px;
   padding: 0 4px;
 }
 
-.period-radios label {
+.period-filters label {
   display: inline-flex;
   align-items: center;
   gap: 4px;
