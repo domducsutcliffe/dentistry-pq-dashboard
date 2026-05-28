@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-27T07:54:03.205Z",
+  "generatedAt": "2026-05-28T06:43:44.753Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,8 +15,8 @@
     }
   },
   "totals": {
-    "questions": 3523,
-    "answered": 3510,
+    "questions": 3524,
+    "answered": 3511,
     "unanswered": 13,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
@@ -33,7 +33,7 @@
     },
     {
       "key": "Con",
-      "count": 773,
+      "count": 774,
       "name": "Conservative"
     },
     {
@@ -114,7 +114,7 @@
     },
     {
       "key": "Midlands",
-      "count": 591
+      "count": 592
     },
     {
       "key": "North West",
@@ -2719,23 +2719,2849 @@
     },
     {
       "month": "2026-05",
-      "total": 24,
-      "answered": 14,
+      "total": 25,
+      "answered": 15,
       "unanswered": 10,
       "byParty": {
         "LD": 15,
         "Lab": 3,
-        "Con": 6
+        "Con": 7
       },
       "byRegion": {
         "South West": 12,
         "North West": 2,
-        "Midlands": 3,
+        "Midlands": 4,
         "South East": 2,
         "London": 1,
         "East of England": 4
       }
     }
   ],
+  "topics": {
+    "method": "taxonomy-plus-trends",
+    "taxonomyVersion": "2026-05-28-policy-v2",
+    "generatedAt": "2026-05-28T06:43:44.764Z",
+    "monthFingerprints": {
+      "2014-06": "27e38d8f",
+      "2014-07": "c4060596",
+      "2014-08": "3e8e8bb5",
+      "2014-09": "a96e9ef4",
+      "2014-10": "0f639e99",
+      "2014-11": "81250241",
+      "2014-12": "de4c36bf",
+      "2015-01": "9f8766b1",
+      "2015-02": "b3d798a1",
+      "2015-03": "2a7435b3",
+      "2015-05": "ae716a4c",
+      "2015-06": "e51e9463",
+      "2015-07": "28a351b7",
+      "2015-09": "0c6838dd",
+      "2015-10": "0a3b68e7",
+      "2015-11": "637e4116",
+      "2015-12": "5c5e3a1d",
+      "2016-01": "de0dae8e",
+      "2016-02": "190c4f74",
+      "2016-03": "7ca32151",
+      "2016-04": "ba8a266d",
+      "2016-05": "8e2bc86a",
+      "2016-06": "4f49ec09",
+      "2016-07": "f0d30050",
+      "2016-09": "08004cfc",
+      "2016-10": "02296ae3",
+      "2016-11": "f4c7e7a3",
+      "2016-12": "26bfbb54",
+      "2017-01": "d26f4637",
+      "2017-02": "c49d0669",
+      "2017-03": "dadf09e1",
+      "2017-04": "21b278b3",
+      "2017-06": "0eb9ada1",
+      "2017-07": "4d6f7a0a",
+      "2017-09": "2b8965bf",
+      "2017-10": "ff6dbf30",
+      "2017-11": "c973ff80",
+      "2017-12": "84b38e26",
+      "2018-01": "9ca90a60",
+      "2018-02": "999c8cca",
+      "2018-03": "35c604b0",
+      "2018-04": "d32661a0",
+      "2018-05": "cd71bb6f",
+      "2018-06": "0229a8f3",
+      "2018-07": "f253453e",
+      "2018-09": "8c93f470",
+      "2018-10": "113eb459",
+      "2018-11": "452f9973",
+      "2018-12": "afebbddf",
+      "2019-01": "9ab5b80d",
+      "2019-02": "1e6d5e7d",
+      "2019-03": "04bf7b86",
+      "2019-04": "8757f87a",
+      "2019-05": "84234824",
+      "2019-06": "d07c6b2b",
+      "2019-07": "bf61c678",
+      "2019-09": "d0b444df",
+      "2019-10": "f472674a",
+      "2019-12": "e94a9a64",
+      "2020-01": "5ae84e53",
+      "2020-02": "479c8131",
+      "2020-03": "d2b41715",
+      "2020-04": "13464fb4",
+      "2020-05": "9790b20a",
+      "2020-06": "c1fdd3dc",
+      "2020-07": "87c41bef",
+      "2020-08": "3cb12715",
+      "2020-09": "68583263",
+      "2020-10": "a8bc41bd",
+      "2020-11": "85b10c89",
+      "2020-12": "bb74a80e",
+      "2021-01": "2f77b19c",
+      "2021-02": "29e1657f",
+      "2021-03": "ac6d0f5c",
+      "2021-04": "12213594",
+      "2021-05": "88d0b1e8",
+      "2021-06": "ef1bd206",
+      "2021-07": "d8e70603",
+      "2021-08": "747bbf76",
+      "2021-09": "23a35239",
+      "2021-10": "5e575051",
+      "2021-11": "c25ac8b7",
+      "2021-12": "1ecd0ee9",
+      "2022-01": "c06509b2",
+      "2022-02": "920d9c47",
+      "2022-03": "30726c74",
+      "2022-04": "32eeead1",
+      "2022-05": "328da0aa",
+      "2022-06": "be617ba0",
+      "2022-07": "601b26da",
+      "2022-09": "9ed9f43b",
+      "2022-10": "aa94e99d",
+      "2022-11": "6a37be54",
+      "2022-12": "9aebb4aa",
+      "2023-01": "32515be3",
+      "2023-02": "6f7c63af",
+      "2023-03": "f1c1541f",
+      "2023-04": "7889b3a7",
+      "2023-05": "00ed5d1c",
+      "2023-06": "9f2c31d4",
+      "2023-07": "8348e512",
+      "2023-09": "a00379a4",
+      "2023-10": "a930cebd",
+      "2023-11": "57c9de47",
+      "2023-12": "689bc90d",
+      "2024-01": "6c757fa5",
+      "2024-02": "a27325ba",
+      "2024-03": "8e9252f6",
+      "2024-04": "2557bb58",
+      "2024-05": "7b34a6bb",
+      "2024-07": "ba7474df",
+      "2024-08": "86435a88",
+      "2024-09": "ef08341e",
+      "2024-10": "5b42e748",
+      "2024-11": "29c2aaad",
+      "2024-12": "61d8e28b",
+      "2025-01": "949fe3e4",
+      "2025-02": "69fc67eb",
+      "2025-03": "6a8a8106",
+      "2025-04": "dc2c1f38",
+      "2025-05": "96a2cae0",
+      "2025-06": "ab4bfe84",
+      "2025-07": "8bda5faf",
+      "2025-08": "aed38b3e",
+      "2025-09": "154cae90",
+      "2025-10": "399e2f62",
+      "2025-11": "8b89c542",
+      "2025-12": "ca22f99d",
+      "2026-01": "c444627f",
+      "2026-02": "918263ea",
+      "2026-03": "f1a46f5d",
+      "2026-04": "235b1123",
+      "2026-05": "8d76fcc8"
+    },
+    "byMonth": {
+      "2014-06": [],
+      "2014-07": [
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.901319,
+          "volumeScore": 0.307692,
+          "spikeScore": 5
+        }
+      ],
+      "2014-08": [],
+      "2014-09": [],
+      "2014-10": [],
+      "2014-11": [],
+      "2014-12": [],
+      "2015-01": [],
+      "2015-02": [],
+      "2015-03": [],
+      "2015-05": [],
+      "2015-06": [],
+      "2015-07": [
+        {
+          "label": "Hcws114 Nhs",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Hcws114 Nhs Remuneration",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "July Hcws114 Nhs",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Places",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Remuneration",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Remuneration Doctors",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        }
+      ],
+      "2015-09": [
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.772347,
+          "volumeScore": 0.214286,
+          "spikeScore": 4
+        }
+      ],
+      "2015-10": [
+        {
+          "label": "Higher Education",
+          "count": 6,
+          "score": 0.981777,
+          "volumeScore": 0.25,
+          "spikeScore": 7
+        },
+        {
+          "label": "Medicine Higher Education",
+          "count": 6,
+          "score": 0.981777,
+          "volumeScore": 0.25,
+          "spikeScore": 7
+        },
+        {
+          "label": "Education Medical",
+          "count": 5,
+          "score": 0.903364,
+          "volumeScore": 0.208333,
+          "spikeScore": 6
+        },
+        {
+          "label": "Education Medical Students",
+          "count": 5,
+          "score": 0.903364,
+          "volumeScore": 0.208333,
+          "spikeScore": 6
+        },
+        {
+          "label": "Higher Education Medical",
+          "count": 5,
+          "score": 0.903364,
+          "volumeScore": 0.208333,
+          "spikeScore": 6
+        },
+        {
+          "label": "Medical Students",
+          "count": 5,
+          "score": 0.903364,
+          "volumeScore": 0.208333,
+          "spikeScore": 6
+        },
+        {
+          "label": "Contracts Doctors",
+          "count": 4,
+          "score": 0.816704,
+          "volumeScore": 0.166667,
+          "spikeScore": 5
+        },
+        {
+          "label": "Contracts Doctors Prevented",
+          "count": 4,
+          "score": 0.816704,
+          "volumeScore": 0.166667,
+          "spikeScore": 5
+        }
+      ],
+      "2015-11": [],
+      "2015-12": [],
+      "2016-01": [],
+      "2016-02": [
+        {
+          "label": "Services Children",
+          "count": 6,
+          "score": 1.078364,
+          "volumeScore": 0.5,
+          "spikeScore": 6
+        }
+      ],
+      "2016-03": [],
+      "2016-04": [
+        {
+          "label": "Doctors Training",
+          "count": 4,
+          "score": 0.84302,
+          "volumeScore": 0.210526,
+          "spikeScore": 5
+        },
+        {
+          "label": "Analysis New Contract",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "Contract Doctors",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "Contract Doctors Training",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "Doctors Training Nhs",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "New Contract Doctors",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Apprentices",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Published",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        }
+      ],
+      "2016-05": [
+        {
+          "label": "Professions Training",
+          "count": 3,
+          "score": 0.823775,
+          "volumeScore": 0.3,
+          "spikeScore": 4
+        }
+      ],
+      "2016-06": [],
+      "2016-07": [],
+      "2016-09": [],
+      "2016-10": [],
+      "2016-11": [],
+      "2016-12": [
+        {
+          "label": "Services Children",
+          "count": 3,
+          "score": 0.782237,
+          "volumeScore": 0.230769,
+          "spikeScore": 4
+        }
+      ],
+      "2017-01": [
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.719868,
+          "volumeScore": 0.222222,
+          "spikeScore": 3.333333
+        }
+      ],
+      "2017-02": [],
+      "2017-03": [
+        {
+          "label": "Seen Nhs",
+          "count": 4,
+          "score": 0.802418,
+          "volumeScore": 0.142857,
+          "spikeScore": 5
+        },
+        {
+          "label": "Seen Nhs Each",
+          "count": 3,
+          "score": 0.708061,
+          "volumeScore": 0.107143,
+          "spikeScore": 4
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.659517,
+          "volumeScore": 0.107143,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Nhs Each",
+          "count": 3,
+          "score": 0.659517,
+          "volumeScore": 0.107143,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Children Pursuant",
+          "count": 3,
+          "score": 0.583999,
+          "volumeScore": 0.107143,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Children Pursuant Answer",
+          "count": 3,
+          "score": 0.583999,
+          "volumeScore": 0.107143,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Services Children Pursuant",
+          "count": 3,
+          "score": 0.583999,
+          "volumeScore": 0.107143,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Services Children",
+          "count": 3,
+          "score": 0.463697,
+          "volumeScore": 0.107143,
+          "spikeScore": 1.714286
+        }
+      ],
+      "2017-04": [
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.556774,
+          "volumeScore": 0.25,
+          "spikeScore": 1.764706
+        }
+      ],
+      "2017-06": [],
+      "2017-07": [],
+      "2017-09": [
+        {
+          "label": "Children Cost",
+          "count": 4,
+          "score": 0.850037,
+          "volumeScore": 0.222222,
+          "spikeScore": 5
+        },
+        {
+          "label": "Services Children Cost",
+          "count": 4,
+          "score": 0.850037,
+          "volumeScore": 0.222222,
+          "spikeScore": 5
+        },
+        {
+          "label": "Children Young",
+          "count": 3,
+          "score": 0.743775,
+          "volumeScore": 0.166667,
+          "spikeScore": 4
+        },
+        {
+          "label": "Children Young People",
+          "count": 3,
+          "score": 0.743775,
+          "volumeScore": 0.166667,
+          "spikeScore": 4
+        },
+        {
+          "label": "Services Children",
+          "count": 7,
+          "score": 0.737435,
+          "volumeScore": 0.388889,
+          "spikeScore": 2.526316
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.619713,
+          "volumeScore": 0.166667,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.58951,
+          "volumeScore": 0.166667,
+          "spikeScore": 2.4
+        }
+      ],
+      "2017-10": [],
+      "2017-11": [],
+      "2017-12": [],
+      "2018-01": [
+        {
+          "label": "UDA Targets and Activity",
+          "count": 7,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Negligence",
+          "count": 4,
+          "score": 0.83099,
+          "volumeScore": 0.190476,
+          "spikeScore": 5
+        },
+        {
+          "label": "Instructed Nhs",
+          "count": 3,
+          "score": 0.729489,
+          "volumeScore": 0.142857,
+          "spikeScore": 4
+        },
+        {
+          "label": "Lawyers Instructed Nhs",
+          "count": 3,
+          "score": 0.729489,
+          "volumeScore": 0.142857,
+          "spikeScore": 4
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.680945,
+          "volumeScore": 0.142857,
+          "spikeScore": 3.428571
+        }
+      ],
+      "2018-02": [
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.618053,
+          "volumeScore": 0.266667,
+          "spikeScore": 2.142857
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.446704,
+          "volumeScore": 0.2,
+          "spikeScore": 1.263158
+        }
+      ],
+      "2018-03": [
+        {
+          "label": "Home Residents",
+          "count": 4,
+          "score": 0.787292,
+          "volumeScore": 0.117647,
+          "spikeScore": 5
+        },
+        {
+          "label": "Nhs England",
+          "count": 4,
+          "score": 0.787292,
+          "volumeScore": 0.117647,
+          "spikeScore": 5
+        },
+        {
+          "label": "Children's Oral Health",
+          "count": 4,
+          "score": 0.736591,
+          "volumeScore": 0.117647,
+          "spikeScore": 4.285714
+        }
+      ],
+      "2018-04": [],
+      "2018-05": [
+        {
+          "label": "Nhs Services",
+          "count": 5,
+          "score": 0.720698,
+          "volumeScore": 0.128205,
+          "spikeScore": 4
+        },
+        {
+          "label": "Charge Revenue",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Children Children",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Expenditure Nhs",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Expenditure Nhs Services",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Most",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Most Deprived",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Per",
+          "count": 3,
+          "score": 0.689929,
+          "volumeScore": 0.076923,
+          "spikeScore": 4
+        }
+      ],
+      "2018-06": [],
+      "2018-07": [],
+      "2018-09": [],
+      "2018-10": [
+        {
+          "label": "Services Fees Charges",
+          "count": 3,
+          "score": 0.715231,
+          "volumeScore": 0.2,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Fees Charges",
+          "count": 3,
+          "score": 0.674518,
+          "volumeScore": 0.2,
+          "spikeScore": 3
+        }
+      ],
+      "2018-11": [],
+      "2018-12": [
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.900918,
+          "volumeScore": 0.428571,
+          "spikeScore": 4
+        }
+      ],
+      "2019-01": [
+        {
+          "label": "Charge Revenue",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Expenditure Nhs",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "June Question Nhs",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Patient Charge",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Patient Charge Revenue",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Question Nhs",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Question Nhs Services",
+          "count": 3,
+          "score": 0.843775,
+          "volumeScore": 0.333333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.754518,
+          "volumeScore": 0.333333,
+          "spikeScore": 3
+        }
+      ],
+      "2019-02": [
+        {
+          "label": "Fees Charges",
+          "count": 6,
+          "score": 0.853959,
+          "volumeScore": 0.375,
+          "spikeScore": 3.818182
+        },
+        {
+          "label": "Services Fees Charges",
+          "count": 5,
+          "score": 0.797923,
+          "volumeScore": 0.3125,
+          "spikeScore": 3.6
+        },
+        {
+          "label": "Charges Reference",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Fees Charges Reference",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Hitting Vulnerable Nhs",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Patients Published",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Vulnerable Nhs",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        },
+        {
+          "label": "Vulnerable Nhs Patients",
+          "count": 3,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
+          "spikeScore": 4
+        }
+      ],
+      "2019-03": [],
+      "2019-04": [
+        {
+          "label": "International Surgical Training",
+          "count": 3,
+          "score": 0.807412,
+          "volumeScore": 0.272727,
+          "spikeScore": 4
+        },
+        {
+          "label": "Surgical Training",
+          "count": 3,
+          "score": 0.807412,
+          "volumeScore": 0.272727,
+          "spikeScore": 4
+        },
+        {
+          "label": "Surgical Training Programme",
+          "count": 3,
+          "score": 0.807412,
+          "volumeScore": 0.272727,
+          "spikeScore": 4
+        },
+        {
+          "label": "Training Programme",
+          "count": 3,
+          "score": 0.807412,
+          "volumeScore": 0.272727,
+          "spikeScore": 4
+        }
+      ],
+      "2019-05": [],
+      "2019-06": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.636336,
+          "volumeScore": 0.136364,
+          "spikeScore": 3
+        }
+      ],
+      "2019-07": [
+        {
+          "label": "Services Children",
+          "count": 9,
+          "score": 1.216301,
+          "volumeScore": 0.428571,
+          "spikeScore": 10
+        }
+      ],
+      "2019-09": [],
+      "2019-10": [],
+      "2019-12": [],
+      "2020-01": [
+        {
+          "label": "Services Children",
+          "count": 3,
+          "score": 0.545841,
+          "volumeScore": 0.272727,
+          "spikeScore": 1.6
+        }
+      ],
+      "2020-02": [],
+      "2020-03": [
+        {
+          "label": "COVID-19",
+          "count": 19,
+          "score": 1.673809,
+          "volumeScore": 0.76,
+          "spikeScore": 20
+        }
+      ],
+      "2020-04": [
+        {
+          "label": "Access and Waiting Times",
+          "count": 11,
+          "score": 1.261694,
+          "volumeScore": 0.392857,
+          "spikeScore": 12
+        },
+        {
+          "label": "COVID-19",
+          "count": 16,
+          "score": 0.992982,
+          "volumeScore": 0.571429,
+          "spikeScore": 4.08
+        }
+      ],
+      "2020-05": [
+        {
+          "label": "COVID-19",
+          "count": 9,
+          "score": 0.678266,
+          "volumeScore": 0.529412,
+          "spikeScore": 1.463415
+        }
+      ],
+      "2020-06": [
+        {
+          "label": "COVID-19",
+          "count": 23,
+          "score": 0.887334,
+          "volumeScore": 0.575,
+          "spikeScore": 2.88
+        },
+        {
+          "label": "Infection Prevention and IPC",
+          "count": 3,
+          "score": 0.599518,
+          "volumeScore": 0.075,
+          "spikeScore": 3
+        }
+      ],
+      "2020-07": [
+        {
+          "label": "COVID-19",
+          "count": 21,
+          "score": 0.783608,
+          "volumeScore": 0.617647,
+          "spikeScore": 1.808219
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 5,
+          "score": 0.52768,
+          "volumeScore": 0.147059,
+          "spikeScore": 2
+        }
+      ],
+      "2020-08": [
+        {
+          "label": "COVID-19",
+          "count": 5,
+          "score": 0.504696,
+          "volumeScore": 0.625,
+          "spikeScore": 0.382979
+        }
+      ],
+      "2020-09": [
+        {
+          "label": "COVID-19",
+          "count": 5,
+          "score": 0.281957,
+          "volumeScore": 0.263158,
+          "spikeScore": 0.363636
+        }
+      ],
+      "2020-10": [
+        {
+          "label": "COVID-19",
+          "count": 19,
+          "score": 0.637143,
+          "volumeScore": 0.475,
+          "spikeScore": 1.411765
+        }
+      ],
+      "2020-11": [
+        {
+          "label": "Nhs Patients",
+          "count": 3,
+          "score": 0.677049,
+          "volumeScore": 0.136364,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "COVID-19",
+          "count": 10,
+          "score": 0.496574,
+          "volumeScore": 0.454545,
+          "spikeScore": 0.75
+        }
+      ],
+      "2020-12": [
+        {
+          "label": "COVID-19",
+          "count": 10,
+          "score": 0.537705,
+          "volumeScore": 0.526316,
+          "spikeScore": 0.741573
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.476941,
+          "volumeScore": 0.157895,
+          "spikeScore": 1.6
+        }
+      ],
+      "2021-01": [
+        {
+          "label": "UDA Targets and Activity",
+          "count": 10,
+          "score": 1.104135,
+          "volumeScore": 0.357143,
+          "spikeScore": 8.25
+        },
+        {
+          "label": "COVID-19",
+          "count": 19,
+          "score": 0.786095,
+          "volumeScore": 0.678571,
+          "spikeScore": 1.578947
+        }
+      ],
+      "2021-02": [
+        {
+          "label": "COVID-19",
+          "count": 10,
+          "score": 0.5159,
+          "volumeScore": 0.434783,
+          "spikeScore": 0.891892
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.496648,
+          "volumeScore": 0.130435,
+          "spikeScore": 1.846154
+        }
+      ],
+      "2021-03": [
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.695204,
+          "volumeScore": 0.085714,
+          "spikeScore": 4
+        },
+        {
+          "label": "Dental Charges and Affordability",
+          "count": 3,
+          "score": 0.646659,
+          "volumeScore": 0.085714,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.490992,
+          "volumeScore": 0.114286,
+          "spikeScore": 1.875
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 4,
+          "score": 0.447524,
+          "volumeScore": 0.114286,
+          "spikeScore": 1.578947
+        },
+        {
+          "label": "COVID-19",
+          "count": 8,
+          "score": 0.345503,
+          "volumeScore": 0.228571,
+          "spikeScore": 0.683544
+        }
+      ],
+      "2021-04": [],
+      "2021-05": [
+        {
+          "label": "Contract Holders",
+          "count": 5,
+          "score": 0.857311,
+          "volumeScore": 0.131579,
+          "spikeScore": 6
+        },
+        {
+          "label": "Contract Holders England",
+          "count": 5,
+          "score": 0.857311,
+          "volumeScore": 0.131579,
+          "spikeScore": 6
+        },
+        {
+          "label": "General Services Contract",
+          "count": 5,
+          "score": 0.857311,
+          "volumeScore": 0.131579,
+          "spikeScore": 6
+        },
+        {
+          "label": "Nhs General Services",
+          "count": 5,
+          "score": 0.857311,
+          "volumeScore": 0.131579,
+          "spikeScore": 6
+        },
+        {
+          "label": "Services Contract Holders",
+          "count": 5,
+          "score": 0.857311,
+          "volumeScore": 0.131579,
+          "spikeScore": 6
+        },
+        {
+          "label": "Nhs General",
+          "count": 5,
+          "score": 0.805063,
+          "volumeScore": 0.131579,
+          "spikeScore": 5.142857
+        },
+        {
+          "label": "Services Contract",
+          "count": 5,
+          "score": 0.805063,
+          "volumeScore": 0.131579,
+          "spikeScore": 5.142857
+        },
+        {
+          "label": "Services Contracts",
+          "count": 5,
+          "score": 0.805063,
+          "volumeScore": 0.131579,
+          "spikeScore": 5.142857
+        }
+      ],
+      "2021-06": [
+        {
+          "label": "Access Nhs",
+          "count": 3,
+          "score": 0.534981,
+          "volumeScore": 0.12,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "COVID-19",
+          "count": 3,
+          "score": 0.212559,
+          "volumeScore": 0.12,
+          "spikeScore": 0.421053
+        }
+      ],
+      "2021-07": [
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.539537,
+          "volumeScore": 0.307692,
+          "spikeScore": 1.428571
+        }
+      ],
+      "2021-08": [],
+      "2021-09": [
+        {
+          "label": "COVID-19",
+          "count": 4,
+          "score": 0.44301,
+          "volumeScore": 0.181818,
+          "spikeScore": 1.304348
+        }
+      ],
+      "2021-10": [],
+      "2021-11": [
+        {
+          "label": "Fees Charges",
+          "count": 4,
+          "score": 0.787292,
+          "volumeScore": 0.117647,
+          "spikeScore": 5
+        },
+        {
+          "label": "Services Fees Charges",
+          "count": 4,
+          "score": 0.787292,
+          "volumeScore": 0.117647,
+          "spikeScore": 5
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 4,
+          "score": 0.736591,
+          "volumeScore": 0.117647,
+          "spikeScore": 4.285714
+        },
+        {
+          "label": "Nhs Services",
+          "count": 5,
+          "score": 0.698658,
+          "volumeScore": 0.147059,
+          "spikeScore": 3.6
+        },
+        {
+          "label": "Access Nhs",
+          "count": 4,
+          "score": 0.596859,
+          "volumeScore": 0.117647,
+          "spikeScore": 2.727273
+        }
+      ],
+      "2021-12": [],
+      "2022-01": [
+        {
+          "label": "Services Children",
+          "count": 6,
+          "score": 0.840433,
+          "volumeScore": 0.103448,
+          "spikeScore": 6
+        },
+        {
+          "label": "COVID-19",
+          "count": 12,
+          "score": 0.83242,
+          "volumeScore": 0.206897,
+          "spikeScore": 4.875
+        },
+        {
+          "label": "Nhs Orthodontic",
+          "count": 3,
+          "score": 0.67481,
+          "volumeScore": 0.051724,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs-funded Patients",
+          "count": 3,
+          "score": 0.67481,
+          "volumeScore": 0.051724,
+          "spikeScore": 4
+        },
+        {
+          "label": "Access Nhs",
+          "count": 5,
+          "score": 0.632625,
+          "volumeScore": 0.086207,
+          "spikeScore": 3.272727
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.397551,
+          "volumeScore": 0.051724,
+          "spikeScore": 1.5
+        }
+      ],
+      "2022-02": [
+        {
+          "label": "UDA Targets and Activity",
+          "count": 5,
+          "score": 0.699331,
+          "volumeScore": 0.092593,
+          "spikeScore": 4
+        },
+        {
+          "label": "Additional Appointments",
+          "count": 3,
+          "score": 0.677108,
+          "volumeScore": 0.055556,
+          "spikeScore": 4
+        },
+        {
+          "label": "Services Contracts",
+          "count": 3,
+          "score": 0.677108,
+          "volumeScore": 0.055556,
+          "spikeScore": 4
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 7,
+          "score": 0.651812,
+          "volumeScore": 0.12963,
+          "spikeScore": 3.2
+        },
+        {
+          "label": "Nhs England",
+          "count": 3,
+          "score": 0.496314,
+          "volumeScore": 0.055556,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Access Nhs",
+          "count": 4,
+          "score": 0.483889,
+          "volumeScore": 0.074074,
+          "spikeScore": 2
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.451721,
+          "volumeScore": 0.055556,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.39985,
+          "volumeScore": 0.055556,
+          "spikeScore": 1.5
+        }
+      ],
+      "2022-03": [
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 6,
+          "score": 0.584372,
+          "volumeScore": 0.115385,
+          "spikeScore": 2.625
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 4,
+          "score": 0.504207,
+          "volumeScore": 0.076923,
+          "spikeScore": 2.142857
+        },
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.47406,
+          "volumeScore": 0.057692,
+          "spikeScore": 2
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.47406,
+          "volumeScore": 0.057692,
+          "spikeScore": 2
+        },
+        {
+          "label": "Nhs England",
+          "count": 3,
+          "score": 0.434027,
+          "volumeScore": 0.057692,
+          "spikeScore": 1.714286
+        }
+      ],
+      "2022-04": [
+        {
+          "label": "Nhs January",
+          "count": 3,
+          "score": 0.705844,
+          "volumeScore": 0.103448,
+          "spikeScore": 4
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.400988,
+          "volumeScore": 0.103448,
+          "spikeScore": 1.333333
+        }
+      ],
+      "2022-05": [
+        {
+          "label": "Nhs Announced",
+          "count": 3,
+          "score": 0.696716,
+          "volumeScore": 0.088235,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Announced Government",
+          "count": 3,
+          "score": 0.696716,
+          "volumeScore": 0.088235,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Practices",
+          "count": 4,
+          "score": 0.657123,
+          "volumeScore": 0.117647,
+          "spikeScore": 3.333333
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 3,
+          "score": 0.607459,
+          "volumeScore": 0.088235,
+          "spikeScore": 3
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 4,
+          "score": 0.42551,
+          "volumeScore": 0.117647,
+          "spikeScore": 1.428571
+        }
+      ],
+      "2022-06": [
+        {
+          "label": "Registered Nhs",
+          "count": 5,
+          "score": 0.824518,
+          "volumeScore": 0.076923,
+          "spikeScore": 6
+        },
+        {
+          "label": "Nhs Services",
+          "count": 6,
+          "score": 0.632338,
+          "volumeScore": 0.092308,
+          "spikeScore": 3.230769
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 5,
+          "score": 0.627055,
+          "volumeScore": 0.076923,
+          "spikeScore": 3.272727
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 8,
+          "score": 0.597179,
+          "volumeScore": 0.123077,
+          "spikeScore": 2.7
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.394209,
+          "volumeScore": 0.046154,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 4,
+          "score": 0.370842,
+          "volumeScore": 0.061538,
+          "spikeScore": 1.304348
+        }
+      ],
+      "2022-07": [
+        {
+          "label": "Access and Waiting Times",
+          "count": 19,
+          "score": 0.909435,
+          "volumeScore": 0.365385,
+          "spikeScore": 4.615385
+        },
+        {
+          "label": "Improve Access",
+          "count": 5,
+          "score": 0.739592,
+          "volumeScore": 0.096154,
+          "spikeScore": 4.5
+        },
+        {
+          "label": "Improve Access Nhs",
+          "count": 5,
+          "score": 0.739592,
+          "volumeScore": 0.096154,
+          "spikeScore": 4.5
+        },
+        {
+          "label": "Access Nhs Services",
+          "count": 5,
+          "score": 0.701467,
+          "volumeScore": 0.096154,
+          "spikeScore": 4
+        },
+        {
+          "label": "Taking Improve Access",
+          "count": 3,
+          "score": 0.629846,
+          "volumeScore": 0.057692,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Access Nhs",
+          "count": 7,
+          "score": 0.600482,
+          "volumeScore": 0.134615,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Nhs Services",
+          "count": 5,
+          "score": 0.497137,
+          "volumeScore": 0.096154,
+          "spikeScore": 2
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.373535,
+          "volumeScore": 0.057692,
+          "spikeScore": 1.333333
+        }
+      ],
+      "2022-09": [
+        {
+          "label": "Nhs Treatment",
+          "count": 3,
+          "score": 0.54576,
+          "volumeScore": 0.09375,
+          "spikeScore": 2.4
+        },
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.455662,
+          "volumeScore": 0.09375,
+          "spikeScore": 1.714286
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.453953,
+          "volumeScore": 0.125,
+          "spikeScore": 1.578947
+        }
+      ],
+      "2022-10": [
+        {
+          "label": "Adequacy Nhs",
+          "count": 44,
+          "score": 1.667539,
+          "volumeScore": 0.226804,
+          "spikeScore": 45
+        },
+        {
+          "label": "Adequacy Nhs Provision",
+          "count": 44,
+          "score": 1.667539,
+          "volumeScore": 0.226804,
+          "spikeScore": 45
+        },
+        {
+          "label": "She Adequacy Nhs",
+          "count": 43,
+          "score": 1.655655,
+          "volumeScore": 0.221649,
+          "spikeScore": 44
+        },
+        {
+          "label": "Nhs Provision",
+          "count": 46,
+          "score": 1.630475,
+          "volumeScore": 0.237113,
+          "spikeScore": 40.285714
+        },
+        {
+          "label": "Help Improve Access",
+          "count": 44,
+          "score": 1.555354,
+          "volumeScore": 0.226804,
+          "spikeScore": 33.75
+        },
+        {
+          "label": "Children Under",
+          "count": 32,
+          "score": 1.509513,
+          "volumeScore": 0.164948,
+          "spikeScore": 33
+        },
+        {
+          "label": "Children Under Age",
+          "count": 32,
+          "score": 1.509513,
+          "volumeScore": 0.164948,
+          "spikeScore": 33
+        },
+        {
+          "label": "Good Quality Commission",
+          "count": 26,
+          "score": 1.413294,
+          "volumeScore": 0.134021,
+          "spikeScore": 27
+        }
+      ],
+      "2022-11": [
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.663258,
+          "volumeScore": 0.066667,
+          "spikeScore": 3.75
+        },
+        {
+          "label": "Fees Charges",
+          "count": 3,
+          "score": 0.625231,
+          "volumeScore": 0.05,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Services Fees Charges",
+          "count": 3,
+          "score": 0.625231,
+          "volumeScore": 0.05,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Increase Nhs",
+          "count": 4,
+          "score": 0.566271,
+          "volumeScore": 0.066667,
+          "spikeScore": 2.727273
+        },
+        {
+          "label": "Availability Nhs",
+          "count": 3,
+          "score": 0.51951,
+          "volumeScore": 0.05,
+          "spikeScore": 2.4
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.469445,
+          "volumeScore": 0.05,
+          "spikeScore": 2
+        },
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.469445,
+          "volumeScore": 0.05,
+          "spikeScore": 2
+        },
+        {
+          "label": "Access Nhs",
+          "count": 9,
+          "score": 0.354559,
+          "volumeScore": 0.15,
+          "spikeScore": 0.9375
+        }
+      ],
+      "2022-12": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 7,
+          "score": 0.658034,
+          "volumeScore": 0.14,
+          "spikeScore": 3.2
+        },
+        {
+          "label": "New Nhs Patients",
+          "count": 3,
+          "score": 0.590518,
+          "volumeScore": 0.06,
+          "spikeScore": 3
+        },
+        {
+          "label": "New Nhs",
+          "count": 3,
+          "score": 0.52551,
+          "volumeScore": 0.06,
+          "spikeScore": 2.4
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.498981,
+          "volumeScore": 0.06,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 5,
+          "score": 0.459412,
+          "volumeScore": 0.1,
+          "spikeScore": 1.714286
+        },
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.454387,
+          "volumeScore": 0.06,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 4,
+          "score": 0.402921,
+          "volumeScore": 0.08,
+          "spikeScore": 1.428571
+        },
+        {
+          "label": "Access Nhs",
+          "count": 3,
+          "score": 0.149701,
+          "volumeScore": 0.06,
+          "spikeScore": 0.328767
+        }
+      ],
+      "2023-01": [
+        {
+          "label": "Register Nhs",
+          "count": 3,
+          "score": 0.620231,
+          "volumeScore": 0.041667,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Availability Nhs",
+          "count": 4,
+          "score": 0.534439,
+          "volumeScore": 0.055556,
+          "spikeScore": 2.5
+        },
+        {
+          "label": "Nhs Practices",
+          "count": 3,
+          "score": 0.51451,
+          "volumeScore": 0.041667,
+          "spikeScore": 2.4
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 6,
+          "score": 0.502561,
+          "volumeScore": 0.083333,
+          "spikeScore": 2.1
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.464445,
+          "volumeScore": 0.041667,
+          "spikeScore": 2
+        },
+        {
+          "label": "Services Children",
+          "count": 3,
+          "score": 0.464445,
+          "volumeScore": 0.041667,
+          "spikeScore": 2
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.464445,
+          "volumeScore": 0.041667,
+          "spikeScore": 2
+        },
+        {
+          "label": "Training and Education",
+          "count": 4,
+          "score": 0.455754,
+          "volumeScore": 0.055556,
+          "spikeScore": 1.875
+        }
+      ],
+      "2023-02": [
+        {
+          "label": "Training and Education",
+          "count": 4,
+          "score": 0.456372,
+          "volumeScore": 0.129032,
+          "spikeScore": 1.578947
+        }
+      ],
+      "2023-03": [
+        {
+          "label": "Children Norwich",
+          "count": 3,
+          "score": 0.676502,
+          "volumeScore": 0.054545,
+          "spikeScore": 4
+        },
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.501689,
+          "volumeScore": 0.072727,
+          "spikeScore": 2.142857
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.451115,
+          "volumeScore": 0.054545,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "Availability Nhs",
+          "count": 3,
+          "score": 0.414932,
+          "volumeScore": 0.054545,
+          "spikeScore": 1.6
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.398558,
+          "volumeScore": 0.072727,
+          "spikeScore": 1.428571
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.301905,
+          "volumeScore": 0.054545,
+          "spikeScore": 0.96
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.14378,
+          "volumeScore": 0.054545,
+          "spikeScore": 0.32
+        }
+      ],
+      "2023-04": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 6,
+          "score": 0.452489,
+          "volumeScore": 0.113208,
+          "spikeScore": 1.615385
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.379202,
+          "volumeScore": 0.075472,
+          "spikeScore": 1.304348
+        }
+      ],
+      "2023-05": [
+        {
+          "label": "Nhs Registered",
+          "count": 3,
+          "score": 0.692424,
+          "volumeScore": 0.081081,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Appointments",
+          "count": 3,
+          "score": 0.51163,
+          "volumeScore": 0.081081,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Services Children",
+          "count": 4,
+          "score": 0.471639,
+          "volumeScore": 0.108108,
+          "spikeScore": 1.764706
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.430853,
+          "volumeScore": 0.081081,
+          "spikeScore": 1.6
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.408945,
+          "volumeScore": 0.108108,
+          "spikeScore": 1.363636
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 3,
+          "score": 0.400792,
+          "volumeScore": 0.081081,
+          "spikeScore": 1.411765
+        },
+        {
+          "label": "Nhs Services",
+          "count": 4,
+          "score": 0.342124,
+          "volumeScore": 0.108108,
+          "spikeScore": 1
+        }
+      ],
+      "2023-06": [
+        {
+          "label": "Services Children",
+          "count": 5,
+          "score": 0.55828,
+          "volumeScore": 0.172414,
+          "spikeScore": 2.117647
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.414212,
+          "volumeScore": 0.103448,
+          "spikeScore": 1.411765
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 3,
+          "score": 0.400988,
+          "volumeScore": 0.103448,
+          "spikeScore": 1.333333
+        }
+      ],
+      "2023-07": [
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.490387,
+          "volumeScore": 0.12,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.438516,
+          "volumeScore": 0.12,
+          "spikeScore": 1.5
+        }
+      ],
+      "2023-09": [
+        {
+          "label": "Nhs Services",
+          "count": 5,
+          "score": 0.568236,
+          "volumeScore": 0.16129,
+          "spikeScore": 2.25
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 5,
+          "score": 0.521932,
+          "volumeScore": 0.16129,
+          "spikeScore": 1.894737
+        }
+      ],
+      "2023-10": [
+        {
+          "label": "Access Nhs Services",
+          "count": 3,
+          "score": 0.710442,
+          "volumeScore": 0.111111,
+          "spikeScore": 4
+        },
+        {
+          "label": "Access Services",
+          "count": 3,
+          "score": 0.621184,
+          "volumeScore": 0.111111,
+          "spikeScore": 3
+        },
+        {
+          "label": "Access Nhs",
+          "count": 3,
+          "score": 0.529648,
+          "volumeScore": 0.111111,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.393371,
+          "volumeScore": 0.111111,
+          "spikeScore": 1.263158
+        }
+      ],
+      "2023-11": [
+        {
+          "label": "Access Nhs",
+          "count": 7,
+          "score": 0.682006,
+          "volumeScore": 0.106061,
+          "spikeScore": 3.692308
+        },
+        {
+          "label": "Increase Access Nhs",
+          "count": 3,
+          "score": 0.622504,
+          "volumeScore": 0.045455,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Fees Charges",
+          "count": 3,
+          "score": 0.58179,
+          "volumeScore": 0.045455,
+          "spikeScore": 3
+        },
+        {
+          "label": "Increase Access",
+          "count": 3,
+          "score": 0.58179,
+          "volumeScore": 0.045455,
+          "spikeScore": 3
+        },
+        {
+          "label": "Nhs Appointments",
+          "count": 4,
+          "score": 0.537469,
+          "volumeScore": 0.060606,
+          "spikeScore": 2.5
+        },
+        {
+          "label": "Access Services",
+          "count": 3,
+          "score": 0.490254,
+          "volumeScore": 0.045455,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Nhs Services",
+          "count": 4,
+          "score": 0.415316,
+          "volumeScore": 0.060606,
+          "spikeScore": 1.578947
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.370283,
+          "volumeScore": 0.060606,
+          "spikeScore": 1.304348
+        }
+      ],
+      "2023-12": [],
+      "2024-01": [
+        {
+          "label": "Dental Recovery Plan",
+          "count": 4,
+          "score": 0.642349,
+          "volumeScore": 0.093023,
+          "spikeScore": 3.333333
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 7,
+          "score": 0.634144,
+          "volumeScore": 0.162791,
+          "spikeScore": 2.823529
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.556919,
+          "volumeScore": 0.093023,
+          "spikeScore": 2.5
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.481305,
+          "volumeScore": 0.069767,
+          "spikeScore": 2
+        }
+      ],
+      "2024-02": [
+        {
+          "label": "Dental Recovery Plan",
+          "count": 9,
+          "score": 0.818775,
+          "volumeScore": 0.214286,
+          "spikeScore": 4.615385
+        },
+        {
+          "label": "Training and Education",
+          "count": 3,
+          "score": 0.56257,
+          "volumeScore": 0.071429,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.482302,
+          "volumeScore": 0.071429,
+          "spikeScore": 2
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.423659,
+          "volumeScore": 0.095238,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.337897,
+          "volumeScore": 0.071429,
+          "spikeScore": 1.090909
+        }
+      ],
+      "2024-03": [
+        {
+          "label": "Dental Recovery Plan",
+          "count": 6,
+          "score": 0.521263,
+          "volumeScore": 0.136364,
+          "spikeScore": 2
+        },
+        {
+          "label": "UDA Targets and Activity",
+          "count": 3,
+          "score": 0.459297,
+          "volumeScore": 0.068182,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 5,
+          "score": 0.424981,
+          "volumeScore": 0.113636,
+          "spikeScore": 1.44
+        }
+      ],
+      "2024-04": [],
+      "2024-05": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 6,
+          "score": 0.564782,
+          "volumeScore": 0.315789,
+          "spikeScore": 1.555556
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.494148,
+          "volumeScore": 0.157895,
+          "spikeScore": 1.714286
+        }
+      ],
+      "2024-07": [
+        {
+          "label": "Nhs Patients",
+          "count": 8,
+          "score": 0.936574,
+          "volumeScore": 0.117647,
+          "spikeScore": 7.714286
+        },
+        {
+          "label": "Adult Nhs",
+          "count": 5,
+          "score": 0.822482,
+          "volumeScore": 0.073529,
+          "spikeScore": 6
+        },
+        {
+          "label": "Adult Nhs Patients",
+          "count": 5,
+          "score": 0.822482,
+          "volumeScore": 0.073529,
+          "spikeScore": 6
+        },
+        {
+          "label": "Access Nhs",
+          "count": 7,
+          "score": 0.800095,
+          "volumeScore": 0.102941,
+          "spikeScore": 5.333333
+        },
+        {
+          "label": "Increase Access Nhs",
+          "count": 4,
+          "score": 0.751998,
+          "volumeScore": 0.058824,
+          "spikeScore": 5
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 8,
+          "score": 0.702768,
+          "volumeScore": 0.117647,
+          "spikeScore": 3.857143
+        },
+        {
+          "label": "Increase Access",
+          "count": 4,
+          "score": 0.701297,
+          "volumeScore": 0.058824,
+          "spikeScore": 4.285714
+        },
+        {
+          "label": "Training and Education",
+          "count": 7,
+          "score": 0.680135,
+          "volumeScore": 0.102941,
+          "spikeScore": 3.692308
+        }
+      ],
+      "2024-08": [],
+      "2024-09": [
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.578525,
+          "volumeScore": 0.129032,
+          "spikeScore": 2.5
+        }
+      ],
+      "2024-10": [
+        {
+          "label": "Taking Improve Access",
+          "count": 3,
+          "score": 0.558844,
+          "volumeScore": 0.065217,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Improve Access",
+          "count": 3,
+          "score": 0.502112,
+          "volumeScore": 0.065217,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.41869,
+          "volumeScore": 0.086957,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.405647,
+          "volumeScore": 0.065217,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 4,
+          "score": 0.396254,
+          "volumeScore": 0.086957,
+          "spikeScore": 1.363636
+        }
+      ],
+      "2024-11": [
+        {
+          "label": "Nhs Middlesbrough",
+          "count": 3,
+          "score": 0.691144,
+          "volumeScore": 0.078947,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Middlesbrough Stockton-on-tees",
+          "count": 3,
+          "score": 0.691144,
+          "volumeScore": 0.078947,
+          "spikeScore": 4
+        },
+        {
+          "label": "Nhs Patients",
+          "count": 4,
+          "score": 0.44211,
+          "volumeScore": 0.105263,
+          "spikeScore": 1.578947
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 4,
+          "score": 0.418079,
+          "volumeScore": 0.105263,
+          "spikeScore": 1.428571
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.374073,
+          "volumeScore": 0.078947,
+          "spikeScore": 1.263158
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.342408,
+          "volumeScore": 0.078947,
+          "spikeScore": 1.090909
+        }
+      ],
+      "2024-12": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 4,
+          "score": 0.392944,
+          "volumeScore": 0.114286,
+          "spikeScore": 1.25
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.320606,
+          "volumeScore": 0.085714,
+          "spikeScore": 0.96
+        }
+      ],
+      "2025-01": [
+        {
+          "label": "Services Contracts",
+          "count": 3,
+          "score": 0.549221,
+          "volumeScore": 0.04918,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.447896,
+          "volumeScore": 0.04918,
+          "spikeScore": 1.846154
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 5,
+          "score": 0.436941,
+          "volumeScore": 0.081967,
+          "spikeScore": 1.636364
+        },
+        {
+          "label": "Improve Access",
+          "count": 3,
+          "score": 0.396024,
+          "volumeScore": 0.04918,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.283904,
+          "volumeScore": 0.04918,
+          "spikeScore": 0.888889
+        }
+      ],
+      "2025-02": [
+        {
+          "label": "Nhs Capacity",
+          "count": 10,
+          "score": 1.068037,
+          "volumeScore": 0.123457,
+          "spikeScore": 11
+        },
+        {
+          "label": "Adequacy Nhs Capacity",
+          "count": 9,
+          "score": 1.025825,
+          "volumeScore": 0.111111,
+          "spikeScore": 10
+        },
+        {
+          "label": "His Adequacy Nhs",
+          "count": 9,
+          "score": 0.97018,
+          "volumeScore": 0.111111,
+          "spikeScore": 8.571429
+        },
+        {
+          "label": "Adequacy Nhs",
+          "count": 10,
+          "score": 0.963923,
+          "volumeScore": 0.123457,
+          "spikeScore": 8.25
+        },
+        {
+          "label": "Adequacy Access Nhs",
+          "count": 5,
+          "score": 0.763153,
+          "volumeScore": 0.061728,
+          "spikeScore": 5.142857
+        },
+        {
+          "label": "His Adequacy Access",
+          "count": 5,
+          "score": 0.763153,
+          "volumeScore": 0.061728,
+          "spikeScore": 5.142857
+        },
+        {
+          "label": "Appointments Published",
+          "count": 4,
+          "score": 0.746333,
+          "volumeScore": 0.049383,
+          "spikeScore": 5
+        },
+        {
+          "label": "Appointments Published February",
+          "count": 4,
+          "score": 0.746333,
+          "volumeScore": 0.049383,
+          "spikeScore": 5
+        }
+      ],
+      "2025-03": [
+        {
+          "label": "Nhs Services",
+          "count": 8,
+          "score": 0.594952,
+          "volumeScore": 0.186047,
+          "spikeScore": 2.347826
+        },
+        {
+          "label": "Taking Improve Access",
+          "count": 3,
+          "score": 0.481305,
+          "volumeScore": 0.069767,
+          "spikeScore": 2
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 6,
+          "score": 0.459029,
+          "volumeScore": 0.139535,
+          "spikeScore": 1.555556
+        },
+        {
+          "label": "Access Nhs",
+          "count": 4,
+          "score": 0.410735,
+          "volumeScore": 0.093023,
+          "spikeScore": 1.428571
+        },
+        {
+          "label": "Access Nhs Services",
+          "count": 3,
+          "score": 0.408377,
+          "volumeScore": 0.069767,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Improve Access",
+          "count": 3,
+          "score": 0.394004,
+          "volumeScore": 0.069767,
+          "spikeScore": 1.411765
+        }
+      ],
+      "2025-04": [
+        {
+          "label": "Infection Prevention and IPC",
+          "count": 3,
+          "score": 0.596378,
+          "volumeScore": 0.069767,
+          "spikeScore": 3
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 6,
+          "score": 0.499278,
+          "volumeScore": 0.139535,
+          "spikeScore": 1.826087
+        },
+        {
+          "label": "Access Nhs",
+          "count": 3,
+          "score": 0.319119,
+          "volumeScore": 0.069767,
+          "spikeScore": 1
+        }
+      ],
+      "2025-05": [
+        {
+          "label": "Access and Waiting Times",
+          "count": 6,
+          "score": 0.443232,
+          "volumeScore": 0.113208,
+          "spikeScore": 1.555556
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 4,
+          "score": 0.424236,
+          "volumeScore": 0.075472,
+          "spikeScore": 1.578947
+        },
+        {
+          "label": "Access Nhs",
+          "count": 5,
+          "score": 0.413403,
+          "volumeScore": 0.09434,
+          "spikeScore": 1.44
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.400479,
+          "volumeScore": 0.056604,
+          "spikeScore": 1.5
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.295533,
+          "volumeScore": 0.056604,
+          "spikeScore": 0.923077
+        }
+      ],
+      "2025-06": [
+        {
+          "label": "Nhs Pay",
+          "count": 5,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
+          "spikeScore": 4
+        },
+        {
+          "label": "Training and Education",
+          "count": 4,
+          "score": 0.663258,
+          "volumeScore": 0.066667,
+          "spikeScore": 3.75
+        },
+        {
+          "label": "Nhs Pay Review",
+          "count": 3,
+          "score": 0.625231,
+          "volumeScore": 0.05,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 4,
+          "score": 0.346902,
+          "volumeScore": 0.066667,
+          "spikeScore": 1.153846
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 4,
+          "score": 0.317259,
+          "volumeScore": 0.066667,
+          "spikeScore": 1
+        }
+      ],
+      "2025-07": [
+        {
+          "label": "Patient Charge",
+          "count": 4,
+          "score": 0.756704,
+          "volumeScore": 0.066667,
+          "spikeScore": 5
+        },
+        {
+          "label": "Proportion Nhs",
+          "count": 4,
+          "score": 0.756704,
+          "volumeScore": 0.066667,
+          "spikeScore": 5
+        },
+        {
+          "label": "Charge Revenue",
+          "count": 3,
+          "score": 0.673775,
+          "volumeScore": 0.05,
+          "spikeScore": 4
+        },
+        {
+          "label": "Patient Charge Revenue",
+          "count": 3,
+          "score": 0.673775,
+          "volumeScore": 0.05,
+          "spikeScore": 4
+        },
+        {
+          "label": "Ensure Nhs",
+          "count": 3,
+          "score": 0.625231,
+          "volumeScore": 0.05,
+          "spikeScore": 3.428571
+        },
+        {
+          "label": "Nhs Practices",
+          "count": 3,
+          "score": 0.492981,
+          "volumeScore": 0.05,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 5,
+          "score": 0.461848,
+          "volumeScore": 0.083333,
+          "spikeScore": 1.8
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 5,
+          "score": 0.372837,
+          "volumeScore": 0.083333,
+          "spikeScore": 1.241379
+        }
+      ],
+      "2025-08": [
+        {
+          "label": "Nhs Professionals",
+          "count": 3,
+          "score": 0.738512,
+          "volumeScore": 0.157895,
+          "spikeScore": 4
+        }
+      ],
+      "2025-09": [],
+      "2025-10": [
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 9,
+          "score": 0.778067,
+          "volumeScore": 0.102273,
+          "spikeScore": 5
+        },
+        {
+          "label": "Fluoridation and Prevention",
+          "count": 4,
+          "score": 0.693276,
+          "volumeScore": 0.045455,
+          "spikeScore": 4.285714
+        },
+        {
+          "label": "Nhs Staff",
+          "count": 4,
+          "score": 0.650531,
+          "volumeScore": 0.045455,
+          "spikeScore": 3.75
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 10,
+          "score": 0.562887,
+          "volumeScore": 0.113636,
+          "spikeScore": 2.444444
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 5,
+          "score": 0.445939,
+          "volumeScore": 0.056818,
+          "spikeScore": 1.8
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.419866,
+          "volumeScore": 0.034091,
+          "spikeScore": 1.714286
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 4,
+          "score": 0.406225,
+          "volumeScore": 0.045455,
+          "spikeScore": 1.578947
+        },
+        {
+          "label": "Access Nhs",
+          "count": 4,
+          "score": 0.382194,
+          "volumeScore": 0.045455,
+          "spikeScore": 1.428571
+        }
+      ],
+      "2025-11": [
+        {
+          "label": "Taking Improve Access",
+          "count": 4,
+          "score": 0.591441,
+          "volumeScore": 0.061538,
+          "spikeScore": 3
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 8,
+          "score": 0.534075,
+          "volumeScore": 0.123077,
+          "spikeScore": 2.16
+        },
+        {
+          "label": "Improve Access",
+          "count": 4,
+          "score": 0.515423,
+          "volumeScore": 0.061538,
+          "spikeScore": 2.307692
+        },
+        {
+          "label": "Training and Education",
+          "count": 4,
+          "score": 0.515423,
+          "volumeScore": 0.061538,
+          "spikeScore": 2.307692
+        },
+        {
+          "label": "Improve Access Nhs",
+          "count": 3,
+          "score": 0.490673,
+          "volumeScore": 0.046154,
+          "spikeScore": 2.181818
+        },
+        {
+          "label": "Nhs Services",
+          "count": 3,
+          "score": 0.409897,
+          "volumeScore": 0.046154,
+          "spikeScore": 1.6
+        },
+        {
+          "label": "Access Nhs",
+          "count": 4,
+          "score": 0.381004,
+          "volumeScore": 0.061538,
+          "spikeScore": 1.363636
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.354397,
+          "volumeScore": 0.046154,
+          "spikeScore": 1.263158
+        }
+      ],
+      "2025-12": [],
+      "2026-01": [
+        {
+          "label": "Urgent Appointments",
+          "count": 3,
+          "score": 0.574259,
+          "volumeScore": 0.090909,
+          "spikeScore": 2.666667
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.38125,
+          "volumeScore": 0.090909,
+          "spikeScore": 1.263158
+        }
+      ],
+      "2026-02": [
+        {
+          "label": "Access Appointments",
+          "count": 4,
+          "score": 0.799462,
+          "volumeScore": 0.137931,
+          "spikeScore": 5
+        },
+        {
+          "label": "Access Appointments Published",
+          "count": 4,
+          "score": 0.799462,
+          "volumeScore": 0.137931,
+          "spikeScore": 5
+        },
+        {
+          "label": "Benefit Improved Access",
+          "count": 4,
+          "score": 0.799462,
+          "volumeScore": 0.137931,
+          "spikeScore": 5
+        },
+        {
+          "label": "Improved Access",
+          "count": 4,
+          "score": 0.799462,
+          "volumeScore": 0.137931,
+          "spikeScore": 5
+        },
+        {
+          "label": "Improved Access Appointments",
+          "count": 4,
+          "score": 0.799462,
+          "volumeScore": 0.137931,
+          "spikeScore": 5
+        },
+        {
+          "label": "Appointments Published",
+          "count": 4,
+          "score": 0.748762,
+          "volumeScore": 0.137931,
+          "spikeScore": 4.285714
+        },
+        {
+          "label": "Appointments Published February",
+          "count": 4,
+          "score": 0.748762,
+          "volumeScore": 0.137931,
+          "spikeScore": 4.285714
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.34793,
+          "volumeScore": 0.103448,
+          "spikeScore": 1.043478
+        }
+      ],
+      "2026-03": [
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 6,
+          "score": 0.726954,
+          "volumeScore": 0.25,
+          "spikeScore": 3.230769
+        },
+        {
+          "label": "Access Nhs",
+          "count": 3,
+          "score": 0.390383,
+          "volumeScore": 0.125,
+          "spikeScore": 1.2
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.37004,
+          "volumeScore": 0.125,
+          "spikeScore": 1.090909
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.360861,
+          "volumeScore": 0.125,
+          "spikeScore": 1.043478
+        }
+      ],
+      "2026-04": [
+        {
+          "label": "Oral Education",
+          "count": 4,
+          "score": 0.796704,
+          "volumeScore": 0.133333,
+          "spikeScore": 5
+        },
+        {
+          "label": "Access Nhs",
+          "count": 5,
+          "score": 0.499412,
+          "volumeScore": 0.166667,
+          "spikeScore": 1.714286
+        },
+        {
+          "label": "Access and Waiting Times",
+          "count": 3,
+          "score": 0.329178,
+          "volumeScore": 0.1,
+          "spikeScore": 0.96
+        },
+        {
+          "label": "Commissioning and ICB Performance",
+          "count": 3,
+          "score": 0.321571,
+          "volumeScore": 0.1,
+          "spikeScore": 0.923077
+        }
+      ],
+      "2026-05": [
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.454205,
+          "volumeScore": 0.12,
+          "spikeScore": 1.6
+        }
+      ]
+    }
+  },
   "unmatchedConstituencies": []
 }

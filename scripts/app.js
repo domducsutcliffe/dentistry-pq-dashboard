@@ -6,7 +6,6 @@ const state = {
   region: "",
   answer: "",
   periods: ["current"],
-  searchQuestionOnly: false,
   searchAnswerMatch: false,
   chartPoints: [],
   selectedMonth: "",
@@ -60,7 +59,6 @@ const elements = {
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
   periodCheckboxes: document.querySelectorAll('input[name="period"]'),
-  searchQuestionOnly: document.querySelector("#search-question-only"),
   searchAnswerMatch: document.querySelector("#search-answer-match"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
@@ -98,14 +96,6 @@ const MONTH_NAMES = {
   "12": "December",
 };
 
-const THEME_LABELS = {
-  access: "Access & Appointments",
-  workforce: "Workforce & Education",
-  contract: "Contract & Commissioning",
-  prevention: "Oral Health & Prevention",
-  funding: "Funding & Charges",
-};
-
 function parseDate(value) {
   if (!value) return null;
   const date = new Date(`${value}T00:00:00Z`);
@@ -125,56 +115,23 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
-function getQuestionThemes(question) {
-  const text = `${question.heading} ${question.questionText}`.toLowerCase();
-  const themes = [];
-
-  // 1. Access & Appointments (wait lists, appointments, geography, urgent care, hubs, provision)
-  if (/\b(access\w*|geograph\w*|rural\w*|local\w*|area\w*|region\w*|constituenc\w*|wait\w*|queue\w*|appointment\w*|udc|urgent|emergency|emergencies|hub\w*|finder|provision\w*)\b/.test(text)) {
-    themes.push("access");
+function getThemeCounts(questions, preferredMonth = "") {
+  const monthlyRows = state.summary?.topics?.byMonth?.[preferredMonth];
+  if (preferredMonth && Array.isArray(monthlyRows) && monthlyRows.length) {
+    return monthlyRows.map((row) => ({ key: row.label || row.key, count: row.count }));
   }
 
-  // 2. Workforce & Education (dentists, nurses, recruitment, retention, pay, training, education, exams, registration, overseas, careers, jobs, professions)
-  if (/\b(workforce|dentists?|nurses?|hygienists?|therapists?|recruit\w*|retain\w*|retention|staff\w*|pay|salary|salaries|manpower|education|student\w*|train\w*|school\w*|exam\w*|ore|gdc|overseas|degree\w*|universit\w*|qualific\w*|career\w*|job\w*|profession\w*)\b/.test(text)) {
-    themes.push("workforce");
-  }
-
-  // 3. Contract & Commissioning (contract reform, UDAs, banding, commissioning bodies like ICBs, returns, regulation/CQC/GDC)
-  if (/\b(contract\w*|uda\w*|unit\w* of dental activity|reform\w*|remunerat\w*|commission\w*|icb\w*|integrated care board|underspend\w*|returned money|regulat\w*|cqc|gdc)\b/.test(text)) {
-    themes.push("contract");
-  }
-
-  // 4. Oral Health & Prevention (children, tooth decay, prevention, fluoridation, brushing, sugar, diet)
-  if (/\b(child\w*|baby|babies|young|prevent\w*|fluorid\w*|decay|toothache|brushing|oral health|hygiene|sugar|diet|obesity)\b/.test(text)) {
-    themes.push("prevention");
-  }
-
-  // 5. Funding & Patient Charges (patient costs, fees, charges, banding fees, budget, funding, finance)
-  if (/\b(funding|finance|budget|cost\w*|charges?|fees?|pricing|price|pay\s+charge|exempt\w*|afford\w*)\b/.test(text)) {
-    themes.push("funding");
-  }
-
-  return themes;
-}
-
-function getThemeCounts(questions) {
-  const counts = {
-    access: 0,
-    workforce: 0,
-    contract: 0,
-    prevention: 0,
-    funding: 0,
-  };
-  for (const q of questions) {
-    const themes = getQuestionThemes(q);
-    for (const t of themes) {
-      if (counts.hasOwnProperty(t)) {
-        counts[t]++;
-      }
+  const months = [...new Set(questions.map((q) => (q.dateTabled || "").slice(0, 7)).filter(Boolean))];
+  const merged = new Map();
+  for (const month of months) {
+    const rows = state.summary?.topics?.byMonth?.[month] || [];
+    for (const row of rows) {
+      const label = row.label || row.key;
+      merged.set(label, (merged.get(label) || 0) + (row.count || 0));
     }
   }
-  return Object.entries(counts)
-    .map(([key, count]) => ({ key: THEME_LABELS[key], count }))
+  return [...merged.entries()]
+    .map(([key, count]) => ({ key, count }))
     .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
 }
 
@@ -286,13 +243,8 @@ function getFilteredQuestions(excludeMonth = false) {
 
     if (query) {
       const words = query.split(/\s+/).filter(Boolean);
-      if (state.searchQuestionOnly) {
-        const textToSearch = (question.questionText || "").toLowerCase();
-        if (!words.every((word) => textToSearch.includes(word))) return false;
-      } else {
-        const textToSearch = questionText(question);
-        if (!words.every((word) => textToSearch.includes(word))) return false;
-      }
+      const textToSearch = questionText(question);
+      if (!words.every((word) => textToSearch.includes(word))) return false;
     }
 
     if (!excludeMonth && state.selectedMonth) {
@@ -451,7 +403,7 @@ function renderLineChart(items) {
     const count = monthQuestions.length;
     const x = pad + index * step;
     const y = height - pad - (count / max) * (height - pad * 2);
-    const themeCounts = getThemeCounts(monthQuestions);
+    const themeCounts = getThemeCounts(monthQuestions, month);
     return { month, count, x, y, themeCounts };
   });
   state.chartPoints = points;
@@ -583,7 +535,7 @@ function render() {
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
   renderLineChart(lineChartFiltered);
-  renderBars(elements.themeChart, getThemeCounts(filtered), { limit: 5 });
+  renderBars(elements.themeChart, getThemeCounts(filtered, state.selectedMonth), { limit: 5 });
   renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
     limit: 30,
     snpFloor: true,
@@ -645,11 +597,6 @@ for (const checkbox of elements.periodCheckboxes) {
     render();
   });
 }
-
-elements.searchQuestionOnly.addEventListener("change", (event) => {
-  state.searchQuestionOnly = event.target.checked;
-  render();
-});
 
 elements.searchAnswerMatch.addEventListener("change", (event) => {
   state.searchAnswerMatch = event.target.checked;
@@ -780,7 +727,6 @@ document.addEventListener("click", (event) => {
     (elements.partyFilter && elements.partyFilter.contains(event.target)) ||
     (elements.regionFilter && elements.regionFilter.contains(event.target)) ||
     (elements.answerFilter && elements.answerFilter.contains(event.target)) ||
-    (elements.searchQuestionOnly && elements.searchQuestionOnly.contains(event.target)) ||
     (elements.searchAnswerMatch && elements.searchAnswerMatch.contains(event.target)) ||
     ([...elements.periodCheckboxes].some(cb => cb.contains(event.target)));
 
@@ -796,7 +742,6 @@ document.addEventListener("click", (event) => {
 
 loadData()
   .then(() => {
-    elements.searchQuestionOnly.checked = state.searchQuestionOnly;
     elements.searchAnswerMatch.checked = state.searchAnswerMatch;
     renderSelects();
     render();
