@@ -785,6 +785,29 @@ elements.monthlyChart.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("click", (event) => {
+  if (!state.selectedMonth) return;
+
+  const isInsideChart = elements.monthlyChart.contains(event.target);
+  const isInsideFilterControl = 
+    (elements.search && elements.search.contains(event.target)) ||
+    (elements.partyFilter && elements.partyFilter.contains(event.target)) ||
+    (elements.regionFilter && elements.regionFilter.contains(event.target)) ||
+    (elements.answerFilter && elements.answerFilter.contains(event.target)) ||
+    (elements.searchQuestionOnly && elements.searchQuestionOnly.contains(event.target)) ||
+    (elements.searchAnswerMatch && elements.searchAnswerMatch.contains(event.target)) ||
+    ([...elements.periodCheckboxes].some(cb => cb.contains(event.target)));
+
+  const isClearLink = event.target.id === "clear-month-filter";
+
+  if (isInsideChart || isInsideFilterControl || isClearLink) {
+    return;
+  }
+
+  state.selectedMonth = "";
+  render();
+});
+
 loadData()
   .then(() => {
     elements.searchQuestionOnly.checked = state.searchQuestionOnly;
@@ -837,6 +860,23 @@ loadData()
               view: window,
               clientX: 0,
               clientY: 0
+            }));
+          }, 100);
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-global-deselect=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          // Select the month
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          
+          // Click document body (outside chart) after 100ms
+          setTimeout(() => {
+            document.body.dispatchEvent(new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window
             }));
           }, 100);
         }
