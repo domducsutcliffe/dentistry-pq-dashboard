@@ -716,6 +716,7 @@ elements.monthlyChart.addEventListener("mouseout", (event) => {
 });
 
 elements.monthlyChart.addEventListener("click", (event) => {
+  event.stopPropagation(); // Prevent document click handler from immediately clearing state.selectedMonth
   if (state.chartPoints.length === 0) return;
 
   // Direct dot click (or programmatic test events)
