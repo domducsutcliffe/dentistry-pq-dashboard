@@ -741,27 +741,11 @@ elements.monthlyChart.addEventListener("click", (event) => {
 
   const rect = svg.getBoundingClientRect();
   const clickXRel = event.clientX - rect.left;
-  const clickYRel = event.clientY - rect.top;
   const viewBoxWidth = 760;
-  const viewBoxHeight = 230;
   
   const svgX = (clickXRel / rect.width) * viewBoxWidth;
-  const svgY = (clickYRel / rect.height) * viewBoxHeight;
 
   const pad = 28;
-  const buffer = 10;
-
-  // Check if click is outside plot area boundaries (e.g., margins/padding)
-  if (
-    svgX < pad - buffer ||
-    svgX > (viewBoxWidth - pad) + buffer ||
-    svgY < pad - buffer ||
-    svgY > (viewBoxHeight - pad) + buffer
-  ) {
-    state.selectedMonth = "";
-    render();
-    return;
-  }
 
   let closestPoint = null;
   let minDistance = Infinity;
@@ -775,6 +759,7 @@ elements.monthlyChart.addEventListener("click", (event) => {
   }
 
   if (closestPoint) {
+    // Allow clicking month labels and any point within the chart SVG width.
     if (svgX >= pad - 10 && svgX <= (viewBoxWidth - pad) + 10) {
       if (state.selectedMonth === closestPoint.month) {
         state.selectedMonth = "";
