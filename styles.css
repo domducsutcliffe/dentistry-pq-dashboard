@@ -629,34 +629,3 @@ table th {
   border-color: var(--orange);
   color: var(--orange);
 }
-
-/* Header navigation tabs */
-.topbar-tabs {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-
-.tab-link {
-  color: #000;
-  font-weight: 500;
-  padding: 2px 8px;
-  text-decoration: none;
-  font-size: 11px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 3px;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.tab-link:hover {
-  background: rgba(0, 0, 0, 0.08);
-  text-decoration: none;
-}
-
-.tab-link.active {
-  background: #000;
-  color: var(--orange);
-  font-weight: 700;
-}
-
