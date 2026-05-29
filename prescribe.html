@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NHS Dental Prescribing Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="prescribe.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./">NHS Prescribing Portal</a>
+        <span>Dentistry</span>
+        <span>Oakwood Practice</span>
+        <span>GDC: 198273</span>
+        <nav class="topbar-tabs">
+          <a href="./" class="tab-link">PQ Interest</a>
+          <a href="prescribe.html" class="tab-link active">Prescribe Portal</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <!-- Authentication Screen (PIN Lock) -->
+      <section id="auth-screen" class="auth-container">
+        <div class="auth-card">
+          <div class="auth-logo">
+            <span class="nhs-logo-text">NHS</span>
+          </div>
+          <h1>Dentist Prescribing Portal</h1>
+          <p class="auth-subtitle">Oakwood Dental Practice &middot; NHS England</p>
+          
+          <div class="dentist-info-badge">
+            <div class="avatar">AS</div>
+            <div>
+              <div class="dentist-name">Dr. Alexander Sterling</div>
+              <div class="dentist-gdc">GDC Reg: 198273 (Dentist)</div>
+            </div>
+          </div>
+
+          <div class="pin-entry-wrap">
+            <label for="pin-input-hidden" class="sr-only">Enter GDC PIN</label>
+            <div class="pin-display">
+              <span class="pin-dot"></span>
+              <span class="pin-dot"></span>
+              <span class="pin-dot"></span>
+              <span class="pin-dot"></span>
+            </div>
+            <p class="pin-help-text">Enter your 4-digit prescriber PIN to unlock (Demo PIN: <strong>2026</strong>)</p>
+          </div>
+
+          <div class="pin-keypad">
+            <button type="button" class="keypad-btn" data-key="1">1</button>
+            <button type="button" class="keypad-btn" data-key="2">2</button>
+            <button type="button" class="keypad-btn" data-key="3">3</button>
+            <button type="button" class="keypad-btn" data-key="4">4</button>
+            <button type="button" class="keypad-btn" data-key="5">5</button>
+            <button type="button" class="keypad-btn" data-key="6">6</button>
+            <button type="button" class="keypad-btn" data-key="7">7</button>
+            <button type="button" class="keypad-btn" data-key="8">8</button>
+            <button type="button" class="keypad-btn" data-key="9">9</button>
+            <button type="button" class="keypad-btn action-btn text-btn" data-key="clear">Clear</button>
+            <button type="button" class="keypad-btn" data-key="0">0</button>
+            <button type="button" class="keypad-btn action-btn text-btn submit-btn" data-key="enter">Enter</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Prescribing App (Hidden Initially) -->
+      <section id="app-workspace" class="workspace-grid" style="display: none;">
+        
+        <!-- Left Column: Search & Selector Directories -->
+        <div class="workspace-col sidebar-col">
+          
+          <!-- Patient Panel -->
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Select Patient</h2>
+              <span class="badge" id="patient-count">4 loaded</span>
+            </div>
+            <div class="search-box">
+              <input id="patient-search" type="search" placeholder="Search name or NHS number..." autocomplete="off" />
+            </div>
+            <div id="patient-list" class="list-container scrolling-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </article>
+
+          <!-- Formulary Panel -->
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Dental Formulary (BNF)</h2>
+              <span class="badge" id="drug-count">10 loaded</span>
+            </div>
+            <div class="search-box">
+              <input id="drug-search" type="search" placeholder="Search drug, group, or indication..." autocomplete="off" />
+            </div>
+            <div id="drug-list" class="list-container scrolling-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Middle Column: FP10D Form & Form controls -->
+        <div class="workspace-col form-col">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>FP10D Prescription Editor</h2>
+              <span>Green Form Mode</span>
+            </div>
+            
+            <div class="prescription-editor-body">
+              
+              <!-- Real-time Interactive FP10D Replica -->
+              <div class="fp10d-paper-container">
+                <div class="fp10d-paper">
+                  <!-- NHS Branding -->
+                  <div class="fp10d-header">
+                    <span class="fp10d-nhs">NHS</span>
+                    <span class="fp10d-title">NATIONAL HEALTH SERVICE</span>
+                    <span class="fp10d-form-code">FP10D</span>
+                  </div>
+
+                  <!-- Patient Details Boxes -->
+                  <div class="fp10d-grid patient-meta">
+                    <div class="meta-box span-all">
+                      <label>NHS Number</label>
+                      <div class="val font-mono" id="fp-nhs-no">&nbsp;</div>
+                    </div>
+                    <div class="meta-box span-half">
+                      <label>Surname</label>
+                      <div class="val" id="fp-surname">&nbsp;</div>
+                    </div>
+                    <div class="meta-box span-half">
+                      <label>Forenames</label>
+                      <div class="val" id="fp-forename">&nbsp;</div>
+                    </div>
+                    <div class="meta-box span-all">
+                      <label>Address</label>
+                      <div class="val address-val" id="fp-address">&nbsp;</div>
+                    </div>
+                    <div class="meta-box span-half">
+                      <label>Date of Birth</label>
+                      <div class="val font-mono" id="fp-dob">&nbsp;</div>
+                    </div>
+                    <div class="meta-box span-half">
+                      <label>Age (if under 16)</label>
+                      <div class="val font-mono" id="fp-age">&nbsp;</div>
+                    </div>
+                  </div>
+
+                  <!-- Prescribed Medication Details -->
+                  <div class="fp10d-items">
+                    <div class="items-watermark">DENTAL USE ONLY</div>
+                    <div class="items-body">
+                      <div class="prescribed-item-display" id="fp-med-details">
+                        <span class="placeholder-text">Select patient and dental drug to construct FP10D...</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Dentist Details & Date -->
+                  <div class="fp10d-footer-grid">
+                    <div class="meta-box spec-box">
+                      <label>Dentist Name & GDC Number</label>
+                      <div class="val signature-meta font-mono">
+                        Dr. Alexander Sterling<br>
+                        GDC Reg No: 198273<br>
+                        Oakwood Practice, NW1 5DP
+                      </div>
+                    </div>
+                    <div class="meta-box spec-box text-center">
+                      <label>Date</label>
+                      <div class="val font-mono mt-10" id="fp-date">&nbsp;</div>
+                    </div>
+                    <div class="meta-box spec-box relative">
+                      <label>Signature of Prescriber</label>
+                      <div class="fp10d-signature-overlay-wrap">
+                        <img id="fp-signature-image" style="display: none;" alt="Dentist Signature">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Controls (Dose, Frequency, etc) -->
+              <div class="prescribing-form-controls">
+                <h3>Prescription Details</h3>
+                
+                <div class="form-row inline-fields">
+                  <div class="form-group">
+                    <label for="input-dose">Dose & Frequency</label>
+                    <input type="text" id="input-dose" placeholder="e.g. 500mg three times daily" disabled />
+                  </div>
+                  <div class="form-group select-group">
+                    <label for="input-route">Route</label>
+                    <select id="input-route" disabled>
+                      <option value="Oral" selected>Oral</option>
+                      <option value="Topical">Topical</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row inline-fields">
+                  <div class="form-group">
+                    <label for="input-duration">Duration</label>
+                    <input type="text" id="input-duration" placeholder="e.g. 5 days" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label for="input-quantity">Quantity (Total Packs/Volume)</label>
+                    <input type="text" id="input-quantity" placeholder="e.g. 15 capsules or 150ml" disabled />
+                  </div>
+                </div>
+
+                <div class="form-row preset-templates-row">
+                  <span class="label-heading">BNF Standard Templates:</span>
+                  <div id="dose-templates" class="template-chips-container">
+                    <span class="placeholder-text text-center">Select a drug to view dosage templates</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+        </div>
+
+        <!-- Right Column: Safety Alerts & EPS Signing Pad -->
+        <div class="workspace-col alerts-col">
+          
+          <!-- Clinical Alerts -->
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Clinical Safety Checks</h2>
+              <span id="alerts-count-badge" class="badge bg-green">0 Alerts</span>
+            </div>
+            <div id="safety-alerts-box" class="safety-box">
+              <div class="safety-state green-state">
+                <span class="safety-icon">&#10004;</span>
+                <p class="safety-title">Safety Check Passed</p>
+                <p class="safety-desc">No known allergy warning or drug interactions detected for the selected combination.</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Signature Pad Panel -->
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Electronic Prescribing (EPS)</h2>
+              <span>Secure Draw Pad</span>
+            </div>
+            <div class="signature-pad-container">
+              <div class="canvas-wrapper">
+                <canvas id="signature-canvas" width="280" height="120"></canvas>
+                <div class="canvas-placeholder">Prescriber sign here (Draw with mouse/touch)</div>
+              </div>
+              <div class="canvas-actions">
+                <button type="button" id="btn-clear-sig" class="btn-sig btn-sig-clear">Clear</button>
+                <button type="button" id="btn-submit-prescription" class="btn-sig btn-sig-submit" disabled>Sign & Submit to EPS</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Recent Prescriptions Log -->
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Recent Prescriptions</h2>
+              <span class="badge" id="session-prescriptions-count">0 issued</span>
+            </div>
+            <div id="prescription-history" class="list-container scrolling-history">
+              <p class="chart-note pad-10">No prescriptions issued in this session.</p>
+            </div>
+          </article>
+
+        </div>
+
+      </section>
+    </main>
+
+    <!-- EPS Submission Success Modal Overlay -->
+    <div id="eps-success-overlay" class="modal-overlay" style="display: none;">
+      <div class="modal-card select-none">
+        <div class="modal-success-check animate-bounce">
+          <span class="success-checkmark">&#10004;</span>
+        </div>
+        <h2>Prescription Transmitted to EPS</h2>
+        <p class="modal-subtitle">Electronic Prescription Service (EPS v2.1) Validation Secure</p>
+
+        <div class="eps-receipt-box">
+          <div class="receipt-row">
+            <span class="r-label">NHS Number:</span>
+            <span class="r-val font-mono" id="receipt-nhs"></span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Patient Name:</span>
+            <span class="r-val" id="receipt-name"></span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Prescription:</span>
+            <span class="r-val font-weight-bold" id="receipt-med"></span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Quantity / Vol:</span>
+            <span class="r-val font-mono" id="receipt-qty"></span>
+          </div>
+          <div class="receipt-row border-dashed-top">
+            <span class="r-label">Prescrip. ID (UUID):</span>
+            <span class="r-val font-mono text-small" id="receipt-uuid"></span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Security Signature:</span>
+            <span class="r-val font-mono text-small text-green">SHA-256 Verified</span>
+          </div>
+          
+          <div class="receipt-qr-wrap">
+            <div class="simulated-qr">
+              <!-- QR grid lines generated in CSS -->
+              <div class="qr-corners"></div>
+            </div>
+            <span class="qr-label">Scan at dispensing pharmacy</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="btn-modal-close" class="btn-primary">Prescribe New Drug</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Import -->
+    <script src="scripts/prescribe.js" type="module"></script>
+  </body>
+</html>
