@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T10:20:18.503Z",
+  "generatedAt": "2026-05-29T10:33:18.893Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,8 +15,8 @@
     }
   },
   "totals": {
-    "questions": 3084,
-    "answered": 3073,
+    "questions": 3037,
+    "answered": 3026,
     "unanswered": 11,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
@@ -28,17 +28,17 @@
   "parties": [
     {
       "key": "Lab",
-      "count": 1804,
+      "count": 1774,
       "name": "Labour"
     },
     {
       "key": "Con",
-      "count": 651,
+      "count": 638,
       "name": "Conservative"
     },
     {
       "key": "LD",
-      "count": 447,
+      "count": 444,
       "name": "Liberal Democrat"
     },
     {
@@ -58,7 +58,7 @@
     },
     {
       "key": "RUK",
-      "count": 30,
+      "count": 29,
       "name": "Reform UK"
     },
     {
@@ -105,31 +105,31 @@
   "regions": [
     {
       "key": "North East and Yorkshire",
-      "count": 731
+      "count": 727
     },
     {
       "key": "Midlands",
-      "count": 512
+      "count": 509
     },
     {
       "key": "North West",
-      "count": 464
+      "count": 456
     },
     {
       "key": "South West",
-      "count": 405
+      "count": 398
     },
     {
       "key": "South East",
-      "count": 342
+      "count": 339
     },
     {
       "key": "East of England",
-      "count": 301
+      "count": 289
     },
     {
       "key": "London",
-      "count": 244
+      "count": 234
     },
     {
       "key": "Northern Ireland",
@@ -147,7 +147,7 @@
   "topMembers": [
     {
       "key": "Rachael Maskell",
-      "count": 244
+      "count": 242
     },
     {
       "key": "Judith Cummins",
@@ -175,7 +175,7 @@
     },
     {
       "key": "Justin Madders",
-      "count": 45
+      "count": 43
     },
     {
       "key": "Preet Kaur Gill",
@@ -203,14 +203,14 @@
     },
     {
       "key": "Daisy Cooper",
-      "count": 35
-    },
-    {
-      "key": "Julie Cooper",
       "count": 34
     },
     {
       "key": "Jonathan Ashworth",
+      "count": 33
+    },
+    {
+      "key": "Julie Cooper",
       "count": 33
     },
     {
@@ -229,18 +229,18 @@
   "monthly": [
     {
       "month": "2014-06",
-      "total": 8,
-      "answered": 8,
+      "total": 7,
+      "answered": 7,
       "unanswered": 0,
       "byParty": {
-        "Lab": 5,
+        "Lab": 4,
         "Con": 3
       },
       "byRegion": {
         "North East and Yorkshire": 2,
         "Wales": 1,
         "North West": 3,
-        "South West": 2
+        "South West": 1
       }
     },
     {
@@ -305,17 +305,16 @@
     },
     {
       "month": "2014-11",
-      "total": 6,
-      "answered": 6,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
         "Con": 2,
-        "Lab": 4
+        "Lab": 2
       },
       "byRegion": {
         "East of England": 1,
-        "North West": 3,
-        "North East and Yorkshire": 1,
+        "North West": 2,
         "London": 1
       }
     },
@@ -338,15 +337,15 @@
     },
     {
       "month": "2015-01",
-      "total": 5,
-      "answered": 5,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
-        "Con": 3,
+        "Con": 2,
         "Lab": 2
       },
       "byRegion": {
-        "South West": 2,
+        "South West": 1,
         "South East": 1,
         "North West": 2
       }
@@ -412,51 +411,47 @@
     },
     {
       "month": "2015-09",
-      "total": 5,
-      "answered": 5,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
         "Lab": 1,
-        "Con": 3,
+        "Con": 2,
         "DUP": 1
       },
       "byRegion": {
         "Midlands": 2,
         "London": 1,
-        "Northern Ireland": 1,
-        "East of England": 1
+        "Northern Ireland": 1
       }
     },
     {
       "month": "2015-10",
-      "total": 12,
-      "answered": 12,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
-        "Lab": 9,
-        "Con": 3
+        "Lab": 3,
+        "Con": 1
       },
       "byRegion": {
         "North West": 3,
-        "Midlands": 1,
-        "East of England": 2,
-        "London": 6
+        "Midlands": 1
       }
     },
     {
       "month": "2015-11",
-      "total": 5,
-      "answered": 5,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
         "Con": 3,
-        "Lab": 2
+        "Lab": 1
       },
       "byRegion": {
         "London": 1,
         "Midlands": 1,
-        "South East": 2,
-        "South West": 1
+        "South East": 2
       }
     },
     {
@@ -492,16 +487,14 @@
     },
     {
       "month": "2016-03",
-      "total": 2,
-      "answered": 2,
+      "total": 1,
+      "answered": 1,
       "unanswered": 0,
       "byParty": {
-        "SNP": 1,
-        "Con": 1
+        "SNP": 1
       },
       "byRegion": {
-        "Scotland": 1,
-        "South East": 1
+        "Scotland": 1
       }
     },
     {
@@ -523,14 +516,14 @@
     },
     {
       "month": "2016-05",
-      "total": 4,
-      "answered": 4,
+      "total": 3,
+      "answered": 3,
       "unanswered": 0,
       "byParty": {
-        "Lab": 4
+        "Lab": 3
       },
       "byRegion": {
-        "North West": 2,
+        "North West": 1,
         "Midlands": 2
       }
     },
@@ -594,15 +587,14 @@
     },
     {
       "month": "2016-11",
-      "total": 5,
-      "answered": 5,
+      "total": 4,
+      "answered": 4,
       "unanswered": 0,
       "byParty": {
-        "Con": 4,
-        "Lab": 1
+        "Lab": 1,
+        "Con": 3
       },
       "byRegion": {
-        "South West": 1,
         "Midlands": 1,
         "East of England": 3
       }
@@ -626,19 +618,18 @@
     },
     {
       "month": "2017-01",
-      "total": 18,
-      "answered": 18,
+      "total": 17,
+      "answered": 17,
       "unanswered": 0,
       "byParty": {
         "Con": 6,
-        "Lab": 12
+        "Lab": 11
       },
       "byRegion": {
         "South West": 1,
         "Midlands": 8,
         "South East": 3,
         "North East and Yorkshire": 3,
-        "London": 1,
         "East of England": 1,
         "North West": 1
       }
@@ -692,14 +683,14 @@
     },
     {
       "month": "2017-06",
-      "total": 3,
-      "answered": 3,
+      "total": 2,
+      "answered": 2,
       "unanswered": 0,
       "byParty": {
-        "Lab": 3
+        "Lab": 2
       },
       "byRegion": {
-        "North East and Yorkshire": 3
+        "North East and Yorkshire": 2
       }
     },
     {
@@ -719,15 +710,14 @@
     },
     {
       "month": "2017-09",
-      "total": 17,
-      "answered": 17,
+      "total": 16,
+      "answered": 16,
       "unanswered": 0,
       "byParty": {
-        "Lab": 11,
+        "Lab": 10,
         "SNP": 6
       },
       "byRegion": {
-        "North West": 1,
         "Midlands": 9,
         "North East and Yorkshire": 1,
         "Scotland": 6
@@ -848,15 +838,15 @@
     },
     {
       "month": "2018-05",
-      "total": 37,
-      "answered": 37,
+      "total": 36,
+      "answered": 36,
       "unanswered": 0,
       "byParty": {
-        "Lab": 34,
+        "Lab": 33,
         "Con": 3
       },
       "byRegion": {
-        "North West": 27,
+        "North West": 26,
         "North East and Yorkshire": 6,
         "South East": 2,
         "Midlands": 2
@@ -864,18 +854,18 @@
     },
     {
       "month": "2018-06",
-      "total": 7,
-      "answered": 7,
+      "total": 6,
+      "answered": 6,
       "unanswered": 0,
       "byParty": {
         "Lab": 4,
-        "Con": 3
+        "Con": 2
       },
       "byRegion": {
         "North West": 2,
         "North East and Yorkshire": 1,
         "Midlands": 1,
-        "East of England": 2,
+        "East of England": 1,
         "South East": 1
       }
     },
@@ -914,15 +904,15 @@
     },
     {
       "month": "2018-10",
-      "total": 13,
-      "answered": 13,
+      "total": 12,
+      "answered": 12,
       "unanswered": 0,
       "byParty": {
-        "Lab": 12,
+        "Lab": 11,
         "Con": 1
       },
       "byRegion": {
-        "North West": 5,
+        "North West": 4,
         "South East": 2,
         "South West": 1,
         "Midlands": 2,
@@ -1282,19 +1272,19 @@
     },
     {
       "month": "2020-10",
-      "total": 35,
-      "answered": 35,
+      "total": 34,
+      "answered": 34,
       "unanswered": 0,
       "byParty": {
-        "Lab": 33,
+        "Lab": 32,
         "Con": 2
       },
       "byRegion": {
         "South West": 5,
-        "North East and Yorkshire": 14,
         "North West": 8,
         "Midlands": 7,
-        "South East": 1
+        "South East": 1,
+        "North East and Yorkshire": 13
       }
     },
     {
@@ -1339,17 +1329,17 @@
     },
     {
       "month": "2021-01",
-      "total": 23,
-      "answered": 23,
+      "total": 22,
+      "answered": 22,
       "unanswered": 0,
       "byParty": {
         "Con": 5,
-        "Lab": 17,
+        "Lab": 16,
         "LD": 1
       },
       "byRegion": {
         "South West": 2,
-        "London": 5,
+        "London": 4,
         "North West": 7,
         "North East and Yorkshire": 6,
         "East of England": 1,
@@ -1478,18 +1468,17 @@
     },
     {
       "month": "2021-09",
-      "total": 12,
-      "answered": 12,
+      "total": 11,
+      "answered": 11,
       "unanswered": 0,
       "byParty": {
-        "Lab": 10,
+        "Lab": 9,
         "Con": 1,
         "LD": 1
       },
       "byRegion": {
         "North East and Yorkshire": 3,
         "South West": 1,
-        "London": 1,
         "North West": 4,
         "East of England": 1,
         "Midlands": 1,
@@ -1570,43 +1559,43 @@
     },
     {
       "month": "2022-02",
-      "total": 49,
-      "answered": 49,
+      "total": 48,
+      "answered": 48,
       "unanswered": 0,
       "byParty": {
-        "Lab": 23,
         "LD": 9,
+        "Lab": 22,
         "Con": 8,
         "Green": 8,
         "SNP": 1
       },
       "byRegion": {
-        "North West": 6,
         "East of England": 7,
         "North East and Yorkshire": 18,
         "South West": 4,
         "South East": 9,
         "London": 2,
         "Midlands": 2,
-        "Scotland": 1
+        "Scotland": 1,
+        "North West": 5
       }
     },
     {
       "month": "2022-03",
-      "total": 51,
-      "answered": 51,
+      "total": 50,
+      "answered": 50,
       "unanswered": 0,
       "byParty": {
         "Lab": 34,
-        "LD": 4,
         "Green": 3,
         "Con": 7,
+        "LD": 3,
         "SNP": 3
       },
       "byRegion": {
         "South East": 16,
-        "East of England": 5,
         "North East and Yorkshire": 13,
+        "East of England": 4,
         "Midlands": 3,
         "Scotland": 3,
         "North West": 4,
@@ -1739,17 +1728,17 @@
     },
     {
       "month": "2022-11",
-      "total": 58,
-      "answered": 58,
+      "total": 57,
+      "answered": 57,
       "unanswered": 0,
       "byParty": {
-        "Lab": 32,
+        "Lab": 31,
         "Con": 20,
         "LD": 4,
         "Ind": 2
       },
       "byRegion": {
-        "North West": 10,
+        "North West": 9,
         "Midlands": 7,
         "South West": 4,
         "London": 5,
@@ -1781,11 +1770,11 @@
     },
     {
       "month": "2023-01",
-      "total": 69,
-      "answered": 69,
+      "total": 68,
+      "answered": 68,
       "unanswered": 0,
       "byParty": {
-        "Lab": 44,
+        "Lab": 43,
         "Con": 19,
         "LD": 5,
         "Ind": 1
@@ -1797,7 +1786,7 @@
         "East of England": 14,
         "South East": 3,
         "South West": 6,
-        "Midlands": 2
+        "Midlands": 1
       }
     },
     {
@@ -1899,17 +1888,17 @@
     },
     {
       "month": "2023-07",
-      "total": 24,
-      "answered": 24,
+      "total": 23,
+      "answered": 23,
       "unanswered": 0,
       "byParty": {
         "Con": 9,
-        "Lab": 11,
+        "Lab": 10,
         "LD": 4
       },
       "byRegion": {
         "South West": 6,
-        "North East and Yorkshire": 9,
+        "North East and Yorkshire": 8,
         "Midlands": 5,
         "East of England": 1,
         "South East": 2,
@@ -1918,11 +1907,11 @@
     },
     {
       "month": "2023-09",
-      "total": 30,
-      "answered": 30,
+      "total": 29,
+      "answered": 29,
       "unanswered": 0,
       "byParty": {
-        "Lab": 16,
+        "Lab": 15,
         "LD": 4,
         "Con": 9,
         "DUP": 1
@@ -1930,7 +1919,6 @@
       "byRegion": {
         "Midlands": 7,
         "East of England": 8,
-        "London": 1,
         "North East and Yorkshire": 10,
         "South West": 2,
         "Northern Ireland": 1,
@@ -1960,12 +1948,12 @@
     },
     {
       "month": "2023-11",
-      "total": 59,
-      "answered": 59,
+      "total": 58,
+      "answered": 58,
       "unanswered": 0,
       "byParty": {
         "Lab": 33,
-        "Con": 19,
+        "Con": 18,
         "Green": 1,
         "LD": 4,
         "Ind": 2
@@ -1975,7 +1963,7 @@
         "North East and Yorkshire": 19,
         "South West": 10,
         "Midlands": 5,
-        "East of England": 7,
+        "East of England": 6,
         "London": 2,
         "North West": 5,
         "Wales": 2
@@ -2021,12 +2009,12 @@
     },
     {
       "month": "2024-02",
-      "total": 40,
-      "answered": 40,
+      "total": 39,
+      "answered": 39,
       "unanswered": 0,
       "byParty": {
         "Con": 7,
-        "Lab": 23,
+        "Lab": 22,
         "DUP": 1,
         "LD": 8,
         "PC": 1
@@ -2034,7 +2022,7 @@
       "byRegion": {
         "East of England": 4,
         "Midlands": 22,
-        "South West": 4,
+        "South West": 3,
         "Northern Ireland": 1,
         "North East and Yorkshire": 1,
         "North West": 5,
@@ -2166,20 +2154,20 @@
     },
     {
       "month": "2024-10",
-      "total": 41,
-      "answered": 41,
+      "total": 40,
+      "answered": 40,
       "unanswered": 0,
       "byParty": {
         "LD": 5,
         "RUK": 5,
-        "Lab": 21,
+        "Lab": 20,
         "Con": 10
       },
       "byRegion": {
         "South West": 8,
         "East of England": 10,
         "Midlands": 7,
-        "South East": 4,
+        "South East": 3,
         "North West": 3,
         "North East and Yorkshire": 6,
         "London": 3
@@ -2250,11 +2238,11 @@
     },
     {
       "month": "2025-02",
-      "total": 74,
-      "answered": 74,
+      "total": 73,
+      "answered": 73,
       "unanswered": 0,
       "byParty": {
-        "Con": 5,
+        "Con": 4,
         "DUP": 1,
         "LD": 28,
         "Lab": 33,
@@ -2263,11 +2251,11 @@
       },
       "byRegion": {
         "Midlands": 19,
-        "East of England": 11,
         "Northern Ireland": 1,
         "South West": 19,
         "London": 3,
         "North East and Yorkshire": 6,
+        "East of England": 10,
         "South East": 8,
         "North West": 7
       }
@@ -2340,13 +2328,13 @@
     },
     {
       "month": "2025-06",
-      "total": 50,
-      "answered": 50,
+      "total": 49,
+      "answered": 49,
       "unanswered": 0,
       "byParty": {
         "Con": 9,
         "LD": 22,
-        "Lab": 15,
+        "Lab": 14,
         "DUP": 2,
         "Ind": 1,
         "Green": 1
@@ -2354,7 +2342,7 @@
       "byRegion": {
         "East of England": 5,
         "South West": 11,
-        "Midlands": 14,
+        "Midlands": 13,
         "North West": 3,
         "South East": 9,
         "London": 1,
@@ -2408,18 +2396,18 @@
     },
     {
       "month": "2025-09",
-      "total": 18,
-      "answered": 18,
+      "total": 14,
+      "answered": 14,
       "unanswered": 0,
       "byParty": {
-        "LD": 10,
+        "LD": 8,
         "Lab": 3,
-        "Con": 4,
+        "Con": 2,
         "DUP": 1
       },
       "byRegion": {
-        "South West": 5,
-        "East of England": 8,
+        "South West": 3,
+        "East of England": 6,
         "Midlands": 3,
         "Northern Ireland": 1,
         "London": 1
@@ -2427,12 +2415,12 @@
     },
     {
       "month": "2025-10",
-      "total": 72,
-      "answered": 72,
+      "total": 70,
+      "answered": 70,
       "unanswered": 0,
       "byParty": {
         "Lab": 19,
-        "Con": 25,
+        "Con": 23,
         "LD": 23,
         "Ind": 2,
         "Green": 3
@@ -2442,26 +2430,26 @@
         "London": 2,
         "South West": 13,
         "Wales": 1,
-        "South East": 16,
+        "South East": 15,
         "North West": 7,
         "North East and Yorkshire": 9,
-        "East of England": 12
+        "East of England": 11
       }
     },
     {
       "month": "2025-11",
-      "total": 54,
-      "answered": 54,
+      "total": 53,
+      "answered": 53,
       "unanswered": 0,
       "byParty": {
-        "Lab": 10,
+        "Lab": 9,
         "LD": 38,
         "Con": 4,
         "UUP": 1,
         "Ind": 1
       },
       "byRegion": {
-        "North West": 7,
+        "North West": 6,
         "South West": 12,
         "Midlands": 5,
         "South East": 19,
@@ -2473,11 +2461,11 @@
     },
     {
       "month": "2025-12",
-      "total": 24,
-      "answered": 24,
+      "total": 22,
+      "answered": 22,
       "unanswered": 0,
       "byParty": {
-        "Lab": 7,
+        "Lab": 5,
         "Con": 7,
         "Green": 1,
         "RUK": 1,
@@ -2487,7 +2475,7 @@
       "byRegion": {
         "North East and Yorkshire": 3,
         "Midlands": 5,
-        "East of England": 6,
+        "East of England": 4,
         "London": 5,
         "South East": 4,
         "South West": 1
@@ -2495,15 +2483,15 @@
     },
     {
       "month": "2026-01",
-      "total": 27,
-      "answered": 27,
+      "total": 26,
+      "answered": 26,
       "unanswered": 0,
       "byParty": {
         "LD": 8,
         "Con": 8,
         "Lab": 5,
         "DUP": 2,
-        "RUK": 3,
+        "RUK": 2,
         "Ind": 1
       },
       "byRegion": {
@@ -2512,7 +2500,7 @@
         "South East": 5,
         "London": 1,
         "Northern Ireland": 2,
-        "Midlands": 7,
+        "Midlands": 6,
         "North West": 1
       }
     },
@@ -2599,41 +2587,41 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-05-29T10:20:18.508Z",
+    "generatedAt": "2026-05-29T10:33:18.898Z",
     "monthFingerprints": {
-      "2014-06": "7eaafabb",
+      "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
       "2014-08": "f049a9de",
       "2014-09": "8483e8b8",
       "2014-10": "7791905d",
-      "2014-11": "81250241",
+      "2014-11": "efef453f",
       "2014-12": "39c1e01c",
-      "2015-01": "985ad108",
+      "2015-01": "ed279e97",
       "2015-02": "b3d798a1",
       "2015-03": "10ec3a84",
       "2015-06": "862884cd",
       "2015-07": "63ea01b4",
-      "2015-09": "23d0bb8d",
-      "2015-10": "0ef5269a",
-      "2015-11": "8cbbfd8f",
+      "2015-09": "a61eb405",
+      "2015-10": "50b71c0e",
+      "2015-11": "845cc923",
       "2016-01": "76421c18",
       "2016-02": "952782f8",
-      "2016-03": "44da9da2",
+      "2016-03": "cd8a5f5c",
       "2016-04": "b41ea832",
-      "2016-05": "aac7b92f",
+      "2016-05": "0f303c18",
       "2016-06": "d854c07c",
       "2016-07": "c678341e",
       "2016-09": "c3f0e392",
       "2016-10": "ae805b52",
-      "2016-11": "c8b5ea49",
+      "2016-11": "4f14b8c6",
       "2016-12": "8725631f",
-      "2017-01": "d26f4637",
+      "2017-01": "d6cc0af5",
       "2017-02": "c3f80970",
       "2017-03": "19149f47",
       "2017-04": "06d8bf4b",
-      "2017-06": "5ace0352",
+      "2017-06": "f82552bc",
       "2017-07": "2c21e085",
-      "2017-09": "8fe86155",
+      "2017-09": "19b9b725",
       "2017-10": "3cc69753",
       "2017-11": "349b462d",
       "2017-12": "84b38e26",
@@ -2641,11 +2629,11 @@
       "2018-02": "1a6e08bf",
       "2018-03": "46702c79",
       "2018-04": "d32661a0",
-      "2018-05": "67520909",
-      "2018-06": "3efc7b20",
+      "2018-05": "d36d78d8",
+      "2018-06": "419e3d3e",
       "2018-07": "88926f4c",
       "2018-09": "eba70b2f",
-      "2018-10": "ffb67802",
+      "2018-10": "35248dbe",
       "2018-11": "6fed7c9e",
       "2018-12": "afebbddf",
       "2019-01": "3410609d",
@@ -2667,10 +2655,10 @@
       "2020-07": "1cf5ade4",
       "2020-08": "3cb12715",
       "2020-09": "9de6d818",
-      "2020-10": "137c369d",
+      "2020-10": "eff5eaac",
       "2020-11": "1fff4e19",
       "2020-12": "bb74a80e",
-      "2021-01": "c578f72c",
+      "2021-01": "62146afa",
       "2021-02": "29e1657f",
       "2021-03": "e1bdc386",
       "2021-04": "faf0276a",
@@ -2678,56 +2666,56 @@
       "2021-06": "683b7944",
       "2021-07": "0c18f692",
       "2021-08": "747bbf76",
-      "2021-09": "f86c8f70",
+      "2021-09": "189d6bc8",
       "2021-10": "5e575051",
       "2021-11": "c25ac8b7",
       "2021-12": "de91dcab",
       "2022-01": "c06509b2",
-      "2022-02": "ccd5dfd8",
-      "2022-03": "7642b7af",
+      "2022-02": "0bc7feb7",
+      "2022-03": "0385379e",
       "2022-04": "1bc2f428",
       "2022-05": "328da0aa",
       "2022-06": "f4fcec76",
       "2022-07": "be92c4fd",
       "2022-09": "fd208611",
       "2022-10": "e2ada1a1",
-      "2022-11": "240de87a",
+      "2022-11": "1de27ba2",
       "2022-12": "7dafd82b",
-      "2023-01": "1d69fed5",
+      "2023-01": "a2566b1c",
       "2023-02": "36531617",
       "2023-03": "3d60fd89",
       "2023-04": "4eab553d",
       "2023-05": "25e2c47c",
       "2023-06": "6789119d",
-      "2023-07": "7cf406c2",
-      "2023-09": "7ff60bcb",
+      "2023-07": "2837a69c",
+      "2023-09": "b0b07019",
       "2023-10": "e953b490",
-      "2023-11": "14eabff3",
+      "2023-11": "4cd10454",
       "2023-12": "806e25d5",
       "2024-01": "e7464473",
-      "2024-02": "276b5751",
+      "2024-02": "cf48ade4",
       "2024-03": "987b9ce9",
       "2024-04": "d24c7550",
       "2024-05": "e9d41c70",
       "2024-07": "548f2800",
       "2024-08": "86435a88",
       "2024-09": "05e95ed0",
-      "2024-10": "da4a19df",
+      "2024-10": "24ee5bf9",
       "2024-11": "45c52574",
       "2024-12": "826f9b64",
       "2025-01": "52d5f8de",
-      "2025-02": "f3bf49f6",
+      "2025-02": "1e1579cc",
       "2025-03": "3da5abcb",
       "2025-04": "b74c0367",
       "2025-05": "02991b18",
-      "2025-06": "319ea799",
+      "2025-06": "f91bdc67",
       "2025-07": "48f4427c",
       "2025-08": "3bd44e99",
-      "2025-09": "e48a296f",
-      "2025-10": "76ca4edb",
-      "2025-11": "a9b97b37",
-      "2025-12": "a7bb6698",
-      "2026-01": "0e7e90fc",
+      "2025-09": "7e062ea8",
+      "2025-10": "00295205",
+      "2025-11": "d4499f14",
+      "2025-12": "0aeb6f80",
+      "2026-01": "747e0b15",
       "2026-02": "ecb7f1ae",
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
@@ -2798,50 +2786,7 @@
         }
       ],
       "2015-09": [],
-      "2015-10": [
-        {
-          "label": "Education Medical",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        },
-        {
-          "label": "Education Medical Students",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        },
-        {
-          "label": "Higher Education",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        },
-        {
-          "label": "Higher Education Medical",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        },
-        {
-          "label": "Medical Students",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        },
-        {
-          "label": "Medicine Higher Education",
-          "count": 5,
-          "score": 1.028364,
-          "volumeScore": 0.416667,
-          "spikeScore": 6
-        }
-      ],
+      "2015-10": [],
       "2015-11": [],
       "2016-01": [],
       "2016-02": [
@@ -2931,8 +2876,8 @@
         {
           "label": "Services Children",
           "count": 4,
-          "score": 0.719868,
-          "volumeScore": 0.222222,
+          "score": 0.727711,
+          "volumeScore": 0.235294,
           "spikeScore": 3.333333
         }
       ],
@@ -3010,50 +2955,50 @@
         {
           "label": "Children Cost",
           "count": 4,
-          "score": 0.85788,
-          "volumeScore": 0.235294,
+          "score": 0.866704,
+          "volumeScore": 0.25,
           "spikeScore": 5
         },
         {
           "label": "Services Children Cost",
           "count": 4,
-          "score": 0.85788,
-          "volumeScore": 0.235294,
+          "score": 0.866704,
+          "volumeScore": 0.25,
           "spikeScore": 5
         },
         {
           "label": "Services Children",
           "count": 7,
-          "score": 0.75116,
-          "volumeScore": 0.411765,
+          "score": 0.766601,
+          "volumeScore": 0.4375,
           "spikeScore": 2.526316
         },
         {
           "label": "Children Young",
           "count": 3,
-          "score": 0.749658,
-          "volumeScore": 0.176471,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
           "spikeScore": 4
         },
         {
           "label": "Children Young People",
           "count": 3,
-          "score": 0.749658,
-          "volumeScore": 0.176471,
+          "score": 0.756275,
+          "volumeScore": 0.1875,
           "spikeScore": 4
         },
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 3,
-          "score": 0.625596,
-          "volumeScore": 0.176471,
+          "score": 0.632213,
+          "volumeScore": 0.1875,
           "spikeScore": 2.666667
         },
         {
           "label": "UDA Targets and Activity",
           "count": 3,
-          "score": 0.595393,
-          "volumeScore": 0.176471,
+          "score": 0.60201,
+          "volumeScore": 0.1875,
           "spikeScore": 2.4
         }
       ],
@@ -3120,57 +3065,57 @@
         {
           "label": "Nhs Services",
           "count": 5,
-          "score": 0.76298,
-          "volumeScore": 0.135135,
+          "score": 0.765233,
+          "volumeScore": 0.138889,
           "spikeScore": 4.5
         },
         {
           "label": "Charge Revenue",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Children Children",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Expenditure Nhs",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Expenditure Nhs Services",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Nhs Most",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Nhs Most Deprived",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         },
         {
           "label": "Nhs Per",
           "count": 3,
-          "score": 0.692424,
-          "volumeScore": 0.081081,
+          "score": 0.693775,
+          "volumeScore": 0.083333,
           "spikeScore": 4
         }
       ],
@@ -3181,15 +3126,15 @@
         {
           "label": "Fees Charges",
           "count": 3,
-          "score": 0.733692,
-          "volumeScore": 0.230769,
+          "score": 0.745231,
+          "volumeScore": 0.25,
           "spikeScore": 3.428571
         },
         {
           "label": "Services Fees Charges",
           "count": 3,
-          "score": 0.733692,
-          "volumeScore": 0.230769,
+          "score": 0.745231,
+          "volumeScore": 0.25,
           "spikeScore": 3.428571
         }
       ],
@@ -3425,10 +3370,10 @@
       "2020-10": [
         {
           "label": "COVID-19",
-          "count": 17,
-          "score": 0.64511,
-          "volumeScore": 0.485714,
-          "spikeScore": 1.421053
+          "count": 16,
+          "score": 0.622773,
+          "volumeScore": 0.470588,
+          "spikeScore": 1.342105
         }
       ],
       "2020-11": [
@@ -3467,16 +3412,16 @@
         {
           "label": "UDA Targets and Activity",
           "count": 10,
-          "score": 1.150719,
-          "volumeScore": 0.434783,
+          "score": 1.162577,
+          "volumeScore": 0.454545,
           "spikeScore": 8.25
         },
         {
           "label": "COVID-19",
-          "count": 16,
-          "score": 0.794834,
-          "volumeScore": 0.695652,
-          "spikeScore": 1.569231
+          "count": 15,
+          "score": 0.775607,
+          "volumeScore": 0.681818,
+          "spikeScore": 1.5
         }
       ],
       "2021-02": [
@@ -3705,57 +3650,57 @@
         {
           "label": "UDA Targets and Activity",
           "count": 5,
-          "score": 0.705,
-          "volumeScore": 0.102041,
+          "score": 0.706275,
+          "volumeScore": 0.104167,
           "spikeScore": 4
         },
         {
           "label": "Additional Appointments",
           "count": 3,
-          "score": 0.68051,
-          "volumeScore": 0.061224,
+          "score": 0.681275,
+          "volumeScore": 0.0625,
           "spikeScore": 4
         },
         {
           "label": "Services Contracts",
           "count": 3,
-          "score": 0.68051,
-          "volumeScore": 0.061224,
+          "score": 0.681275,
+          "volumeScore": 0.0625,
           "spikeScore": 4
         },
         {
           "label": "Access and Waiting Times",
           "count": 7,
-          "score": 0.659748,
-          "volumeScore": 0.142857,
+          "score": 0.661534,
+          "volumeScore": 0.145833,
           "spikeScore": 3.2
         },
         {
           "label": "Access Nhs",
           "count": 4,
-          "score": 0.488425,
-          "volumeScore": 0.081633,
+          "score": 0.489445,
+          "volumeScore": 0.083333,
           "spikeScore": 2
         },
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 3,
-          "score": 0.455122,
-          "volumeScore": 0.061224,
+          "score": 0.455887,
+          "volumeScore": 0.0625,
           "spikeScore": 1.846154
         },
         {
           "label": "Nhs Services",
           "count": 3,
-          "score": 0.403251,
-          "volumeScore": 0.061224,
+          "score": 0.404016,
+          "volumeScore": 0.0625,
           "spikeScore": 1.5
         },
         {
           "label": "COVID-19",
           "count": 3,
-          "score": 0.322596,
-          "volumeScore": 0.061224,
+          "score": 0.323361,
+          "volumeScore": 0.0625,
           "spikeScore": 1.043478
         }
       ],
@@ -3763,36 +3708,36 @@
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 6,
-          "score": 0.58573,
-          "volumeScore": 0.117647,
+          "score": 0.587142,
+          "volumeScore": 0.12,
           "spikeScore": 2.625
         },
         {
           "label": "UDA Targets and Activity",
           "count": 4,
-          "score": 0.505112,
-          "volumeScore": 0.078431,
+          "score": 0.506053,
+          "volumeScore": 0.08,
           "spikeScore": 2.142857
         },
         {
           "label": "Training and Education",
           "count": 3,
-          "score": 0.498275,
-          "volumeScore": 0.058824,
+          "score": 0.498981,
+          "volumeScore": 0.06,
           "spikeScore": 2.181818
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 3,
-          "score": 0.498275,
-          "volumeScore": 0.058824,
+          "score": 0.498981,
+          "volumeScore": 0.06,
           "spikeScore": 2.181818
         },
         {
           "label": "Nhs England",
           "count": 3,
-          "score": 0.453682,
-          "volumeScore": 0.058824,
+          "score": 0.454387,
+          "volumeScore": 0.06,
           "spikeScore": 1.846154
         }
       ],
@@ -4022,57 +3967,57 @@
         {
           "label": "Services Children",
           "count": 4,
-          "score": 0.664637,
-          "volumeScore": 0.068966,
+          "score": 0.665363,
+          "volumeScore": 0.070175,
           "spikeScore": 3.75
         },
         {
           "label": "Fees Charges",
           "count": 3,
-          "score": 0.626265,
-          "volumeScore": 0.051724,
+          "score": 0.62681,
+          "volumeScore": 0.052632,
           "spikeScore": 3.428571
         },
         {
           "label": "Services Fees Charges",
           "count": 3,
-          "score": 0.626265,
-          "volumeScore": 0.051724,
+          "score": 0.62681,
+          "volumeScore": 0.052632,
           "spikeScore": 3.428571
         },
         {
           "label": "Increase Nhs",
           "count": 4,
-          "score": 0.56765,
-          "volumeScore": 0.068966,
+          "score": 0.568376,
+          "volumeScore": 0.070175,
           "spikeScore": 2.727273
         },
         {
           "label": "Availability Nhs",
           "count": 3,
-          "score": 0.520545,
-          "volumeScore": 0.051724,
+          "score": 0.521089,
+          "volumeScore": 0.052632,
           "spikeScore": 2.4
         },
         {
           "label": "Commissioning and ICB Performance",
           "count": 3,
-          "score": 0.494016,
-          "volumeScore": 0.051724,
+          "score": 0.49456,
+          "volumeScore": 0.052632,
           "spikeScore": 2.181818
         },
         {
           "label": "Training and Education",
           "count": 3,
-          "score": 0.470479,
-          "volumeScore": 0.051724,
+          "score": 0.471024,
+          "volumeScore": 0.052632,
           "spikeScore": 2
         },
         {
           "label": "Access Nhs",
           "count": 9,
-          "score": 0.357663,
-          "volumeScore": 0.155172,
+          "score": 0.359296,
+          "volumeScore": 0.157895,
           "spikeScore": 0.9375
         }
       ],
@@ -4138,57 +4083,57 @@
         {
           "label": "Register Nhs",
           "count": 3,
-          "score": 0.621318,
-          "volumeScore": 0.043478,
+          "score": 0.621701,
+          "volumeScore": 0.044118,
           "spikeScore": 3.428571
         },
         {
           "label": "Availability Nhs",
           "count": 4,
-          "score": 0.535888,
-          "volumeScore": 0.057971,
+          "score": 0.536399,
+          "volumeScore": 0.058824,
           "spikeScore": 2.5
         },
         {
           "label": "Nhs Practices",
           "count": 3,
-          "score": 0.515597,
-          "volumeScore": 0.043478,
+          "score": 0.515981,
+          "volumeScore": 0.044118,
           "spikeScore": 2.4
         },
         {
           "label": "Commissioning and ICB Performance",
           "count": 5,
-          "score": 0.468636,
-          "volumeScore": 0.072464,
+          "score": 0.469275,
+          "volumeScore": 0.073529,
           "spikeScore": 1.894737
         },
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 3,
-          "score": 0.465532,
-          "volumeScore": 0.043478,
+          "score": 0.465916,
+          "volumeScore": 0.044118,
           "spikeScore": 2
         },
         {
           "label": "Services Children",
           "count": 3,
-          "score": 0.465532,
-          "volumeScore": 0.043478,
+          "score": 0.465916,
+          "volumeScore": 0.044118,
           "spikeScore": 2
         },
         {
           "label": "UDA Targets and Activity",
           "count": 3,
-          "score": 0.465532,
-          "volumeScore": 0.043478,
+          "score": 0.465916,
+          "volumeScore": 0.044118,
           "spikeScore": 2
         },
         {
           "label": "Training and Education",
           "count": 4,
-          "score": 0.457204,
-          "volumeScore": 0.057971,
+          "score": 0.457715,
+          "volumeScore": 0.058824,
           "spikeScore": 1.875
         }
       ],
@@ -4339,8 +4284,8 @@
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 3,
-          "score": 0.441516,
-          "volumeScore": 0.125,
+          "score": 0.444777,
+          "volumeScore": 0.130435,
           "spikeScore": 1.5
         }
       ],
@@ -4348,15 +4293,15 @@
         {
           "label": "Nhs Services",
           "count": 5,
-          "score": 0.571462,
-          "volumeScore": 0.166667,
+          "score": 0.57491,
+          "volumeScore": 0.172414,
           "spikeScore": 2.25
         },
         {
           "label": "Access and Waiting Times",
           "count": 5,
-          "score": 0.554831,
-          "volumeScore": 0.166667,
+          "score": 0.55828,
+          "volumeScore": 0.172414,
           "spikeScore": 2.117647
         }
       ],
@@ -4387,57 +4332,57 @@
         {
           "label": "Access Nhs",
           "count": 7,
-          "score": 0.689556,
-          "volumeScore": 0.118644,
-          "spikeScore": 3.692308
+          "score": 0.716189,
+          "volumeScore": 0.12069,
+          "spikeScore": 4
         },
         {
           "label": "Increase Access Nhs",
           "count": 3,
-          "score": 0.625739,
-          "volumeScore": 0.050847,
+          "score": 0.626265,
+          "volumeScore": 0.051724,
           "spikeScore": 3.428571
         },
         {
           "label": "Increase Access",
           "count": 3,
-          "score": 0.585026,
-          "volumeScore": 0.050847,
+          "score": 0.585552,
+          "volumeScore": 0.051724,
           "spikeScore": 3
         },
         {
           "label": "Nhs Appointments",
           "count": 4,
-          "score": 0.541783,
-          "volumeScore": 0.067797,
+          "score": 0.542484,
+          "volumeScore": 0.068966,
           "spikeScore": 2.5
         },
         {
           "label": "Access Services",
           "count": 3,
-          "score": 0.520019,
-          "volumeScore": 0.050847,
+          "score": 0.520545,
+          "volumeScore": 0.051724,
           "spikeScore": 2.4
         },
         {
           "label": "Nhs Services",
           "count": 4,
-          "score": 0.41963,
-          "volumeScore": 0.067797,
+          "score": 0.420332,
+          "volumeScore": 0.068966,
           "spikeScore": 1.578947
         },
         {
           "label": "Access and Waiting Times",
           "count": 4,
-          "score": 0.395599,
-          "volumeScore": 0.067797,
+          "score": 0.396301,
+          "volumeScore": 0.068966,
           "spikeScore": 1.428571
         },
         {
           "label": "Nhs Patients",
           "count": 3,
-          "score": 0.369428,
-          "volumeScore": 0.050847,
+          "score": 0.369954,
+          "volumeScore": 0.051724,
           "spikeScore": 1.333333
         }
       ],
@@ -4476,37 +4421,37 @@
         {
           "label": "Dental Recovery Plan",
           "count": 9,
-          "score": 0.825204,
-          "volumeScore": 0.225,
+          "score": 0.828666,
+          "volumeScore": 0.230769,
           "spikeScore": 4.615385
         },
         {
           "label": "Training and Education",
           "count": 3,
-          "score": 0.564713,
-          "volumeScore": 0.075,
+          "score": 0.565867,
+          "volumeScore": 0.076923,
           "spikeScore": 2.666667
         },
         {
           "label": "UDA Targets and Activity",
           "count": 3,
-          "score": 0.484445,
-          "volumeScore": 0.075,
+          "score": 0.485599,
+          "volumeScore": 0.076923,
           "spikeScore": 2
         },
         {
           "label": "Access and Waiting Times",
           "count": 4,
-          "score": 0.426516,
-          "volumeScore": 0.1,
+          "score": 0.428055,
+          "volumeScore": 0.102564,
           "spikeScore": 1.5
         },
         {
           "label": "Commissioning and ICB Performance",
           "count": 3,
-          "score": 0.349856,
-          "volumeScore": 0.075,
-          "spikeScore": 1.142857
+          "score": 0.361537,
+          "volumeScore": 0.076923,
+          "spikeScore": 1.2
         }
       ],
       "2024-03": [
@@ -4621,22 +4566,22 @@
         {
           "label": "Access and Waiting Times",
           "count": 4,
-          "score": 0.425053,
-          "volumeScore": 0.097561,
+          "score": 0.426516,
+          "volumeScore": 0.1,
           "spikeScore": 1.5
         },
         {
           "label": "Commissioning and ICB Performance",
           "count": 4,
-          "score": 0.413458,
-          "volumeScore": 0.097561,
+          "score": 0.414921,
+          "volumeScore": 0.1,
           "spikeScore": 1.428571
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 3,
-          "score": 0.410419,
-          "volumeScore": 0.073171,
+          "score": 0.411516,
+          "volumeScore": 0.075,
           "spikeScore": 1.5
         }
       ],
@@ -4734,57 +4679,57 @@
         {
           "label": "Nhs Capacity",
           "count": 10,
-          "score": 1.075044,
-          "volumeScore": 0.135135,
+          "score": 1.076154,
+          "volumeScore": 0.136986,
           "spikeScore": 11
         },
         {
           "label": "Adequacy Nhs Capacity",
           "count": 9,
-          "score": 1.032131,
-          "volumeScore": 0.121622,
+          "score": 1.033131,
+          "volumeScore": 0.123288,
           "spikeScore": 10
         },
         {
           "label": "His Adequacy Nhs",
           "count": 9,
-          "score": 0.976486,
-          "volumeScore": 0.121622,
+          "score": 0.977486,
+          "volumeScore": 0.123288,
           "spikeScore": 8.571429
         },
         {
           "label": "Adequacy Nhs",
           "count": 10,
-          "score": 0.970931,
-          "volumeScore": 0.135135,
+          "score": 0.972041,
+          "volumeScore": 0.136986,
           "spikeScore": 8.25
         },
         {
           "label": "Adequacy Access Nhs",
           "count": 5,
-          "score": 0.766657,
-          "volumeScore": 0.067568,
+          "score": 0.767212,
+          "volumeScore": 0.068493,
           "spikeScore": 5.142857
         },
         {
           "label": "His Adequacy Access",
           "count": 5,
-          "score": 0.766657,
-          "volumeScore": 0.067568,
+          "score": 0.767212,
+          "volumeScore": 0.068493,
           "spikeScore": 5.142857
         },
         {
           "label": "Appointments Published",
           "count": 4,
-          "score": 0.749136,
-          "volumeScore": 0.054054,
+          "score": 0.749581,
+          "volumeScore": 0.054795,
           "spikeScore": 5
         },
         {
           "label": "Appointments Published February",
           "count": 4,
-          "score": 0.749136,
-          "volumeScore": 0.054054,
+          "score": 0.749581,
+          "volumeScore": 0.054795,
           "spikeScore": 5
         }
       ],
@@ -4895,37 +4840,37 @@
       "2025-06": [
         {
           "label": "Nhs Pay",
-          "count": 4,
-          "score": 0.764704,
-          "volumeScore": 0.08,
-          "spikeScore": 5
+          "count": 3,
+          "score": 0.68051,
+          "volumeScore": 0.061224,
+          "spikeScore": 4
         },
         {
           "label": "Nhs Pay Review",
           "count": 3,
-          "score": 0.679775,
-          "volumeScore": 0.06,
+          "score": 0.68051,
+          "volumeScore": 0.061224,
           "spikeScore": 4
         },
         {
           "label": "Training and Education",
           "count": 4,
-          "score": 0.671258,
-          "volumeScore": 0.08,
+          "score": 0.672237,
+          "volumeScore": 0.081633,
           "spikeScore": 3.75
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 4,
-          "score": 0.392081,
-          "volumeScore": 0.08,
-          "spikeScore": 1.363636
+          "score": 0.403901,
+          "volumeScore": 0.081633,
+          "spikeScore": 1.428571
         },
         {
           "label": "Access and Waiting Times",
           "count": 4,
-          "score": 0.325259,
-          "volumeScore": 0.08,
+          "score": 0.326238,
+          "volumeScore": 0.081633,
           "spikeScore": 1
         }
       ],
@@ -4994,43 +4939,43 @@
         {
           "label": "Commissioning and ICB Performance",
           "count": 9,
-          "score": 0.791704,
-          "volumeScore": 0.125,
+          "score": 0.793847,
+          "volumeScore": 0.128571,
           "spikeScore": 5
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 10,
-          "score": 0.62459,
-          "volumeScore": 0.138889,
+          "score": 0.626971,
+          "volumeScore": 0.142857,
           "spikeScore": 2.869565
         },
         {
           "label": "Access and Waiting Times",
           "count": 5,
-          "score": 0.453514,
-          "volumeScore": 0.069444,
+          "score": 0.454705,
+          "volumeScore": 0.071429,
           "spikeScore": 1.8
         },
         {
           "label": "Nhs Services",
           "count": 3,
-          "score": 0.424412,
-          "volumeScore": 0.041667,
+          "score": 0.425126,
+          "volumeScore": 0.042857,
           "spikeScore": 1.714286
         },
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 4,
-          "score": 0.412286,
-          "volumeScore": 0.055556,
+          "score": 0.413238,
+          "volumeScore": 0.057143,
           "spikeScore": 1.578947
         },
         {
           "label": "Access Nhs",
           "count": 4,
-          "score": 0.388255,
-          "volumeScore": 0.055556,
+          "score": 0.389207,
+          "volumeScore": 0.057143,
           "spikeScore": 1.428571
         }
       ],
@@ -5038,57 +4983,57 @@
         {
           "label": "Taking Improve Access",
           "count": 4,
-          "score": 0.598962,
-          "volumeScore": 0.074074,
+          "score": 0.599801,
+          "volumeScore": 0.075472,
           "spikeScore": 3
         },
         {
           "label": "Improve Access",
           "count": 4,
-          "score": 0.522945,
-          "volumeScore": 0.074074,
+          "score": 0.523783,
+          "volumeScore": 0.075472,
           "spikeScore": 2.307692
         },
         {
           "label": "Training and Education",
           "count": 4,
-          "score": 0.522945,
-          "volumeScore": 0.074074,
+          "score": 0.523783,
+          "volumeScore": 0.075472,
           "spikeScore": 2.307692
         },
         {
           "label": "Access and Waiting Times",
           "count": 7,
-          "score": 0.506411,
-          "volumeScore": 0.12963,
+          "score": 0.507879,
+          "volumeScore": 0.132075,
           "spikeScore": 1.92
         },
         {
           "label": "Improve Access Nhs",
           "count": 3,
-          "score": 0.496314,
-          "volumeScore": 0.055556,
+          "score": 0.496943,
+          "volumeScore": 0.056604,
           "spikeScore": 2.181818
         },
         {
           "label": "Nhs Services",
           "count": 3,
-          "score": 0.415538,
-          "volumeScore": 0.055556,
+          "score": 0.416167,
+          "volumeScore": 0.056604,
           "spikeScore": 1.6
         },
         {
           "label": "Access Nhs",
           "count": 4,
-          "score": 0.388525,
-          "volumeScore": 0.074074,
+          "score": 0.389364,
+          "volumeScore": 0.075472,
           "spikeScore": 1.363636
         },
         {
           "label": "Commissioning and ICB Performance",
           "count": 3,
-          "score": 0.360038,
-          "volumeScore": 0.055556,
+          "score": 0.360667,
+          "volumeScore": 0.056604,
           "spikeScore": 1.263158
         }
       ],
@@ -5097,8 +5042,8 @@
         {
           "label": "Urgent Appointments",
           "count": 3,
-          "score": 0.58638,
-          "volumeScore": 0.111111,
+          "score": 0.588944,
+          "volumeScore": 0.115385,
           "spikeScore": 2.666667
         }
       ],

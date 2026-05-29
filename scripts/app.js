@@ -306,10 +306,10 @@ function getScopedQuestions() {
   }
 
   return scoped.filter((question) => {
-    const heading = (question.heading || "").toLowerCase();
-    const questionTextVal = (question.questionText || "").toLowerCase();
+    const heading = question.heading || "";
+    const questionTextVal = question.questionText || "";
     
-    return heading.includes("dent") || questionTextVal.includes("dent");
+    return /\bdent/i.test(heading) || /\bdent/i.test(questionTextVal);
   });
 }
 
