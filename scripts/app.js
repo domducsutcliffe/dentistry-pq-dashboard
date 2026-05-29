@@ -425,8 +425,9 @@ function renderLineChart(items) {
     return;
   }
 
-  const width = 760;
-  const height = 230;
+  const containerWidth = elements.monthlyChart ? elements.monthlyChart.clientWidth : 0;
+  const width = containerWidth > 16 ? (containerWidth - 16) : 760;
+  const height = 220;
   const pad = 28;
   const max = Math.max(...months.map(([, monthQuestions]) => monthQuestions.length), 1);
   const step = months.length > 1 ? (width - pad * 2) / (months.length - 1) : 0;
@@ -812,8 +813,11 @@ elements.monthlyChart.addEventListener("click", (event) => {
   const rect = svg.getBoundingClientRect();
   const clickXRel = event.clientX - rect.left;
   const clickYRel = event.clientY - rect.top;
-  const viewBoxWidth = 760;
-  const viewBoxHeight = 230;
+  
+  const viewBoxAttr = svg.getAttribute("viewBox");
+  const viewBoxParts = viewBoxAttr ? viewBoxAttr.split(/\s+/) : [];
+  const viewBoxWidth = viewBoxParts[2] ? parseFloat(viewBoxParts[2]) : 760;
+  const viewBoxHeight = viewBoxParts[3] ? parseFloat(viewBoxParts[3]) : 220;
   
   const svgX = (clickXRel / rect.width) * viewBoxWidth;
   const svgY = (clickYRel / rect.height) * viewBoxHeight;
@@ -881,6 +885,14 @@ document.addEventListener("click", (event) => {
 
   state.selectedMonth = "";
   render();
+});
+
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(resizeTimeout);
+  resizeTimeout = requestAnimationFrame(() => {
+    render();
+  });
 });
 
 loadData()
