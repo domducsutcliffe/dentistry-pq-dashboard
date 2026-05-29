@@ -222,7 +222,7 @@ select:focus {
 
 .charts {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.6fr 0.7fr 1fr;
   gap: 8px;
   margin-bottom: 10px;
 }
@@ -301,6 +301,14 @@ select:focus {
   padding: 4px 6px;
   border-radius: 4px;
   transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+#theme-chart .bar-row {
+  grid-template-columns: minmax(240px, 2.5fr) minmax(80px, 2.5fr) 50px;
+}
+
+#party-chart .bar-row {
+  grid-template-columns: 60px 1fr 50px;
 }
 
 .bar-row:hover {
