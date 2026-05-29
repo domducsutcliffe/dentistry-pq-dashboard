@@ -361,6 +361,12 @@ select:focus {
   max-height: 220px;
   overflow-y: auto;
   padding-right: 4px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.chart-bars::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }
 
 .data-footer {
