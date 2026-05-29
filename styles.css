@@ -142,7 +142,7 @@ h2 {
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 130px 170px 130px 110px;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 170px 110px;
   gap: 6px;
   align-items: end;
   margin-bottom: 10px;

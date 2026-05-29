@@ -622,6 +622,11 @@ async function main() {
 
   const questions = rawQuestions
     .map((item) => mapQuestion(item, lookup))
+    .filter((q) => {
+      const heading = (q.heading || "").toLowerCase();
+      const questionText = (q.questionText || "").toLowerCase();
+      return heading.includes("dent") || questionText.includes("dent");
+    })
     .sort((a, b) => {
       const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
       if (dateCompare) return dateCompare;

@@ -7,7 +7,6 @@ const state = {
   answer: "",
   periods: ["current"],
   searchQuestionOnly: false,
-  searchAnswerMatch: false,
   chartPoints: [],
   selectedMonth: "",
   selectedTopic: "",
@@ -62,7 +61,6 @@ const elements = {
   search: document.querySelector("#search"),
   periodCheckboxes: document.querySelectorAll('input[name="period"]'),
   searchQuestionOnly: document.querySelector("#search-question-only"),
-  searchAnswerMatch: document.querySelector("#search-answer-match"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
   answerFilter: document.querySelector("#answer-filter"),
@@ -311,18 +309,7 @@ function getScopedQuestions() {
     const heading = (question.heading || "").toLowerCase();
     const questionTextVal = (question.questionText || "").toLowerCase();
     
-    if (heading.includes("dent") || questionTextVal.includes("dent")) {
-      return true;
-    }
-    
-    if (state.searchAnswerMatch) {
-      const answer = (question.answerText || "").toLowerCase();
-      if (answer.includes("dent")) {
-        return true;
-      }
-    }
-    
-    return false;
+    return heading.includes("dent") || questionTextVal.includes("dent");
   });
 }
 
@@ -766,10 +753,7 @@ if (elements.searchQuestionOnly) {
   });
 }
 
-elements.searchAnswerMatch.addEventListener("change", (event) => {
-  state.searchAnswerMatch = event.target.checked;
-  render();
-});
+
 
 elements.partyFilter.addEventListener("change", (event) => {
   state.party = event.target.value;
@@ -847,8 +831,7 @@ elements.resetFilters.addEventListener("click", () => {
     elements.searchQuestionOnly.checked = false;
   }
   state.searchQuestionOnly = false;
-  elements.searchAnswerMatch.checked = false;
-  state.searchAnswerMatch = false;
+
 
   elements.partyFilter.value = "";
   elements.regionFilter.value = "";
@@ -987,7 +970,7 @@ document.addEventListener("click", (event) => {
     (elements.regionFilter && elements.regionFilter.contains(event.target)) ||
     (elements.answerFilter && elements.answerFilter.contains(event.target)) ||
     (elements.searchQuestionOnly && elements.searchQuestionOnly.contains(event.target)) ||
-    (elements.searchAnswerMatch && elements.searchAnswerMatch.contains(event.target)) ||
+
     ([...elements.periodCheckboxes].some(cb => cb.contains(event.target))) ||
     (elements.resetFilters && elements.resetFilters.contains(event.target));
 
@@ -1009,7 +992,7 @@ loadData()
     if (elements.searchQuestionOnly) {
       elements.searchQuestionOnly.checked = state.searchQuestionOnly;
     }
-    elements.searchAnswerMatch.checked = state.searchAnswerMatch;
+
     renderSelects();
     render();
 
