@@ -307,12 +307,22 @@ select:focus {
   background: rgba(255, 102, 0, 0.05);
 }
 
+.bar-row:hover .bar-label {
+  color: var(--orange);
+}
+
+.bar-row:hover .bar-fill {
+  background: var(--orange);
+  opacity: 0.85;
+}
+
 .bar-row.active {
   background: rgba(255, 102, 0, 0.08);
 }
 
 .bar-row.active .bar-fill {
   background: var(--orange);
+  opacity: 1;
 }
 
 .bar-row.active .bar-label {
@@ -324,6 +334,7 @@ select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.15s ease;
 }
 
 .bar-track {
@@ -337,7 +348,7 @@ select:focus {
 .bar-fill {
   height: 100%;
   background: var(--bar-soft);
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background-color 0.15s ease, opacity 0.15s ease;
 }
 
 .bar-value {

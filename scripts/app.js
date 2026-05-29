@@ -326,17 +326,17 @@ function getScopedQuestions() {
   });
 }
 
-function getFilteredQuestions(excludeMonth = false, excludeTopic = false) {
+function getFilteredQuestions(excludeMonth = false, excludeTopic = false, excludeParty = false, excludeRegion = false) {
   const query = state.query.trim().toLowerCase();
   const exactUin = query.match(/^(?:uin:?\s*)?(\d{2,})$/)?.[1] || "";
 
   return getScopedQuestions().filter((question) => {
-    if (state.party) {
+    if (!excludeParty && state.party) {
       const party = question.member.partyAbbreviation || question.member.party || "Unknown";
       if (party !== state.party) return false;
     }
 
-    if (state.region && question.region.nhsRegion !== state.region) return false;
+    if (!excludeRegion && state.region && question.region.nhsRegion !== state.region) return false;
     if (state.answer === "answered" && !question.answered) return false;
     if (state.answer === "unanswered" && question.answered) return false;
 
@@ -405,17 +405,33 @@ function renderScopeStatus(filteredCount) {
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
   const info = getPeriodInfo();
 
+  const filterParts = [];
+  if (state.selectedTopic) {
+    filterParts.push(`topic "${escapeHtml(state.selectedTopic)}"`);
+  }
+  if (state.party) {
+    filterParts.push(`party "${escapeHtml(state.party)}"`);
+  }
+  if (state.region) {
+    filterParts.push(`NHS region "${escapeHtml(state.region)}"`);
+  }
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    filterParts.push(`month "${monthName} ${year}"`);
+  }
+
   let statusText = `${formatNumber.format(filteredCount)} ${info.statusLabel}`;
-  if (state.selectedMonth && state.selectedTopic) {
-    const [year, monthNum] = state.selectedMonth.split("-");
-    const monthName = MONTH_NAMES[monthNum] || monthNum;
-    statusText = `${formatNumber.format(filteredCount)} questions for topic "${escapeHtml(state.selectedTopic)}" from ${monthName} ${year} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-filters-link">(clear filters)</span>`;
-  } else if (state.selectedMonth) {
-    const [year, monthNum] = state.selectedMonth.split("-");
-    const monthName = MONTH_NAMES[monthNum] || monthNum;
-    statusText = `${formatNumber.format(filteredCount)} questions from ${monthName} ${year} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-month-filter">(clear filter)</span>`;
-  } else if (state.selectedTopic) {
-    statusText = `${formatNumber.format(filteredCount)} questions for topic "${escapeHtml(state.selectedTopic)}" shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-topic-filter">(clear filter)</span>`;
+  if (filterParts.length > 0) {
+    let joinedFilters = "";
+    if (filterParts.length === 1) {
+      joinedFilters = filterParts[0];
+    } else if (filterParts.length === 2) {
+      joinedFilters = filterParts.join(" and ");
+    } else {
+      joinedFilters = filterParts.slice(0, -1).join(", ") + ", and " + filterParts.at(-1);
+    }
+    statusText = `${formatNumber.format(filteredCount)} questions matching ${joinedFilters} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-filters-link">(clear filters)</span>`;
   }
 
   elements.status.innerHTML = `<span class="pulsing-dot"></span>${statusText} &middot; ${formatNumber.format(
@@ -433,29 +449,23 @@ function renderScopeStatus(filteredCount) {
   if (state.selectedTopic) {
     footerText += ` Filtered to show only questions under topic "${state.selectedTopic}".`;
   }
+  if (state.party) {
+    footerText += ` Filtered to show only questions from party "${state.party}".`;
+  }
+  if (state.region) {
+    footerText += ` Filtered to show only questions from NHS region "${state.region}".`;
+  }
   elements.footer.textContent = footerText;
-
-  const clearMonthBtn = document.querySelector("#clear-month-filter");
-  if (clearMonthBtn) {
-    clearMonthBtn.addEventListener("click", () => {
-      state.selectedMonth = "";
-      render();
-    });
-  }
-
-  const clearTopicBtn = document.querySelector("#clear-topic-filter");
-  if (clearTopicBtn) {
-    clearTopicBtn.addEventListener("click", () => {
-      state.selectedTopic = "";
-      render();
-    });
-  }
 
   const clearBothBtn = document.querySelector("#clear-filters-link");
   if (clearBothBtn) {
     clearBothBtn.addEventListener("click", () => {
       state.selectedMonth = "";
       state.selectedTopic = "";
+      state.party = "";
+      state.region = "";
+      elements.partyFilter.value = "";
+      elements.regionFilter.value = "";
       render();
     });
   }
@@ -671,8 +681,10 @@ function render() {
   }
 
   const filtered = getFilteredQuestions();
-  const lineChartFiltered = getFilteredQuestions(true, false);
-  const themeChartFiltered = getFilteredQuestions(false, true);
+  const lineChartFiltered = getFilteredQuestions(true, false, false, false);
+  const themeChartFiltered = getFilteredQuestions(false, true, false, false);
+  const partyChartFiltered = getFilteredQuestions(false, false, true, false);
+  const regionChartFiltered = getFilteredQuestions(false, false, false, true);
 
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
@@ -681,11 +693,15 @@ function render() {
     limit: 100,
     selectedKey: state.selectedTopic
   });
-  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
+  renderBars(elements.partyChart, countBy(partyChartFiltered, (question) => question.member.partyAbbreviation || question.member.party), {
     limit: 30,
     snpFloor: true,
+    selectedKey: state.party
   });
-  renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion), { limit: 12 });
+  renderBars(elements.regionChart, countBy(regionChartFiltered, (question) => question.region.nhsRegion), {
+    limit: 12,
+    selectedKey: state.region
+  });
   renderTable(filtered);
 }
 
@@ -782,6 +798,38 @@ elements.themeChart.addEventListener("click", (event) => {
   } else {
     state.selectedTopic = topic;
   }
+  render();
+});
+
+elements.partyChart.addEventListener("click", (event) => {
+  const row = event.target.closest(".bar-row");
+  if (!row) return;
+
+  const party = row.getAttribute("data-key");
+  if (!party) return;
+
+  if (state.party === party) {
+    state.party = "";
+  } else {
+    state.party = party;
+  }
+  elements.partyFilter.value = state.party;
+  render();
+});
+
+elements.regionChart.addEventListener("click", (event) => {
+  const row = event.target.closest(".bar-row");
+  if (!row) return;
+
+  const region = row.getAttribute("data-key");
+  if (!region) return;
+
+  if (state.region === region) {
+    state.region = "";
+  } else {
+    state.region = region;
+  }
+  elements.regionFilter.value = state.region;
   render();
 });
 
@@ -1056,6 +1104,19 @@ loadData()
       
       // Trigger reset click synchronously
       elements.resetFilters.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    } else if (window.location.search.includes("test-multi-select=true")) {
+      const topicRow = document.querySelector('.bar-row[data-key="Coronavirus"]');
+      if (topicRow) {
+        topicRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+      const partyRow = document.querySelector('.bar-row[data-key="Lab"]');
+      if (partyRow) {
+        partyRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+      const regionRow = document.querySelector('.bar-row[data-key="London"]');
+      if (regionRow) {
+        regionRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
     }
   })
   .catch((error) => {
