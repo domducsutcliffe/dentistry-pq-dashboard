@@ -529,26 +529,8 @@ function buildSummary(
   for (const month of orderedMonths) {
     const counts = new Map();
     for (const q of monthQuestions.get(month) || []) {
-      const text = toTopicText(q);
-      const normalised = normaliseForMatch(text);
-      const concepts = matchQuestionConcepts(normalised, taxonomy);
-
-      if (concepts.length) {
-        for (const concept of concepts) {
-          counts.set(concept, (counts.get(concept) || 0) + 1);
-        }
-        continue;
-      }
-
-      // Immediate emerging topic fallback, but only from quality phrases.
-      const phrases = extractTopicPhrases(text).filter((phrase) => {
-        const words = phrase.split(" ");
-        if (words.length < 2 || words.length > 4) return false;
-        if (STOPWORDS.has(phrase)) return false;
-        return POLICY_TERMS.some((term) => phrase.includes(term));
-      });
-      for (const phrase of phrases) {
-        counts.set(titleCase(phrase), (counts.get(titleCase(phrase)) || 0) + 1);
+      if (q.topic && q.topic !== "General") {
+        counts.set(q.topic, (counts.get(q.topic) || 0) + 1);
       }
     }
     monthConceptCounts.set(month, counts);
@@ -612,6 +594,106 @@ function buildSummary(
   };
 }
 
+function classifyQuestions(questions, taxonomy) {
+  const tokenize = (text) => {
+    return String(text || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .map((w) => w.trim())
+      .filter((w) => w.length > 2 && !STOPWORDS.has(w));
+  };
+
+  const df = new Map();
+  const docTokens = questions.map((q) => {
+    const headingTokens = tokenize(q.heading || "");
+    const questionTokens = tokenize(q.questionText || "");
+    const tokens = [...headingTokens, ...headingTokens, ...questionTokens];
+    const uniqueTokens = new Set(tokens);
+    for (const token of uniqueTokens) {
+      df.set(token, (df.get(token) || 0) + 1);
+    }
+    return tokens;
+  });
+
+  const N = questions.length;
+  const getIdf = (token) => {
+    const count = df.get(token) || 0;
+    if (count === 0) return 0;
+    return Math.log(1 + N / count);
+  };
+
+  const conceptVectors = taxonomy.concepts.map((concept) => {
+    const labelTokens = tokenize(concept.label);
+    const aliasTokens = (concept.aliases || []).flatMap((alias) => tokenize(alias));
+    const termWeights = new Map();
+    for (const t of labelTokens) {
+      termWeights.set(t, (termWeights.get(t) || 0) + 3.0);
+    }
+    for (const t of aliasTokens) {
+      termWeights.set(t, (termWeights.get(t) || 0) + 1.0);
+    }
+
+    const vector = new Map();
+    let magnitudeSq = 0;
+    for (const [term, weight] of termWeights.entries()) {
+      const idf = getIdf(term);
+      if (idf > 0) {
+        const val = weight * idf;
+        vector.set(term, val);
+        magnitudeSq += val * val;
+      }
+    }
+
+    return {
+      label: concept.label,
+      vector,
+      magnitude: Math.sqrt(magnitudeSq),
+    };
+  });
+
+  questions.forEach((q, idx) => {
+    const tokens = docTokens[idx];
+    const tf = new Map();
+    for (const token of tokens) {
+      tf.set(token, (tf.get(token) || 0) + 1);
+    }
+
+    const qVector = new Map();
+    let qMagnitudeSq = 0;
+    for (const [term, count] of tf.entries()) {
+      const idf = getIdf(term);
+      if (idf > 0) {
+        const val = count * idf;
+        qVector.set(term, val);
+        qMagnitudeSq += val * val;
+      }
+    }
+    const qMagnitude = Math.sqrt(qMagnitudeSq);
+
+    let bestLabel = "General";
+    let bestScore = 0;
+
+    if (qMagnitude > 0) {
+      for (const concept of conceptVectors) {
+        if (concept.magnitude === 0) continue;
+        let dotProduct = 0;
+        for (const [term, val] of qVector.entries()) {
+          const conceptVal = concept.vector.get(term) || 0;
+          dotProduct += val * conceptVal;
+        }
+        const score = dotProduct / (qMagnitude * concept.magnitude);
+        if (score > bestScore) {
+          bestScore = score;
+          bestLabel = concept.label;
+        }
+      }
+    }
+
+    q.topic = bestScore >= 0.03 ? bestLabel : "General";
+  });
+}
+
 async function main() {
   await mkdir(dataDir, { recursive: true });
   const taxonomy = await loadTopicTaxonomy();
@@ -632,6 +714,8 @@ async function main() {
       if (dateCompare) return dateCompare;
       return String(b.uin || "").localeCompare(String(a.uin || ""));
     });
+
+  classifyQuestions(questions, taxonomy);
 
   const unmatchedConstituencies = [
     ...new Set(

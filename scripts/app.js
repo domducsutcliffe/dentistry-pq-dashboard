@@ -118,111 +118,7 @@ function escapeHtml(value) {
 }
 
 function getQuestionTopic(question) {
-  const heading = question.heading || "";
-  const h = heading.trim().toLowerCase();
-
-  if (/^(dental services|dentistry|nhs dentistry|nhs dental services|dental health|general dental services)$/i.test(heading.trim())) {
-    return "General";
-  }
-
-  let sub = heading;
-  if (heading.includes(":")) {
-    const parts = heading.split(":");
-    sub = parts[parts.length - 1].trim();
-  }
-
-  sub = sub.replace(/\b(dental\s+services|dental\s+health|dentistry|nhs\s+dentistry|nhs\s+dental\s+services|nhs|dental|oral\s+health|oral)\b/ig, "").trim();
-  sub = sub.replace(/^[-:\s]+|[-:\s]+$/g, "").trim();
-
-  if (!sub) {
-    return "General";
-  }
-
-  sub = sub.charAt(0).toUpperCase() + sub.slice(1);
-  const subLower = sub.toLowerCase();
-  
-  // Access & Geography: waiting lists, rural areas, registration, appointments, local constituencies/places
-  if (
-    /^(waiting lists?|rural areas?|registration|appointments?|access|provision|local areas?|hubs|urgent care|udc|emergency|emergencies|constituenc|geograph|region|nation|area|closures?|mobile)/i.test(subLower) ||
-    /^(plymouth|york|lincolnshire|norfolk|south west|west dorset|cornwall|east of england|greater manchester|south east|north west|cumbria|bradford|greater london|easington|slough|surrey|wiltshire|west yorkshire|devon|exeter|lancaster|stockport|north cornwall|lancashire|north east|portsmouth|coventry|ilford|tees valley|west midlands|hastings|leeds|suffolk|somerset|dorset|cambridgeshire|shropshire|hampshire|birmingham|bristol|sheffield|hertfordshire|derbyshire|oxfordshire|gloucestershire|nottinghamshire|leicestershire|sussex|berkshire|buckinghamshire|cheshire|staffordshire|durham|tyne and wear|cleveland|humberside|hereford|worcester|warwick|northampton|hendon|mid bedfordshire|north shropshire|huntingdon|buckingham|bolton)/i.test(subLower)
-  ) {
-    return "Access & Geography";
-  }
-  
-  // Workforce: staff, recruitment, vacancies, pay, salaries, employment, retention, jobs, etc.
-  if (
-    /^(staff|recruitment|vacancies|pay|manpower|employment|salary|salaries|nurses|hygienists|therapists|retention|careers?|jobs?|agency workers|conditions of employment|working hours|resignations?|equal pay|turnover)/i.test(subLower) ||
-    subLower === "laboratories" || subLower === "consultants" || subLower === "junior doctors" || subLower === "workforce"
-  ) {
-    return "Workforce";
-  }
-  
-  // Training & Qualifications
-  if (
-    /^(training|qualifications?|education|students?|exams?|ore|degree|higher education)/i.test(subLower)
-  ) {
-    return "Training & Qualifications";
-  }
-  
-  // Finance
-  if (
-    /^(finance|expenditure|budget|funding|costs?|per capita costs|capital investment)/i.test(subLower)
-  ) {
-    return "Finance";
-  }
-  
-  // Fees & Charges
-  if (
-    /^(fees and charges|fees & charges|charges|prescriptions?|exempt)/i.test(subLower)
-  ) {
-    return "Fees & Charges";
-  }
-  
-  // Children
-  if (
-    /^(children|schools?|pupils?|babies|baby|young|nurseries)/i.test(subLower)
-  ) {
-    return "Children";
-  }
-  
-  // Oral Health & Prevention
-  if (
-    /^(prevention|preventative|health|fluoride|fluoridation|brushing|decay|toothache|hygiene|sugar|diet|obesity|cancer|screening|gum diseases?|smoking)/i.test(subLower)
-  ) {
-    return "Oral Health & Prevention";
-  }
-  
-  // Coronavirus
-  if (
-    /^(coronavirus|covid|vaccination|pandemic|protective clothing)/i.test(subLower)
-  ) {
-    return "Coronavirus";
-  }
-  
-  // Regulation
-  if (
-    /^(general dental council|regulation|gdc|cqc|inspections?|inspections)/i.test(subLower) ||
-    subLower.includes("council")
-  ) {
-    return "Regulation";
-  }
-  
-  // Migrant Workers
-  if (
-    /^(migrant workers|overseas|foreign nationals|english language)/i.test(subLower)
-  ) {
-    return "Migrant Workers";
-  }
-
-  if (subLower === "contracts" || subLower === "standards" || subLower === "private sector" || subLower === "primary care" || subLower === "pregnancy" || subLower === "care homes" || subLower === "research") {
-    return sub;
-  }
-
-  if (heading.toLowerCase().startsWith("dental services:")) {
-    return "Access & Geography";
-  }
-  
-  return "Other";
+  return question.topic || "General";
 }
 
 function getTopicCounts(questions) {
@@ -1071,7 +967,7 @@ loadData()
         }
       }, 50);
     } else if (window.location.search.includes("test-topic-click=true")) {
-      const row = document.querySelector('.bar-row[data-key="Access & Geography"]');
+      const row = document.querySelector('.bar-row[data-key="Access and Waiting Times"]');
       if (row) {
         row.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
       }
@@ -1080,7 +976,7 @@ loadData()
       elements.search.value = "workforce";
       elements.search.dispatchEvent(new Event("input", { bubbles: true }));
       
-      const row = document.querySelector('.bar-row[data-key="Access & Geography"]');
+      const row = document.querySelector('.bar-row[data-key="Access and Waiting Times"]');
       if (row) {
         row.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
       }
@@ -1088,7 +984,7 @@ loadData()
       // Trigger reset click synchronously
       elements.resetFilters.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
     } else if (window.location.search.includes("test-multi-select=true")) {
-      const topicRow = document.querySelector('.bar-row[data-key="Coronavirus"]');
+      const topicRow = document.querySelector('.bar-row[data-key="COVID-19"]');
       if (topicRow) {
         topicRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
       }
