@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T10:50:23.849Z",
+  "generatedAt": "2026-06-01T08:20:04.271Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3037,
+    "questions": 3040,
     "answered": 3026,
-    "unanswered": 11,
+    "unanswered": 14,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-05-19"
+    "newestTabled": "2026-05-29"
   },
   "parties": [
     {
@@ -33,12 +33,12 @@
     },
     {
       "key": "Con",
-      "count": 638,
+      "count": 640,
       "name": "Conservative"
     },
     {
       "key": "LD",
-      "count": 444,
+      "count": 445,
       "name": "Liberal Democrat"
     },
     {
@@ -113,11 +113,11 @@
     },
     {
       "key": "North West",
-      "count": 456
+      "count": 458
     },
     {
       "key": "South West",
-      "count": 398
+      "count": 399
     },
     {
       "key": "South East",
@@ -2566,17 +2566,17 @@
     },
     {
       "month": "2026-05",
-      "total": 23,
+      "total": 26,
       "answered": 15,
-      "unanswered": 8,
+      "unanswered": 11,
       "byParty": {
-        "LD": 15,
-        "Lab": 3,
-        "Con": 5
+        "LD": 16,
+        "Con": 7,
+        "Lab": 3
       },
       "byRegion": {
-        "South West": 12,
-        "North West": 1,
+        "South West": 13,
+        "North West": 3,
         "Midlands": 3,
         "South East": 2,
         "London": 1,
@@ -2587,7 +2587,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-05-29T10:50:23.855Z",
+    "generatedAt": "2026-06-01T08:20:04.272Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2719,7 +2719,7 @@
       "2026-02": "ecb7f1ae",
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
-      "2026-05": "006ae987"
+      "2026-05": "22238145"
     },
     "byMonth": {
       "2014-06": [],
@@ -5160,11 +5160,18 @@
       ],
       "2026-05": [
         {
-          "label": "Workforce Recruitment and Retention",
-          "count": 3,
-          "score": 0.477672,
-          "volumeScore": 0.130435,
-          "spikeScore": 1.714286
+          "label": "NHS Dentistry Contract Reform",
+          "count": 4,
+          "score": 0.499081,
+          "volumeScore": 0.153846,
+          "spikeScore": 1.764706
+        },
+        {
+          "label": "Training and Education",
+          "count": 4,
+          "score": 0.39921,
+          "volumeScore": 0.153846,
+          "spikeScore": 1.153846
         }
       ]
     }
