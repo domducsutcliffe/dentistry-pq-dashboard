@@ -88,11 +88,17 @@ h2 {
 }
 
 .intro p,
+.batch-status,
 .panel-head span,
 .metric span,
 #results-count {
   color: var(--muted);
   font-size: 11px;
+}
+
+
+.batch-status {
+  margin-top: 4px;
 }
 
 .metrics {

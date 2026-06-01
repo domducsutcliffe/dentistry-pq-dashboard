@@ -4,9 +4,15 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "30 6 * * 1-5"
+    - cron: "30 7 * * 1-5"
 
 permissions:
   contents: write
+  issues: write
+
+concurrency:
+  group: dentistry-pq-dashboard-refresh
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -16,8 +22,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-      - name: Refresh committed dashboard data
+      - name: Refresh stored dashboard data
         run: node scripts/refresh-data.mjs
+      - name: Comment refresh status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/comment-refresh-status.mjs
       - name: Commit data changes
         run: |
           if git diff --quiet -- data/questions.json data/summary.json data/constituency-regions.json; then
