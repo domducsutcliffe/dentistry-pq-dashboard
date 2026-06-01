@@ -7,6 +7,9 @@ const state = {
   answer: "",
   periods: ["current"],
   searchQuestionOnly: false,
+  chartPoints: [],
+  selectedMonth: "",
+  selectedTopic: "",
 };
 
 const PERIODS = {
@@ -48,18 +51,15 @@ const PERIODS = {
   },
 };
 
-const PERIOD_ORDER = Object.keys(PERIODS);
-
 const elements = {
   status: document.querySelector("#data-status"),
-  batchStatus: document.querySelector("#batch-status"),
   total: document.querySelector("#metric-total"),
   answered: document.querySelector("#metric-answered"),
   latest: document.querySelector("#metric-latest"),
   partyMetric: document.querySelector("#metric-party"),
   regionMetric: document.querySelector("#metric-region"),
   search: document.querySelector("#search"),
-  periodChecks: document.querySelectorAll('input[name="period"]'),
+  periodCheckboxes: document.querySelectorAll('input[name="period"]'),
   searchQuestionOnly: document.querySelector("#search-question-only"),
   partyFilter: document.querySelector("#party-filter"),
   regionFilter: document.querySelector("#region-filter"),
@@ -68,9 +68,12 @@ const elements = {
   monthlyChart: document.querySelector("#monthly-chart"),
   partyChart: document.querySelector("#party-chart"),
   regionChart: document.querySelector("#region-chart"),
+  themeChart: document.querySelector("#theme-chart"),
   resultsCount: document.querySelector("#results-count"),
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
+  tooltip: document.querySelector("#chart-tooltip"),
+  resetFilters: document.querySelector("#reset-filters"),
 };
 
 const formatNumber = new Intl.NumberFormat("en-GB");
@@ -78,11 +81,6 @@ const formatDate = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "short",
   year: "numeric",
-});
-const formatTime = new Intl.DateTimeFormat("en-GB", {
-  hour: "2-digit",
-  minute: "2-digit",
-  timeZoneName: "short",
 });
 
 const MONTH_NAMES = {
@@ -111,19 +109,27 @@ function shortDate(value) {
   return date ? formatDate.format(date) : "-";
 }
 
-function shortDateTime(value) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  return `${formatDate.format(date)} ${formatTime.format(date)}`;
-}
-
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function getQuestionTopic(question) {
+  return question.topic || "General";
+}
+
+function getTopicCounts(questions) {
+  const counts = {};
+  for (const q of questions) {
+    const topic = getQuestionTopic(q);
+    counts[topic] = (counts[topic] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
 }
 
 function countBy(items, getKey) {
@@ -143,44 +149,77 @@ function questionText(question) {
     question.heading,
     question.questionText,
     question.answerText,
-    question.member.name,
-    question.member.party,
-    question.member.partyAbbreviation,
-    question.member.constituency,
-    question.region.nhsRegion,
-    question.region.nation,
+    question.member?.name,
+    question.member?.party,
+    question.member?.partyAbbreviation,
+    question.member?.constituency,
+    question.region?.nhsRegion,
+    question.region?.nation,
   ]
     .join(" ")
     .toLowerCase();
 }
 
-function normalisedPeriods() {
-  const selected = state.periods.filter((period) => PERIODS[period]);
-  return selected.length ? selected : ["current"];
+function getPeriodInfo() {
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  
+  if (state.periods.includes("all") || selectedKeys.length === 0 || selectedKeys.length === allKeys.length) {
+    return {
+      statusLabel: "questions from all Parliaments shown",
+      label: "all Parliaments",
+      dates: `covers all Parliaments from ${shortDate(state.summary?.dateRange?.oldestTabled)} to ${shortDate(state.summary?.dateRange?.newestTabled)}`
+    };
+  }
+  
+  const labels = selectedKeys.map(k => PERIODS[k].label);
+  let labelText = labels.join(" and ");
+  if (labels.length > 2) {
+    labelText = labels.slice(0, -1).join(", ") + ", and " + labels.at(-1);
+  }
+  
+  return {
+    statusLabel: `questions from selected periods shown`,
+    label: labelText,
+    dates: `covers selected periods (${labelText})`
+  };
 }
 
 function getScopedQuestions() {
-  const selectedPeriods = normalisedPeriods().map((period) => PERIODS[period]);
-  return state.questions.filter((question) =>
-    selectedPeriods.some((period) => {
-      if (question.dateTabled < period.start) return false;
-      if (period.end && question.dateTabled >= period.end) return false;
-      return true;
-    }),
-  );
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  
+  let scoped = state.questions;
+  if (!state.periods.includes("all") && selectedKeys.length > 0) {
+    scoped = state.questions.filter((question) => {
+      return selectedKeys.some((key) => {
+        const period = PERIODS[key];
+        if (question.dateTabled < period.start) return false;
+        if (period.end && question.dateTabled >= period.end) return false;
+        return true;
+      });
+    });
+  }
+
+  return scoped.filter((question) => {
+    const heading = question.heading || "";
+    const questionTextVal = question.questionText || "";
+    
+    return /\bdent/i.test(heading) || /\bdent/i.test(questionTextVal);
+  });
 }
 
-function getFilteredQuestions() {
+function getFilteredQuestions(excludeMonth = false, excludeTopic = false, excludeParty = false, excludeRegion = false) {
   const query = state.query.trim().toLowerCase();
   const exactUin = query.match(/^(?:uin:?\s*)?(\d{2,})$/)?.[1] || "";
 
   return getScopedQuestions().filter((question) => {
-    if (state.party) {
+    if (!excludeParty && state.party) {
       const party = question.member.partyAbbreviation || question.member.party || "Unknown";
       if (party !== state.party) return false;
     }
 
-    if (state.region && question.region.nhsRegion !== state.region) return false;
+    if (!excludeRegion && state.region && question.region.nhsRegion !== state.region) return false;
     if (state.answer === "answered" && !question.answered) return false;
     if (state.answer === "unanswered" && question.answered) return false;
 
@@ -189,64 +228,42 @@ function getFilteredQuestions() {
     }
 
     if (query) {
+      const words = query.split(/\s+/).filter(Boolean);
       if (state.searchQuestionOnly) {
         const textToSearch = (question.questionText || "").toLowerCase();
-        if (!textToSearch.includes(query)) return false;
-      } else if (!questionText(question).includes(query)) {
-        return false;
+        if (!words.every((word) => textToSearch.includes(word))) return false;
+      } else {
+        const textToSearch = questionText(question);
+        if (!words.every((word) => textToSearch.includes(word))) return false;
       }
+    }
+
+    if (!excludeMonth && state.selectedMonth) {
+      const m = (question.dateTabled || "").slice(0, 7);
+      if (m !== state.selectedMonth) return false;
+    }
+
+    if (!excludeTopic && state.selectedTopic) {
+      if (getQuestionTopic(question) !== state.selectedTopic) return false;
     }
 
     return true;
   });
 }
 
-function selectedPeriodLabel() {
-  const selected = normalisedPeriods();
-  if (selected.length === PERIOD_ORDER.length) return "all selected periods";
-  if (selected.length === 1) return PERIODS[selected[0]].label;
-  return selected.map((period) => PERIODS[period].label).join(", ");
-}
-
-function selectedPeriodStatusLabel() {
-  const selected = normalisedPeriods();
-  if (selected.length === 1) return PERIODS[selected[0]].statusLabel;
-  if (selected.length === PERIOD_ORDER.length) return "questions across all selected periods shown";
-  return "questions across selected periods shown";
-}
-
-function selectedPeriodDateRange() {
-  const selected = normalisedPeriods().map((period) => PERIODS[period]);
-  const starts = selected.map((period) => period.start).sort();
-  const ends = selected.map((period) => period.end).filter(Boolean).sort();
-  const start = starts[0];
-  const end = ends.length === selected.length ? ends.at(-1) : "";
-  return end ? `${shortDate(start)} to ${shortDate(end)}` : `from ${shortDate(start)}`;
-}
-
-function syncPeriodChecks() {
-  const selected = new Set(normalisedPeriods());
-  const allSelected = PERIOD_ORDER.every((period) => selected.has(period));
-  for (const input of elements.periodChecks) {
-    input.checked = input.value === "all" ? allSelected : selected.has(input.value);
-  }
-}
-
-function updatePeriodSelection(changedInput) {
-  if (changedInput.value === "all") {
-    state.periods = changedInput.checked ? [...PERIOD_ORDER] : ["current"];
-    syncPeriodChecks();
-    return;
-  }
-
-  const selected = new Set(normalisedPeriods());
-  if (changedInput.checked) {
-    selected.add(changedInput.value);
-  } else {
-    selected.delete(changedInput.value);
-  }
-  state.periods = selected.size ? PERIOD_ORDER.filter((period) => selected.has(period)) : ["current"];
-  syncPeriodChecks();
+function isMonthInPeriods(month) {
+  if (state.periods.includes("all")) return true;
+  const allKeys = Object.keys(PERIODS);
+  const selectedKeys = allKeys.filter(k => state.periods.includes(k));
+  if (selectedKeys.length === 0) return true;
+  
+  return selectedKeys.some(key => {
+    const period = PERIODS[key];
+    const monthStart = `${month}-01`;
+    if (monthStart < period.start.slice(0, 7) + "-01") return false;
+    if (period.end && monthStart >= period.end.slice(0, 7) + "-01") return false;
+    return true;
+  });
 }
 
 function renderMetrics(items) {
@@ -266,29 +283,75 @@ function renderMetrics(items) {
     : "-";
 }
 
-function renderBatchStatus() {
-  const check = state.summary?.batchCheck;
-  if (!check) {
-    elements.batchStatus.textContent = "Morning batch check status will appear after the next scheduled refresh.";
-    return;
-  }
-  elements.batchStatus.textContent = `${check.message} Latest tabled batch in stored data: ${shortDate(
-    check.latestTabledDate,
-  )}. Checked ${shortDateTime(check.checkedAt)}.`;
-}
-
 function renderScopeStatus(filteredCount) {
   if (!state.summary) return;
   const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
-  elements.status.innerHTML = `<span class="pulsing-dot"></span>${formatNumber.format(
-    filteredCount,
-  )} ${selectedPeriodStatusLabel()} &middot; ${formatNumber.format(
+  const info = getPeriodInfo();
+
+  const filterParts = [];
+  if (state.selectedTopic) {
+    filterParts.push(`topic "${escapeHtml(state.selectedTopic)}"`);
+  }
+  if (state.party) {
+    filterParts.push(`party "${escapeHtml(state.party)}"`);
+  }
+  if (state.region) {
+    filterParts.push(`NHS region "${escapeHtml(state.region)}"`);
+  }
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    filterParts.push(`month "${monthName} ${year}"`);
+  }
+
+  let statusText = `${formatNumber.format(filteredCount)} ${info.statusLabel}`;
+  if (filterParts.length > 0) {
+    let joinedFilters = "";
+    if (filterParts.length === 1) {
+      joinedFilters = filterParts[0];
+    } else if (filterParts.length === 2) {
+      joinedFilters = filterParts.join(" and ");
+    } else {
+      joinedFilters = filterParts.slice(0, -1).join(", ") + ", and " + filterParts.at(-1);
+    }
+    statusText = `${formatNumber.format(filteredCount)} questions matching ${joinedFilters} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-filters-link">(clear filters)</span>`;
+  }
+
+  elements.status.innerHTML = `<span class="pulsing-dot"></span>${statusText} &middot; ${formatNumber.format(
     state.summary.totals.questions,
   )} total stored questions &middot; refreshed ${generated}`;
-  elements.footer.textContent = `Stored source data goes back to ${shortDate(
+  
+  let footerText = `Stored source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,
-  )} and includes DHSC plus its predecessor Department of Health. This view covers ${selectedPeriodLabel()}, ${selectedPeriodDateRange()}.`;
-  renderBatchStatus();
+  )} and includes DHSC plus its predecessor Department of Health. This view ${info.dates}.`;
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    const monthName = MONTH_NAMES[monthNum] || monthNum;
+    footerText += ` Filtered to show only questions from ${monthName} ${year}.`;
+  }
+  if (state.selectedTopic) {
+    footerText += ` Filtered to show only questions under topic "${state.selectedTopic}".`;
+  }
+  if (state.party) {
+    footerText += ` Filtered to show only questions from party "${state.party}".`;
+  }
+  if (state.region) {
+    footerText += ` Filtered to show only questions from NHS region "${state.region}".`;
+  }
+  elements.footer.textContent = footerText;
+
+  const clearBothBtn = document.querySelector("#clear-filters-link");
+  if (clearBothBtn) {
+    clearBothBtn.addEventListener("click", () => {
+      state.selectedMonth = "";
+      state.selectedTopic = "";
+      state.party = "";
+      state.region = "";
+      elements.partyFilter.value = "";
+      elements.regionFilter.value = "";
+      render();
+    });
+  }
 }
 
 function renderSelects() {
@@ -311,33 +374,89 @@ function renderSelects() {
   elements.regionFilter.value = state.region;
 }
 
+const getLineProps = (pointA, pointB) => {
+  const lengthX = pointB.x - pointA.x;
+  const lengthY = pointB.y - pointA.y;
+  return {
+    length: Math.sqrt(lengthX * lengthX + lengthY * lengthY),
+    angle: Math.atan2(lengthY, lengthX),
+  };
+};
+
+const getControlPoint = (current, previous, next, reverse) => {
+  const p = previous || current;
+  const n = next || current;
+  const smoothing = 0.15;
+  const o = getLineProps(p, n);
+  const angle = o.angle + (reverse ? Math.PI : 0);
+  const length = o.length * smoothing;
+  const x = current.x + Math.cos(angle) * length;
+  const y = current.y + Math.sin(angle) * length;
+  return [x, y];
+};
+
+const getBezierPath = (points) => {
+  return points.reduce((acc, point, i, a) => {
+    if (i === 0) {
+      return `M ${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+    }
+    const [cpsX, cpsY] = getControlPoint(a[i - 1], a[i - 2], point, false);
+    const [cpeX, cpeY] = getControlPoint(point, a[i - 1], a[i + 1], true);
+    return `${acc} C ${cpsX.toFixed(1)} ${cpsY.toFixed(1)}, ${cpeX.toFixed(1)} ${cpeY.toFixed(1)}, ${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+  }, "");
+};
+
 function renderLineChart(items) {
   const byMonth = new Map();
   for (const question of items) {
     if (!question.dateTabled) continue;
     const month = question.dateTabled.slice(0, 7);
-    byMonth.set(month, (byMonth.get(month) || 0) + 1);
+    if (!byMonth.has(month)) {
+      byMonth.set(month, []);
+    }
+    byMonth.get(month).push(question);
   }
 
   const months = [...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   if (!months.length) {
+    state.chartPoints = [];
     elements.monthlyChart.innerHTML = '<p class="chart-note">No matching monthly data.</p>';
     elements.monthlyRange.textContent = "";
     return;
   }
 
-  const width = 760;
-  const height = 230;
+  const containerWidth = elements.monthlyChart ? elements.monthlyChart.clientWidth : 0;
+  const width = containerWidth > 16 ? (containerWidth - 16) : 760;
+  const height = 220;
   const pad = 28;
-  const max = Math.max(...months.map(([, count]) => count), 1);
+  const max = Math.max(...months.map(([, monthQuestions]) => monthQuestions.length), 1);
   const step = months.length > 1 ? (width - pad * 2) / (months.length - 1) : 0;
-  const points = months.map(([month, count], index) => {
+  const points = months.map(([month, monthQuestions], index) => {
+    const count = monthQuestions.length;
     const x = pad + index * step;
     const y = height - pad - (count / max) * (height - pad * 2);
-    return { month, count, x, y };
+    const themeCounts = getTopicCounts(monthQuestions).filter((t) => t.count > 0).slice(0, 5);
+    return { month, count, x, y, themeCounts };
   });
-  const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
-  const area = `${path} L${points.at(-1).x.toFixed(1)} ${height - pad} L${points[0].x.toFixed(1)} ${height - pad} Z`;
+  state.chartPoints = points;
+
+  // Generate smooth spline path and area
+  const path = getBezierPath(points);
+  const area = points.length > 1 
+    ? `${path} L ${points.at(-1).x.toFixed(1)} ${height - pad} L ${points[0].x.toFixed(1)} ${height - pad} Z`
+    : "";
+
+  // Dynamically calculate dot radius based on the number of points (longer time frames = smaller dots)
+  let dotR = 4;
+  if (points.length > 60) {
+    dotR = 1.2;
+  } else if (points.length > 30) {
+    dotR = 2.0;
+  } else if (points.length > 15) {
+    dotR = 3.0;
+  }
+  const dotRActive = Math.max(3.5, dotR + 2);
+
   const monthTicks = [];
   const totalPoints = points.length;
   const numTicks = Math.min(6, totalPoints);
@@ -356,11 +475,21 @@ function renderLineChart(items) {
 
   elements.monthlyRange.textContent = `${months[0][0]} to ${months.at(-1)[0]}`;
   elements.monthlyChart.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly dentistry PQ volume">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly dentistry PQ volume" style="--dot-r: ${dotR}px; --dot-r-active: ${dotRActive}px;">
       <line class="axis" x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}"></line>
       <line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}"></line>
-      <path class="trend-area" d="${area}"></path>
-      <path class="trend-line" d="${path}"></path>
+      ${area ? `<path class="trend-area" d="${area}"></path>` : ""}
+      ${path ? `<path class="trend-line" d="${path}"></path>` : ""}
+      ${points
+        .map(
+          (point, index) => {
+            const isActive = point.month === state.selectedMonth;
+            return `
+              <circle class="data-point${isActive ? " active" : ""}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" data-index="${index}"></circle>
+            `;
+          }
+        )
+        .join("")}
       ${monthTicks
         .map(
           (tick) => `
@@ -381,19 +510,22 @@ function getRowsAtLeastSnp(rows) {
 }
 
 function renderBars(container, rows, options = {}) {
-  const { limit = 10, snpFloor = false } = options;
+  const { limit = 10, snpFloor = false, selectedKey = "" } = options;
   const visible = (snpFloor ? getRowsAtLeastSnp(rows) : rows).slice(0, limit);
   const max = Math.max(...visible.map((row) => row.count), 1);
   container.innerHTML = visible.length
     ? visible
         .map(
-          (row) => `
-            <div class="bar-row">
-              <span class="bar-label" title="${escapeHtml(row.key)}">${escapeHtml(row.key)}</span>
-              <span class="bar-track"><span class="bar-fill" style="width:${Math.max(3, (row.count / max) * 100)}%"></span></span>
-              <span class="bar-value">${formatNumber.format(row.count)}</span>
-            </div>
-          `,
+          (row) => {
+            const isActive = row.key === selectedKey;
+            return `
+              <div class="bar-row${isActive ? " active" : ""}" data-key="${escapeHtml(row.key)}">
+                <span class="bar-label" title="${escapeHtml(row.key)}">${escapeHtml(row.key)}</span>
+                <span class="bar-track"><span class="bar-fill" style="width:${Math.max(3, (row.count / max) * 100)}%"></span></span>
+                <span class="bar-value">${formatNumber.format(row.count)}</span>
+              </div>
+            `;
+          }
         )
         .join("")
     : '<p class="chart-note">No matching data.</p>';
@@ -428,15 +560,32 @@ function renderTable(items) {
 }
 
 function render() {
+  if (state.selectedMonth && !isMonthInPeriods(state.selectedMonth)) {
+    state.selectedMonth = "";
+  }
+
   const filtered = getFilteredQuestions();
+  const lineChartFiltered = getFilteredQuestions(true, false, false, false);
+  const themeChartFiltered = getFilteredQuestions(false, true, false, false);
+  const partyChartFiltered = getFilteredQuestions(false, false, true, false);
+  const regionChartFiltered = getFilteredQuestions(false, false, false, true);
+
   renderScopeStatus(filtered.length);
   renderMetrics(filtered);
-  renderLineChart(filtered);
-  renderBars(elements.partyChart, countBy(filtered, (question) => question.member.partyAbbreviation || question.member.party), {
+  renderLineChart(lineChartFiltered);
+  renderBars(elements.themeChart, getTopicCounts(themeChartFiltered), {
+    limit: 100,
+    selectedKey: state.selectedTopic
+  });
+  renderBars(elements.partyChart, countBy(partyChartFiltered, (question) => question.member.partyAbbreviation || question.member.party), {
     limit: 30,
     snpFloor: true,
+    selectedKey: state.party
   });
-  renderBars(elements.regionChart, countBy(filtered, (question) => question.region.nhsRegion), { limit: 12 });
+  renderBars(elements.regionChart, countBy(regionChartFiltered, (question) => question.region.nhsRegion), {
+    limit: 12,
+    selectedKey: state.region
+  });
   renderTable(filtered);
 }
 
@@ -460,18 +609,48 @@ elements.search.addEventListener("input", (event) => {
   render();
 });
 
-for (const checkbox of elements.periodChecks) {
+for (const checkbox of elements.periodCheckboxes) {
   checkbox.addEventListener("change", (event) => {
-    updatePeriodSelection(event.target);
+    const value = event.target.value;
+    const checked = event.target.checked;
+
+    if (value === "all") {
+      for (const cb of elements.periodCheckboxes) {
+        if (cb.value !== "all") {
+          cb.checked = checked;
+        }
+      }
+    } else {
+      if (!checked) {
+        const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+        if (allCb) allCb.checked = false;
+      } else {
+        const individualCbs = [...elements.periodCheckboxes].filter((cb) => cb.value !== "all");
+        const allChecked = individualCbs.every((cb) => cb.checked);
+        if (allChecked) {
+          const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+          if (allCb) allCb.checked = true;
+        }
+      }
+    }
+
+    state.periods = [...elements.periodCheckboxes]
+      .filter((cb) => cb.checked)
+      .map((cb) => cb.value);
+
     renderSelects();
     render();
   });
 }
 
-elements.searchQuestionOnly.addEventListener("change", (event) => {
-  state.searchQuestionOnly = event.target.checked;
-  render();
-});
+if (elements.searchQuestionOnly) {
+  elements.searchQuestionOnly.addEventListener("change", (event) => {
+    state.searchQuestionOnly = event.target.checked;
+    render();
+  });
+}
+
+
 
 elements.partyFilter.addEventListener("change", (event) => {
   state.party = event.target.value;
@@ -488,12 +667,348 @@ elements.answerFilter.addEventListener("change", (event) => {
   render();
 });
 
+elements.themeChart.addEventListener("click", (event) => {
+  const row = event.target.closest(".bar-row");
+  if (!row) return;
+
+  const topic = row.getAttribute("data-key");
+  if (!topic) return;
+
+  if (state.selectedTopic === topic) {
+    state.selectedTopic = "";
+  } else {
+    state.selectedTopic = topic;
+  }
+  render();
+});
+
+elements.partyChart.addEventListener("click", (event) => {
+  const row = event.target.closest(".bar-row");
+  if (!row) return;
+
+  const party = row.getAttribute("data-key");
+  if (!party) return;
+
+  if (state.party === party) {
+    state.party = "";
+  } else {
+    state.party = party;
+  }
+  elements.partyFilter.value = state.party;
+  render();
+});
+
+elements.regionChart.addEventListener("click", (event) => {
+  const row = event.target.closest(".bar-row");
+  if (!row) return;
+
+  const region = row.getAttribute("data-key");
+  if (!region) return;
+
+  if (state.region === region) {
+    state.region = "";
+  } else {
+    state.region = region;
+  }
+  elements.regionFilter.value = state.region;
+  render();
+});
+
+elements.resetFilters.addEventListener("click", () => {
+  state.query = "";
+  state.party = "";
+  state.region = "";
+  state.answer = "";
+  state.periods = ["current"];
+  state.selectedMonth = "";
+  state.selectedTopic = "";
+
+  elements.search.value = "";
+  if (elements.searchQuestionOnly) {
+    elements.searchQuestionOnly.checked = false;
+  }
+  state.searchQuestionOnly = false;
+
+
+  elements.partyFilter.value = "";
+  elements.regionFilter.value = "";
+  elements.answerFilter.value = "";
+
+  for (const cb of elements.periodCheckboxes) {
+    cb.checked = (cb.value === "current");
+  }
+
+  renderSelects();
+  render();
+});
+
+elements.monthlyChart.addEventListener("mouseover", (event) => {
+  const dot = event.target.closest(".data-point");
+  if (!dot) return;
+  const index = parseInt(dot.getAttribute("data-index"), 10);
+  const point = state.chartPoints[index];
+  if (!point) return;
+
+  const [year, monthNum] = point.month.split("-");
+  const monthName = MONTH_NAMES[monthNum] || monthNum;
+  const titleText = `${monthName} ${year}`;
+
+  const rowsHtml = point.themeCounts
+    .map(
+      (theme) => `
+      <div class="chart-tooltip-row">
+        <span class="chart-tooltip-label">${escapeHtml(theme.key)}</span>
+        <span class="chart-tooltip-value">${formatNumber.format(theme.count)}</span>
+      </div>
+    `
+    )
+    .join("");
+
+  elements.tooltip.innerHTML = `
+    <div class="chart-tooltip-title">${titleText}</div>
+    <div class="chart-tooltip-row" style="border-bottom: 1px dashed var(--line); padding-bottom: 3px; margin-bottom: 5px;">
+      <span class="chart-tooltip-label" style="font-weight: bold; color: var(--text);">Total PQs</span>
+      <span class="chart-tooltip-value">${formatNumber.format(point.count)}</span>
+    </div>
+    ${rowsHtml}
+  `;
+  elements.tooltip.style.opacity = "1";
+});
+
+elements.monthlyChart.addEventListener("mousemove", (event) => {
+  elements.tooltip.style.left = `${event.pageX + 12}px`;
+  elements.tooltip.style.top = `${event.pageY + 12}px`;
+});
+
+elements.monthlyChart.addEventListener("mouseout", (event) => {
+  const dot = event.target.closest(".data-point");
+  if (!dot) return;
+  elements.tooltip.style.opacity = "0";
+});
+
+elements.monthlyChart.addEventListener("click", (event) => {
+  event.stopPropagation(); // Prevent document click handler from immediately clearing state.selectedMonth
+  if (state.chartPoints.length === 0) return;
+
+  // Direct dot click (or programmatic test events)
+  const dot = event.target.closest(".data-point");
+  if (dot) {
+    const index = parseInt(dot.getAttribute("data-index"), 10);
+    const point = state.chartPoints[index];
+    if (point) {
+      if (state.selectedMonth === point.month) {
+        state.selectedMonth = "";
+      } else {
+        state.selectedMonth = point.month;
+      }
+      render();
+      return;
+    }
+  }
+
+  // Fallback: Click anywhere on column coordinates
+  const svg = elements.monthlyChart.querySelector("svg");
+  if (!svg) return;
+
+  const rect = svg.getBoundingClientRect();
+  const clickXRel = event.clientX - rect.left;
+  const clickYRel = event.clientY - rect.top;
+  
+  const viewBoxAttr = svg.getAttribute("viewBox");
+  const viewBoxParts = viewBoxAttr ? viewBoxAttr.split(/\s+/) : [];
+  const viewBoxWidth = viewBoxParts[2] ? parseFloat(viewBoxParts[2]) : 760;
+  const viewBoxHeight = viewBoxParts[3] ? parseFloat(viewBoxParts[3]) : 220;
+  
+  const svgX = (clickXRel / rect.width) * viewBoxWidth;
+  const svgY = (clickYRel / rect.height) * viewBoxHeight;
+
+  const pad = 28;
+  const buffer = 10;
+
+  // Check if click is outside plot area boundaries (e.g., margins/padding)
+  if (
+    svgX < pad - buffer ||
+    svgX > (viewBoxWidth - pad) + buffer ||
+    svgY < pad - buffer ||
+    svgY > (viewBoxHeight - pad) + buffer
+  ) {
+    state.selectedMonth = "";
+    render();
+    return;
+  }
+
+  let closestPoint = null;
+  let minDistance = Infinity;
+
+  for (const point of state.chartPoints) {
+    const dist = Math.abs(point.x - svgX);
+    if (dist < minDistance) {
+      minDistance = dist;
+      closestPoint = point;
+    }
+  }
+
+  if (closestPoint) {
+    if (svgX >= pad - 10 && svgX <= (viewBoxWidth - pad) + 10) {
+      if (state.selectedMonth === closestPoint.month) {
+        state.selectedMonth = "";
+      } else {
+        state.selectedMonth = closestPoint.month;
+      }
+      render();
+    }
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (!state.selectedMonth) return;
+
+  const isInsideChart = elements.monthlyChart.contains(event.target);
+  const isInsideFilterControl = 
+    (elements.search && elements.search.contains(event.target)) ||
+    (elements.partyFilter && elements.partyFilter.contains(event.target)) ||
+    (elements.regionFilter && elements.regionFilter.contains(event.target)) ||
+    (elements.answerFilter && elements.answerFilter.contains(event.target)) ||
+    (elements.searchQuestionOnly && elements.searchQuestionOnly.contains(event.target)) ||
+
+    ([...elements.periodCheckboxes].some(cb => cb.contains(event.target))) ||
+    (elements.resetFilters && elements.resetFilters.contains(event.target));
+
+  const isClearLink = 
+    event.target.id === "clear-month-filter" ||
+    event.target.id === "clear-topic-filter" ||
+    event.target.id === "clear-filters-link";
+
+  if (isInsideChart || isInsideFilterControl || isClearLink) {
+    return;
+  }
+
+  state.selectedMonth = "";
+  render();
+});
+
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(resizeTimeout);
+  resizeTimeout = requestAnimationFrame(() => {
+    render();
+  });
+});
+
 loadData()
   .then(() => {
-    syncPeriodChecks();
-    elements.searchQuestionOnly.checked = state.searchQuestionOnly;
+    if (elements.searchQuestionOnly) {
+      elements.searchQuestionOnly.checked = state.searchQuestionOnly;
+    }
+
     renderSelects();
     render();
+
+    // Test hook for headless screenshots
+    if (window.location.search.includes("test-tooltip=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          const rect = dot.getBoundingClientRect();
+          const clientX = rect.left + window.scrollX;
+          const clientY = rect.top + window.scrollY;
+
+          dot.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, cancelable: true, view: window }));
+          dot.dispatchEvent(
+            new MouseEvent("mousemove", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+              clientX: clientX + 10,
+              clientY: clientY + 10,
+              pageX: clientX + 10,
+              pageY: clientY + 10,
+            })
+          );
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-click=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-outside-click=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          // Select the month
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          
+          // Click outside the plot area boundaries after 100ms
+          setTimeout(() => {
+            elements.monthlyChart.dispatchEvent(new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+              clientX: 0,
+              clientY: 0
+            }));
+          }, 100);
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-global-deselect=true")) {
+      setTimeout(() => {
+        const dot = document.querySelector(".data-point");
+        if (dot) {
+          // Select the month
+          dot.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          
+          // Click document body (outside chart) after 100ms
+          setTimeout(() => {
+            document.body.dispatchEvent(new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window
+            }));
+          }, 100);
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-all-parliaments=true")) {
+      setTimeout(() => {
+        const allCb = [...elements.periodCheckboxes].find((cb) => cb.value === "all");
+        if (allCb) {
+          allCb.checked = true;
+          allCb.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }, 50);
+    } else if (window.location.search.includes("test-topic-click=true")) {
+      const row = document.querySelector('.bar-row[data-key="Access and Waiting Times"]');
+      if (row) {
+        row.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+    } else if (window.location.search.includes("test-reset-click=true")) {
+      // Set search query and some filters first
+      elements.search.value = "workforce";
+      elements.search.dispatchEvent(new Event("input", { bubbles: true }));
+      
+      const row = document.querySelector('.bar-row[data-key="Access and Waiting Times"]');
+      if (row) {
+        row.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+      
+      // Trigger reset click synchronously
+      elements.resetFilters.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    } else if (window.location.search.includes("test-multi-select=true")) {
+      const topicRow = document.querySelector('.bar-row[data-key="COVID-19"]');
+      if (topicRow) {
+        topicRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+      const partyRow = document.querySelector('.bar-row[data-key="Lab"]');
+      if (partyRow) {
+        partyRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+      const regionRow = document.querySelector('.bar-row[data-key="London"]');
+      if (regionRow) {
+        regionRow.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      }
+    }
   })
   .catch((error) => {
     console.error(error);

@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=batch-periods-1" />
+    <link rel="stylesheet" href="styles.css?v=policy-topics-1" />
   </head>
   <body>
     <header class="topbar">
@@ -22,8 +22,7 @@
     <main class="page">
       <section class="intro">
         <h1>Parliamentary interest in dentistry</h1>
-        <p id="data-status">Loading stored dashboard data...</p>
-        <p id="batch-status" class="batch-status">Checking latest PQ batch status...</p>
+        <p id="data-status">Loading committed dashboard data...</p>
       </section>
 
       <section class="metrics" aria-label="Summary metrics">
@@ -52,9 +51,9 @@
       <section class="controls" aria-label="Dashboard filters">
         <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
         <input id="search" type="search" autocomplete="off" />
-        <fieldset class="period-radios" aria-label="Time period">
+        <fieldset class="period-filters" aria-label="Time period">
           <legend>Period</legend>
-          <label><input type="checkbox" name="period" value="all" /> All</label>
+          <label><input type="checkbox" name="period" value="all" /> All Parliaments</label>
           <label><input type="checkbox" name="period" value="current" checked /> Current Parliament</label>
           <label><input type="checkbox" name="period" value="cameron" /> Cameron</label>
           <label><input type="checkbox" name="period" value="may" /> May</label>
@@ -62,10 +61,6 @@
           <label><input type="checkbox" name="period" value="truss" /> Truss</label>
           <label><input type="checkbox" name="period" value="sunak" /> Sunak</label>
         </fieldset>
-        <label class="checkbox-label">
-          <input id="search-question-only" type="checkbox" />
-          <span>Search question text only</span>
-        </label>
         <select id="party-filter" aria-label="Party filter">
           <option value="">All parties</option>
         </select>
@@ -77,6 +72,7 @@
           <option value="answered">Answered</option>
           <option value="unanswered">Unanswered</option>
         </select>
+        <button id="reset-filters" class="btn-reset" type="button">Reset Filters</button>
       </section>
 
       <section class="charts" aria-label="Dashboard charts">
@@ -89,8 +85,15 @@
         </article>
         <article class="panel">
           <div class="panel-head">
+            <h2>Hot topics</h2>
+            <span>question volume</span>
+          </div>
+          <div id="theme-chart" class="chart chart-bars"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
             <h2>Parties</h2>
-            <span>relative to leader</span>
+            <span>absolute volume</span>
           </div>
           <div id="party-chart" class="chart chart-bars"></div>
         </article>
@@ -129,6 +132,7 @@
       <footer class="data-footer" id="data-footer"></footer>
     </main>
 
-    <script src="scripts/app.js?v=batch-periods-1" type="module"></script>
+    <div id="chart-tooltip" class="chart-tooltip" style="opacity: 0; pointer-events: none; position: absolute; z-index: 1000;"></div>
+    <script src="scripts/app.js?v=policy-topics-1" type="module"></script>
   </body>
 </html>
