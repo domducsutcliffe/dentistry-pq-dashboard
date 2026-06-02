@@ -1024,7 +1024,7 @@ function updateRefreshStatus() {
   // If a manual trigger is active in this session, override to building
   if (sessionStorage.getItem("refresh_in_progress") === "true") {
     dot.className = "status-dot status-building";
-    text.textContent = "BUILDING DATA...";
+    text.textContent = "BUILDING";
   }
 
   fetch(`https://img.shields.io/github/actions/workflow/status/domducsutcliffe/dentistry-pq-dashboard/refresh-data.yml?cb=${Date.now()}`)
@@ -1033,15 +1033,15 @@ function updateRefreshStatus() {
       const lower = svgText.toLowerCase();
       if (lower.includes("in progress") || lower.includes("running") || lower.includes("queued")) {
         dot.className = "status-dot status-building";
-        text.textContent = "BUILDING DATA...";
+        text.textContent = "BUILDING";
         sessionStorage.setItem("refresh_in_progress", "true");
       } else if (lower.includes("failing") || lower.includes("failed")) {
         dot.className = "status-dot status-failed";
-        text.textContent = "BUILD FAILED";
+        text.textContent = "FAILED";
         sessionStorage.removeItem("refresh_in_progress");
       } else {
         dot.className = "status-dot status-built";
-        text.textContent = "DATA BUILT";
+        text.textContent = "BUILT";
         sessionStorage.removeItem("refresh_in_progress");
       }
     })
@@ -1058,7 +1058,7 @@ if (btnRefresh) {
     const text = document.querySelector("#status-text");
     if (dot && text) {
       dot.className = "status-dot status-building";
-      text.textContent = "BUILDING DATA...";
+      text.textContent = "BUILDING";
       sessionStorage.setItem("refresh_in_progress", "true");
     }
   });
