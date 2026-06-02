@@ -109,6 +109,21 @@ function shortDate(value) {
   return date ? formatDate.format(date) : "-";
 }
 
+function formatGeneratedAt(isoString) {
+  if (!isoString) return "-";
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return "-";
+  const day = date.getDate();
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const monthName = months[date.getMonth()];
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${day} ${monthName} @ ${hours}:${minutes}`;
+}
+
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -285,7 +300,7 @@ function renderMetrics(items) {
 
 function renderScopeStatus(filteredCount) {
   if (!state.summary) return;
-  const generated = shortDate(state.summary.generatedAt?.slice(0, 10));
+  const refreshed = formatGeneratedAt(state.summary.generatedAt);
   const info = getPeriodInfo();
 
   const filterParts = [];
@@ -304,22 +319,15 @@ function renderScopeStatus(filteredCount) {
     filterParts.push(`month "${monthName} ${year}"`);
   }
 
-  let statusText = `${formatNumber.format(filteredCount)} ${info.statusLabel}`;
+  const total = formatNumber.format(state.summary.totals.questions);
+  const shown = formatNumber.format(filteredCount);
+  let statusText = `${total} PQs on Dentistry, ${shown} shown, Last refreshed ${refreshed}`;
+
   if (filterParts.length > 0) {
-    let joinedFilters = "";
-    if (filterParts.length === 1) {
-      joinedFilters = filterParts[0];
-    } else if (filterParts.length === 2) {
-      joinedFilters = filterParts.join(" and ");
-    } else {
-      joinedFilters = filterParts.slice(0, -1).join(", ") + ", and " + filterParts.at(-1);
-    }
-    statusText = `${formatNumber.format(filteredCount)} questions matching ${joinedFilters} shown <span style="cursor:pointer; text-decoration:underline; color:var(--orange); font-weight:bold; margin-left:6px;" id="clear-filters-link">(clear filters)</span>`;
+    statusText += ` <span style="cursor:pointer; text-decoration:underline; font-weight:bold; margin-left:6px; color:#000000;" id="clear-filters-link">(clear filters)</span>`;
   }
 
-  elements.status.innerHTML = `<span class="pulsing-dot"></span>${statusText} &middot; ${formatNumber.format(
-    state.summary.totals.questions,
-  )} total stored questions &middot; refreshed ${generated}`;
+  elements.status.innerHTML = statusText;
   
   let footerText = `Stored source data goes back to ${shortDate(
     state.summary.dateRange.oldestTabled,

@@ -63,6 +63,15 @@ a:hover {
   gap: 10px;
 }
 
+.data-status-bar {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #000000;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
 .btn-refresh {
   display: inline-flex;
   align-items: center;
@@ -108,10 +117,6 @@ a:hover {
   padding: 10px 8px 24px;
 }
 
-.intro {
-  margin: 0 0 10px;
-}
-
 h1,
 h2,
 p {
@@ -129,7 +134,6 @@ h2 {
   font-weight: 700;
 }
 
-.intro p,
 .panel-head span,
 .metric span,
 #results-count {
