@@ -12,10 +12,21 @@
   <body>
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="./">Dentistry PQ Dashboard</a>
-        <span>Commons</span>
-        <span>DHSC / predecessor Department of Health</span>
-        <span>dent*</span>
+        <div class="brand-group">
+          <a class="brand" href="./">Dentistry PQ Dashboard</a>
+          <span>Commons</span>
+          <span>DHSC / predecessor Department of Health</span>
+          <span>dent*</span>
+        </div>
+        <div class="refresh-widget">
+          <a class="btn-refresh" href="https://github.com/domducsutcliffe/dentistry-pq-dashboard/actions/workflows/refresh-data.yml" target="_blank" title="Trigger manual dataset refresh on GitHub">
+            <svg class="refresh-svg" viewBox="0 0 24 24" width="12" height="12">
+              <path fill="currentColor" d="M19 12a7 7 0 0 1-7 7c-2.4 0-4.5-1.2-5.7-3H9V14H3v6h2v-2.7c1.7 2.2 4.4 3.7 7.5 3.7a9 9 0 0 0 9-9h-2M5 12a7 7 0 0 1 7-7c2.4 0 4.5 1.2 5.7 3H15v2h6V4h-2v2.7C17.3 4.5 14.6 3 11.5 3a9 9 0 0 0-9 9h2z"/>
+            </svg>
+            <span>Trigger Refresh</span>
+          </a>
+          <img id="workflow-badge" src="https://github.com/domducsutcliffe/dentistry-pq-dashboard/actions/workflows/refresh-data.yml/badge.svg" alt="Refresh Status" />
+        </div>
       </div>
     </header>
 

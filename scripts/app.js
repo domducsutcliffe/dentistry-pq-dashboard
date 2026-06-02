@@ -1014,3 +1014,18 @@ loadData()
     console.error(error);
     elements.status.textContent = "Could not load dashboard data from this repo.";
   });
+
+// Dynamic status badge refresh logic
+function refreshStatusBadge() {
+  const badge = document.querySelector("#workflow-badge");
+  if (badge) {
+    badge.src = `https://github.com/domducsutcliffe/dentistry-pq-dashboard/actions/workflows/refresh-data.yml/badge.svg?cb=${Date.now()}`;
+  }
+}
+
+// Refresh when the tab/window regains focus
+window.addEventListener("focus", refreshStatusBadge);
+
+// Periodically refresh every 10 seconds to show changes live
+setInterval(refreshStatusBadge, 10000);
+
