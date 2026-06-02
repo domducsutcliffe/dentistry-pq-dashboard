@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-01T08:20:04.271Z",
+  "generatedAt": "2026-06-02T06:37:27.484Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -16,8 +16,8 @@
   },
   "totals": {
     "questions": 3040,
-    "answered": 3026,
-    "unanswered": 14,
+    "answered": 3027,
+    "unanswered": 13,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
@@ -2567,8 +2567,8 @@
     {
       "month": "2026-05",
       "total": 26,
-      "answered": 15,
-      "unanswered": 11,
+      "answered": 16,
+      "unanswered": 10,
       "byParty": {
         "LD": 16,
         "Con": 7,
@@ -2587,7 +2587,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-01T08:20:04.272Z",
+    "generatedAt": "2026-06-02T06:37:27.484Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",

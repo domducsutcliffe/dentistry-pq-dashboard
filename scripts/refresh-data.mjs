@@ -325,13 +325,40 @@ async function fetchText(url) {
   return response.text();
 }
 
-async function fetchQuestions() {
+async function loadPreviousQuestions() {
+  try {
+    const raw = await readFile(path.join(dataDir, "questions.json"), "utf8");
+    return JSON.parse(raw).questions || [];
+  } catch {
+    return [];
+  }
+}
+
+function getNewestTabledDate(questions) {
+  if (!questions.length) return "2014-06-04";
+  let newest = questions[0].dateTabled || "2014-06-04";
+  for (const q of questions) {
+    if (q.dateTabled && q.dateTabled > newest) {
+      newest = q.dateTabled;
+    }
+  }
+  return newest;
+}
+
+function subtractDays(dateStr, days) {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() - days);
+  return date.toISOString().slice(0, 10);
+}
+
+async function fetchQuestionsPaged(queryParams) {
   const all = [];
   let total = null;
 
   for (let skip = 0; total === null || skip < total; skip += PAGE_SIZE) {
     const params = new URLSearchParams({
       ...SOURCE_PARAMS,
+      ...queryParams,
       take: String(PAGE_SIZE),
       skip: String(skip),
     });
@@ -341,7 +368,7 @@ async function fetchQuestions() {
 
     total = Number(payload.totalResults || pageItems.length || 0);
     all.push(...pageItems);
-    console.log(`Fetched ${all.length.toLocaleString()} / ${total.toLocaleString()} questions`);
+    console.log(`Fetched ${all.length.toLocaleString()} / ${total.toLocaleString()} questions for params: ${JSON.stringify(queryParams)}`);
 
     if (!pageItems.length) {
       break;
@@ -356,6 +383,22 @@ function getQuestion(item) {
 }
 
 async function buildConstituencyLookup() {
+  const cachePath = path.join(dataDir, "constituency-lookup-cache.json");
+  const forceRebuild = process.argv.includes("--force");
+
+  try {
+    if (!forceRebuild) {
+      const cacheRaw = await readFile(cachePath, "utf8");
+      const cacheParsed = JSON.parse(cacheRaw);
+      const lookupMap = new Map(Object.entries(cacheParsed.lookup));
+      console.log(`Loaded ${cacheParsed.records.length} constituency mapping records from cache`);
+      return { lookup: lookupMap, records: cacheParsed.records };
+    }
+  } catch (err) {
+    console.log("Could not load constituency cache, rebuilding from CSVs...", err.message);
+  }
+
+  console.log("Fetching constituency CSVs from external sources...");
   const [csv2025, csv2020, overlapCsv] = await Promise.all([
     fetchText(CONSTITUENCY_CSV),
     fetchText(CONSTITUENCY_2020_CSV),
@@ -419,8 +462,24 @@ async function buildConstituencyLookup() {
     });
   }
 
+  // Save cache to disk
+  try {
+    await writeFile(
+      cachePath,
+      JSON.stringify({
+        records,
+        lookup: Object.fromEntries(lookup.entries())
+      }, null, 2) + "\n",
+      "utf8"
+    );
+    console.log("Saved constituency lookup cache to data/constituency-lookup-cache.json");
+  } catch (err) {
+    console.warn("Could not save constituency lookup cache:", err.message);
+  }
+
   return { lookup, records };
 }
+
 
 function mapQuestion(item, constituencyLookup) {
   const q = getQuestion(item);
@@ -697,23 +756,71 @@ function classifyQuestions(questions, taxonomy) {
 async function main() {
   await mkdir(dataDir, { recursive: true });
   const taxonomy = await loadTopicTaxonomy();
-  const [{ lookup, records: constituencyRecords }, rawQuestions] = await Promise.all([
-    buildConstituencyLookup(),
-    fetchQuestions(),
-  ]);
+  const { lookup, records: constituencyRecords } = await buildConstituencyLookup();
 
-  const questions = rawQuestions
-    .map((item) => mapQuestion(item, lookup))
-    .filter((q) => {
-      const heading = q.heading || "";
-      const questionText = q.questionText || "";
-      return /\bdent/i.test(heading) || /\bdent/i.test(questionText);
-    })
-    .sort((a, b) => {
+  const existingQuestions = await loadPreviousQuestions();
+  const forceFull = process.argv.includes("--full");
+
+  let questions;
+  if (existingQuestions.length && !forceFull) {
+    const newestDate = getNewestTabledDate(existingQuestions);
+    const startDate = subtractDays(newestDate, 60);
+    console.log(`Performing incremental fetch since ${startDate} (based on newest question date ${newestDate} - 60 days)`);
+
+    const tabledPromise = fetchQuestionsPaged({ tabledWhenFrom: startDate });
+    const answeredPromise = fetchQuestionsPaged({ answeredWhenFrom: startDate });
+
+    const [tabledResult, answeredResult] = await Promise.all([tabledPromise, answeredPromise]);
+
+    const newQuestionsMap = new Map();
+    for (const item of [...tabledResult, ...answeredResult]) {
+      const q = getQuestion(item);
+      if (q && q.id) {
+        newQuestionsMap.set(q.id, item);
+      }
+    }
+    const fetchedRawItems = [...newQuestionsMap.values()];
+    console.log(`Fetched ${fetchedRawItems.length} unique raw questions in window`);
+
+    const processedNewQuestions = fetchedRawItems
+      .map((item) => mapQuestion(item, lookup))
+      .filter((q) => {
+        const heading = q.heading || "";
+        const questionText = q.questionText || "";
+        return /\bdent/i.test(heading) || /\bdent/i.test(questionText);
+      });
+
+    const mergedMap = new Map();
+    for (const q of existingQuestions) {
+      mergedMap.set(q.id, q);
+    }
+    for (const q of processedNewQuestions) {
+      mergedMap.set(q.id, q);
+    }
+
+    questions = [...mergedMap.values()].sort((a, b) => {
       const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
       if (dateCompare) return dateCompare;
       return String(b.uin || "").localeCompare(String(a.uin || ""));
     });
+    console.log(`Merged incremental PQs. Total: ${questions.length} questions`);
+  } else {
+    console.log("Performing full fetch of all questions from API...");
+    const rawQuestions = await fetchQuestionsPaged({});
+    questions = rawQuestions
+      .map((item) => mapQuestion(item, lookup))
+      .filter((q) => {
+        const heading = q.heading || "";
+        const questionText = q.questionText || "";
+        return /\bdent/i.test(heading) || /\bdent/i.test(questionText);
+      })
+      .sort((a, b) => {
+        const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
+        if (dateCompare) return dateCompare;
+        return String(b.uin || "").localeCompare(String(a.uin || ""));
+      });
+    console.log("Full fetch complete. Total: " + questions.length + " questions");
+  }
 
   classifyQuestions(questions, taxonomy);
 
