@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T09:52:49.846Z",
+  "generatedAt": "2026-06-02T15:38:31.348Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3040,
+    "questions": 3041,
     "answered": 3027,
-    "unanswered": 13,
+    "unanswered": 14,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-05-29"
+    "newestTabled": "2026-06-01"
   },
   "parties": [
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 445,
+      "count": 446,
       "name": "Liberal Democrat"
     },
     {
@@ -125,7 +125,7 @@
     },
     {
       "key": "East of England",
-      "count": 289
+      "count": 290
     },
     {
       "key": "London",
@@ -2582,12 +2582,24 @@
         "London": 1,
         "East of England": 4
       }
+    },
+    {
+      "month": "2026-06",
+      "total": 1,
+      "answered": 0,
+      "unanswered": 1,
+      "byParty": {
+        "LD": 1
+      },
+      "byRegion": {
+        "East of England": 1
+      }
     }
   ],
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-02T09:52:49.846Z",
+    "generatedAt": "2026-06-02T15:38:31.348Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2719,7 +2731,8 @@
       "2026-02": "ecb7f1ae",
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
-      "2026-05": "22238145"
+      "2026-05": "834977e1",
+      "2026-06": "a609207b"
     },
     "byMonth": {
       "2014-06": [],
@@ -5173,7 +5186,8 @@
           "volumeScore": 0.153846,
           "spikeScore": 1.153846
         }
-      ]
+      ],
+      "2026-06": []
     }
   },
   "unmatchedConstituencies": []
