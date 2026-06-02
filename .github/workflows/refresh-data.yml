@@ -3,7 +3,8 @@ name: Refresh dentistry PQ data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 6 * * 1-5"
+    - cron: "30 5 * * 1-5"
+    - cron: "0,30 6-8 * * 1-5"
 
 permissions:
   contents: write
