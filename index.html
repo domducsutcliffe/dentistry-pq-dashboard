@@ -25,7 +25,10 @@
             </svg>
             <span>Trigger Refresh</span>
           </a>
-          <img id="workflow-badge" src="https://github.com/domducsutcliffe/dentistry-pq-dashboard/actions/workflows/refresh-data.yml/badge.svg" alt="Refresh Status" />
+          <div id="refresh-status" class="refresh-status" title="Current build status of dentistry PQ dataset">
+            <span id="status-dot" class="status-dot status-built"></span>
+            <span id="status-text" class="status-text">DATA BUILT</span>
+          </div>
         </div>
       </div>
     </header>
