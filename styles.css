@@ -91,51 +91,6 @@ a:hover {
   vertical-align: middle;
 }
 
-.refresh-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #000000;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.status-dot.status-built {
-  background: #28a745;
-}
-
-.status-dot.status-building {
-  background: var(--orange);
-  animation: status-blink 1s infinite alternate;
-}
-
-.status-dot.status-failed {
-  background: #da291c;
-}
-
-@keyframes status-blink {
-  0% {
-    opacity: 0.35;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-}
 
 .brand {
   font-weight: 700;
