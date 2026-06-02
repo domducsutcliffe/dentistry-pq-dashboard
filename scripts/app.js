@@ -543,26 +543,45 @@ function renderTable(items) {
   const limit = 150;
   const visible = items.slice(0, limit);
   elements.resultsCount.textContent = `showing ${formatNumber.format(visible.length)} of ${formatNumber.format(items.length)}`;
+  
+  const todayStr = new Date().toISOString().slice(0, 10);
+  
   elements.table.innerHTML = visible
     .map(
-      (question) => `
-        <tr>
-          <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
-          <td>${escapeHtml(shortDate(question.dateTabled))}</td>
-          <td>${escapeHtml(question.member.name || "-")}</td>
-          <td>${escapeHtml(question.member.partyAbbreviation || question.member.party || "-")}</td>
-          <td>${escapeHtml(question.member.constituency || "-")}</td>
-          <td>${escapeHtml(question.region.nhsRegion || "-")}</td>
-          <td>
-            <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
-            <div class="question-text">${escapeHtml(question.questionText).slice(0, 220)}${question.questionText.length > 220 ? "..." : ""}</div>
-            <span class="status-pill ${question.answered ? "answered" : "unanswered"}">
-              <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
-              ${question.answered ? "answered" : "unanswered"}
-            </span>
-          </td>
-        </tr>
-      `,
+      (question) => {
+        const isOverdue = !question.answered && question.dateForAnswer && question.dateForAnswer < todayStr;
+        let dueLabel = question.dateForAnswer ? shortDate(question.dateForAnswer) : "-";
+        
+        const indicators = [];
+        if (question.isNamedDay) {
+          indicators.push(`<span class="due-indicator named-day" title="Named Day">(ND)</span>`);
+        }
+        if (isOverdue) {
+          indicators.push(`<span class="due-indicator overdue" title="Overdue">(O)</span>`);
+        }
+        
+        const dueCellHtml = dueLabel + (indicators.length ? " " + indicators.join(" ") : "");
+        
+        return `
+          <tr>
+            <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
+            <td>${escapeHtml(shortDate(question.dateTabled))}</td>
+            <td style="white-space: nowrap;">${dueCellHtml}</td>
+            <td>${escapeHtml(question.member.name || "-")}</td>
+            <td>${escapeHtml(question.member.partyAbbreviation || question.member.party || "-")}</td>
+            <td>${escapeHtml(question.member.constituency || "-")}</td>
+            <td>${escapeHtml(question.region.nhsRegion || "-")}</td>
+            <td>
+              <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
+              <div class="question-text">${escapeHtml(question.questionText).slice(0, 220)}${question.questionText.length > 220 ? "..." : ""}</div>
+              <span class="status-pill ${question.answered ? "answered" : "unanswered"}">
+                <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
+                ${question.answered ? "answered" : "unanswered"}
+              </span>
+            </td>
+          </tr>
+        `;
+      }
     )
     .join("");
 }

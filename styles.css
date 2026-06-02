@@ -675,3 +675,18 @@ table th {
   border-color: var(--orange);
   color: var(--orange);
 }
+
+.due-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 10px;
+  margin-left: 3px;
+}
+
+.due-indicator.overdue {
+  color: #bd2130;
+}
+
+.due-indicator.named-day {
+  color: #1a73e8;
+}
