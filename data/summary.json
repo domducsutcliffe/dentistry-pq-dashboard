@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T15:38:31.348Z",
+  "generatedAt": "2026-06-03T05:40:18.863Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3041,
+    "questions": 3043,
     "answered": 3027,
-    "unanswered": 14,
+    "unanswered": 16,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-01"
+    "newestTabled": "2026-06-02"
   },
   "parties": [
     {
@@ -33,7 +33,7 @@
     },
     {
       "key": "Con",
-      "count": 640,
+      "count": 642,
       "name": "Conservative"
     },
     {
@@ -109,7 +109,7 @@
     },
     {
       "key": "Midlands",
-      "count": 509
+      "count": 511
     },
     {
       "key": "North West",
@@ -2585,13 +2585,15 @@
     },
     {
       "month": "2026-06",
-      "total": 1,
+      "total": 3,
       "answered": 0,
-      "unanswered": 1,
+      "unanswered": 3,
       "byParty": {
+        "Con": 2,
         "LD": 1
       },
       "byRegion": {
+        "Midlands": 2,
         "East of England": 1
       }
     }
@@ -2599,7 +2601,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-02T15:38:31.348Z",
+    "generatedAt": "2026-06-03T05:40:18.864Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2732,7 +2734,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "834977e1",
-      "2026-06": "a609207b"
+      "2026-06": "671db0a7"
     },
     "byMonth": {
       "2014-06": [],
