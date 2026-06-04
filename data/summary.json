@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T09:37:14.304Z",
+  "generatedAt": "2026-06-04T07:02:00.256Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3043,
-    "answered": 3027,
-    "unanswered": 16,
+    "questions": 3050,
+    "answered": 3029,
+    "unanswered": 21,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-02"
+    "newestTabled": "2026-06-03"
   },
   "parties": [
     {
@@ -33,12 +33,12 @@
     },
     {
       "key": "Con",
-      "count": 642,
+      "count": 643,
       "name": "Conservative"
     },
     {
       "key": "LD",
-      "count": 446,
+      "count": 452,
       "name": "Liberal Democrat"
     },
     {
@@ -113,11 +113,11 @@
     },
     {
       "key": "North West",
-      "count": 458
+      "count": 461
     },
     {
       "key": "South West",
-      "count": 399
+      "count": 401
     },
     {
       "key": "South East",
@@ -125,7 +125,7 @@
     },
     {
       "key": "East of England",
-      "count": 290
+      "count": 292
     },
     {
       "key": "London",
@@ -206,16 +206,16 @@
       "count": 34
     },
     {
+      "key": "James Wild",
+      "count": 33
+    },
+    {
       "key": "Jonathan Ashworth",
       "count": 33
     },
     {
       "key": "Julie Cooper",
       "count": 33
-    },
-    {
-      "key": "James Wild",
-      "count": 32
     },
     {
       "key": "Jim Shannon",
@@ -2567,8 +2567,8 @@
     {
       "month": "2026-05",
       "total": 26,
-      "answered": 16,
-      "unanswered": 10,
+      "answered": 18,
+      "unanswered": 8,
       "byParty": {
         "LD": 16,
         "Con": 7,
@@ -2585,23 +2585,25 @@
     },
     {
       "month": "2026-06",
-      "total": 3,
+      "total": 10,
       "answered": 0,
-      "unanswered": 3,
+      "unanswered": 10,
       "byParty": {
-        "Con": 2,
-        "LD": 1
+        "LD": 7,
+        "Con": 3
       },
       "byRegion": {
+        "South West": 2,
+        "East of England": 3,
         "Midlands": 2,
-        "East of England": 1
+        "North West": 3
       }
     }
   ],
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-03T09:37:14.305Z",
+    "generatedAt": "2026-06-04T07:02:00.256Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2733,8 +2735,8 @@
       "2026-02": "ecb7f1ae",
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
-      "2026-05": "834977e1",
-      "2026-06": "671db0a7"
+      "2026-05": "f24c43e4",
+      "2026-06": "3387491b"
     },
     "byMonth": {
       "2014-06": [],
