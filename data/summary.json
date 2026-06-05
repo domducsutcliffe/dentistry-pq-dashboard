@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-04T09:20:21.720Z",
+  "generatedAt": "2026-06-05T06:52:57.358Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3050,
+    "questions": 3051,
     "answered": 3029,
-    "unanswered": 21,
+    "unanswered": 22,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-03"
+    "newestTabled": "2026-06-04"
   },
   "parties": [
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 452,
+      "count": 453,
       "name": "Liberal Democrat"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "key": "South West",
-      "count": 401
+      "count": 402
     },
     {
       "key": "South East",
@@ -2585,15 +2585,15 @@
     },
     {
       "month": "2026-06",
-      "total": 10,
+      "total": 11,
       "answered": 0,
-      "unanswered": 10,
+      "unanswered": 11,
       "byParty": {
-        "LD": 7,
+        "LD": 8,
         "Con": 3
       },
       "byRegion": {
-        "South West": 2,
+        "South West": 3,
         "East of England": 3,
         "Midlands": 2,
         "North West": 3
@@ -2603,7 +2603,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-04T09:20:21.720Z",
+    "generatedAt": "2026-06-05T06:52:57.359Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2736,7 +2736,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "3387491b"
+      "2026-06": "13987a24"
     },
     "byMonth": {
       "2014-06": [],
