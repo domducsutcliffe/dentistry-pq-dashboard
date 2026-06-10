@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T08:40:13.900Z",
+  "generatedAt": "2026-06-10T06:52:13.088Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3051,
-    "answered": 3035,
-    "unanswered": 16,
+    "questions": 3052,
+    "answered": 3041,
+    "unanswered": 11,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-04"
+    "newestTabled": "2026-06-09"
   },
   "parties": [
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 453,
+      "count": 454,
       "name": "Liberal Democrat"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "key": "South West",
-      "count": 402
+      "count": 403
     },
     {
       "key": "South East",
@@ -2567,8 +2567,8 @@
     {
       "month": "2026-05",
       "total": 26,
-      "answered": 19,
-      "unanswered": 7,
+      "answered": 22,
+      "unanswered": 4,
       "byParty": {
         "LD": 16,
         "Con": 7,
@@ -2585,15 +2585,15 @@
     },
     {
       "month": "2026-06",
-      "total": 11,
-      "answered": 5,
-      "unanswered": 6,
+      "total": 12,
+      "answered": 8,
+      "unanswered": 4,
       "byParty": {
-        "LD": 8,
+        "LD": 9,
         "Con": 3
       },
       "byRegion": {
-        "South West": 3,
+        "South West": 4,
         "East of England": 3,
         "Midlands": 2,
         "North West": 3
@@ -2603,7 +2603,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-09T08:40:13.901Z",
+    "generatedAt": "2026-06-10T06:52:13.088Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2736,7 +2736,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "10d65778"
+      "2026-06": "e50096a2"
     },
     "byMonth": {
       "2014-06": [],
