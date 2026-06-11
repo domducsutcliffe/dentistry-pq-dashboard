@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-10T08:51:41.155Z",
+  "generatedAt": "2026-06-11T07:06:32.230Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,20 +15,20 @@
     }
   },
   "totals": {
-    "questions": 3052,
+    "questions": 3053,
     "answered": 3041,
-    "unanswered": 11,
+    "unanswered": 12,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-09"
+    "newestTabled": "2026-06-10"
   },
   "parties": [
     {
       "key": "Lab",
-      "count": 1774,
+      "count": 1775,
       "name": "Labour"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "key": "North West",
-      "count": 461
+      "count": 462
     },
     {
       "key": "South West",
@@ -2585,25 +2585,26 @@
     },
     {
       "month": "2026-06",
-      "total": 12,
+      "total": 13,
       "answered": 8,
-      "unanswered": 4,
+      "unanswered": 5,
       "byParty": {
+        "Lab": 1,
         "LD": 9,
         "Con": 3
       },
       "byRegion": {
+        "North West": 4,
         "South West": 4,
         "East of England": 3,
-        "Midlands": 2,
-        "North West": 3
+        "Midlands": 2
       }
     }
   ],
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-10T08:51:41.156Z",
+    "generatedAt": "2026-06-11T07:06:32.231Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2736,7 +2737,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "e50096a2"
+      "2026-06": "87a6b07a"
     },
     "byMonth": {
       "2014-06": [],
