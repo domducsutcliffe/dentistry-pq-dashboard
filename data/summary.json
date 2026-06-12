@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T09:29:56.933Z",
+  "generatedAt": "2026-06-12T07:01:53.772Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,20 +15,20 @@
     }
   },
   "totals": {
-    "questions": 3053,
+    "questions": 3056,
     "answered": 3041,
-    "unanswered": 12,
+    "unanswered": 15,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-10"
+    "newestTabled": "2026-06-11"
   },
   "parties": [
     {
       "key": "Lab",
-      "count": 1775,
+      "count": 1776,
       "name": "Labour"
     },
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 454,
+      "count": 456,
       "name": "Liberal Democrat"
     },
     {
@@ -113,11 +113,11 @@
     },
     {
       "key": "North West",
-      "count": 462
+      "count": 463
     },
     {
       "key": "South West",
-      "count": 403
+      "count": 404
     },
     {
       "key": "South East",
@@ -129,7 +129,7 @@
     },
     {
       "key": "London",
-      "count": 234
+      "count": 235
     },
     {
       "key": "Northern Ireland",
@@ -2585,17 +2585,18 @@
     },
     {
       "month": "2026-06",
-      "total": 13,
+      "total": 16,
       "answered": 8,
-      "unanswered": 5,
+      "unanswered": 8,
       "byParty": {
-        "Lab": 1,
-        "LD": 9,
+        "Lab": 2,
+        "LD": 11,
         "Con": 3
       },
       "byRegion": {
-        "North West": 4,
-        "South West": 4,
+        "London": 1,
+        "North West": 5,
+        "South West": 5,
         "East of England": 3,
         "Midlands": 2
       }
@@ -2604,7 +2605,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-11T09:29:56.934Z",
+    "generatedAt": "2026-06-12T07:01:53.772Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2737,7 +2738,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "87a6b07a"
+      "2026-06": "adc0d37a"
     },
     "byMonth": {
       "2014-06": [],
