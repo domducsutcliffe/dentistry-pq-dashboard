@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-15T10:19:45.292Z",
+  "generatedAt": "2026-06-16T07:14:56.981Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,30 +15,30 @@
     }
   },
   "totals": {
-    "questions": 3056,
-    "answered": 3041,
-    "unanswered": 15,
+    "questions": 3070,
+    "answered": 3043,
+    "unanswered": 27,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-11"
+    "newestTabled": "2026-06-15"
   },
   "parties": [
     {
       "key": "Lab",
-      "count": 1776,
+      "count": 1780,
       "name": "Labour"
     },
     {
       "key": "Con",
-      "count": 643,
+      "count": 647,
       "name": "Conservative"
     },
     {
       "key": "LD",
-      "count": 456,
+      "count": 460,
       "name": "Liberal Democrat"
     },
     {
@@ -58,7 +58,7 @@
     },
     {
       "key": "RUK",
-      "count": 29,
+      "count": 31,
       "name": "Reform UK"
     },
     {
@@ -105,7 +105,7 @@
   "regions": [
     {
       "key": "North East and Yorkshire",
-      "count": 727
+      "count": 731
     },
     {
       "key": "Midlands",
@@ -113,15 +113,15 @@
     },
     {
       "key": "North West",
-      "count": 463
+      "count": 469
     },
     {
       "key": "South West",
-      "count": 404
+      "count": 407
     },
     {
       "key": "South East",
-      "count": 339
+      "count": 340
     },
     {
       "key": "East of England",
@@ -147,11 +147,15 @@
   "topMembers": [
     {
       "key": "Rachael Maskell",
-      "count": 242
+      "count": 246
     },
     {
       "key": "Judith Cummins",
       "count": 80
+    },
+    {
+      "key": "Edward Morello",
+      "count": 51
     },
     {
       "key": "Luke Pollard",
@@ -160,10 +164,6 @@
     {
       "key": "Steve McCabe",
       "count": 50
-    },
-    {
-      "key": "Edward Morello",
-      "count": 48
     },
     {
       "key": "Helen Morgan",
@@ -2585,18 +2585,21 @@
     },
     {
       "month": "2026-06",
-      "total": 16,
-      "answered": 8,
-      "unanswered": 8,
+      "total": 30,
+      "answered": 10,
+      "unanswered": 20,
       "byParty": {
-        "Lab": 2,
-        "LD": 11,
-        "Con": 3
+        "RUK": 2,
+        "LD": 15,
+        "Lab": 6,
+        "Con": 7
       },
       "byRegion": {
+        "North West": 11,
+        "South West": 8,
+        "South East": 1,
+        "North East and Yorkshire": 4,
         "London": 1,
-        "North West": 5,
-        "South West": 5,
         "East of England": 3,
         "Midlands": 2
       }
@@ -2605,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-15T10:19:45.293Z",
+    "generatedAt": "2026-06-16T07:14:56.982Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2738,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "adc0d37a"
+      "2026-06": "5a4a03fd"
     },
     "byMonth": {
       "2014-06": [],
@@ -5193,7 +5196,36 @@
           "spikeScore": 1.153846
         }
       ],
-      "2026-06": []
+      "2026-06": [
+        {
+          "label": "Access and Waiting Times",
+          "count": 6,
+          "score": 0.470187,
+          "volumeScore": 0.2,
+          "spikeScore": 1.4
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.459412,
+          "volumeScore": 0.1,
+          "spikeScore": 1.714286
+        },
+        {
+          "label": "NHS Dentistry Contract Reform",
+          "count": 3,
+          "score": 0.375383,
+          "volumeScore": 0.1,
+          "spikeScore": 1.2
+        },
+        {
+          "label": "Children's Oral Health",
+          "count": 4,
+          "score": 0.357259,
+          "volumeScore": 0.133333,
+          "spikeScore": 1
+        }
+      ]
     }
   },
   "unmatchedConstituencies": []
