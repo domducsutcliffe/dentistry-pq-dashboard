@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T09:56:04.576Z",
+  "generatedAt": "2026-06-17T07:15:24.549Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,8 +15,8 @@
     }
   },
   "totals": {
-    "questions": 3070,
-    "answered": 3044,
+    "questions": 3071,
+    "answered": 3045,
     "unanswered": 26,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
@@ -28,7 +28,7 @@
   "parties": [
     {
       "key": "Lab",
-      "count": 1780,
+      "count": 1781,
       "name": "Labour"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "key": "North West",
-      "count": 469
+      "count": 470
     },
     {
       "key": "South West",
@@ -2585,17 +2585,17 @@
     },
     {
       "month": "2026-06",
-      "total": 30,
-      "answered": 11,
+      "total": 31,
+      "answered": 12,
       "unanswered": 19,
       "byParty": {
         "RUK": 2,
         "LD": 15,
-        "Lab": 6,
+        "Lab": 7,
         "Con": 7
       },
       "byRegion": {
-        "North West": 11,
+        "North West": 12,
         "South West": 8,
         "South East": 1,
         "North East and Yorkshire": 4,
@@ -2608,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-16T09:56:04.577Z",
+    "generatedAt": "2026-06-17T07:15:24.550Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "5a4a03fd"
+      "2026-06": "8c279491"
     },
     "byMonth": {
       "2014-06": [],
@@ -5199,30 +5199,30 @@
       "2026-06": [
         {
           "label": "Access and Waiting Times",
-          "count": 6,
-          "score": 0.470187,
-          "volumeScore": 0.2,
-          "spikeScore": 1.4
+          "count": 7,
+          "score": 0.517688,
+          "volumeScore": 0.225806,
+          "spikeScore": 1.6
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 3,
-          "score": 0.459412,
-          "volumeScore": 0.1,
+          "score": 0.457476,
+          "volumeScore": 0.096774,
           "spikeScore": 1.714286
         },
         {
           "label": "NHS Dentistry Contract Reform",
           "count": 3,
-          "score": 0.375383,
-          "volumeScore": 0.1,
+          "score": 0.373447,
+          "volumeScore": 0.096774,
           "spikeScore": 1.2
         },
         {
           "label": "Children's Oral Health",
           "count": 4,
-          "score": 0.357259,
-          "volumeScore": 0.133333,
+          "score": 0.354678,
+          "volumeScore": 0.129032,
           "spikeScore": 1
         }
       ]
