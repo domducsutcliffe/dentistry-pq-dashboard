@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T09:38:25.283Z",
+  "generatedAt": "2026-06-18T06:18:36.117Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3071,
-    "answered": 3045,
-    "unanswered": 26,
+    "questions": 3073,
+    "answered": 3046,
+    "unanswered": 27,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-15"
+    "newestTabled": "2026-06-17"
   },
   "parties": [
     {
@@ -33,12 +33,12 @@
     },
     {
       "key": "Con",
-      "count": 647,
+      "count": 648,
       "name": "Conservative"
     },
     {
       "key": "LD",
-      "count": 460,
+      "count": 461,
       "name": "Liberal Democrat"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "key": "South West",
-      "count": 407
+      "count": 408
     },
     {
       "key": "South East",
@@ -125,7 +125,7 @@
     },
     {
       "key": "East of England",
-      "count": 292
+      "count": 293
     },
     {
       "key": "London",
@@ -207,7 +207,7 @@
     },
     {
       "key": "James Wild",
-      "count": 33
+      "count": 34
     },
     {
       "key": "Jonathan Ashworth",
@@ -2585,22 +2585,22 @@
     },
     {
       "month": "2026-06",
-      "total": 31,
-      "answered": 12,
-      "unanswered": 19,
+      "total": 33,
+      "answered": 13,
+      "unanswered": 20,
       "byParty": {
+        "LD": 16,
+        "Con": 8,
         "RUK": 2,
-        "LD": 15,
-        "Lab": 7,
-        "Con": 7
+        "Lab": 7
       },
       "byRegion": {
+        "South West": 9,
+        "East of England": 4,
         "North West": 12,
-        "South West": 8,
         "South East": 1,
         "North East and Yorkshire": 4,
         "London": 1,
-        "East of England": 3,
         "Midlands": 2
       }
     }
@@ -2608,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-17T09:38:25.284Z",
+    "generatedAt": "2026-06-18T06:18:36.118Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "8c279491"
+      "2026-06": "959467bb"
     },
     "byMonth": {
       "2014-06": [],
@@ -5199,30 +5199,16 @@
       "2026-06": [
         {
           "label": "Access and Waiting Times",
-          "count": 7,
-          "score": 0.517688,
-          "volumeScore": 0.225806,
-          "spikeScore": 1.6
-        },
-        {
-          "label": "Workforce Recruitment and Retention",
-          "count": 3,
-          "score": 0.457476,
-          "volumeScore": 0.096774,
-          "spikeScore": 1.714286
-        },
-        {
-          "label": "NHS Dentistry Contract Reform",
-          "count": 3,
-          "score": 0.373447,
-          "volumeScore": 0.096774,
-          "spikeScore": 1.2
+          "count": 9,
+          "score": 0.603081,
+          "volumeScore": 0.272727,
+          "spikeScore": 2
         },
         {
           "label": "Children's Oral Health",
           "count": 4,
-          "score": 0.354678,
-          "volumeScore": 0.129032,
+          "score": 0.349986,
+          "volumeScore": 0.121212,
           "spikeScore": 1
         }
       ]
