@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T09:36:14.947Z",
+  "generatedAt": "2026-06-22T05:32:52.562Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3073,
-    "answered": 3054,
-    "unanswered": 19,
+    "questions": 3076,
+    "answered": 3059,
+    "unanswered": 17,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-17"
+    "newestTabled": "2026-06-19"
   },
   "parties": [
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 461,
+      "count": 464,
       "name": "Liberal Democrat"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "key": "South West",
-      "count": 408
+      "count": 411
     },
     {
       "key": "South East",
@@ -155,7 +155,7 @@
     },
     {
       "key": "Edward Morello",
-      "count": 51
+      "count": 54
     },
     {
       "key": "Luke Pollard",
@@ -2585,17 +2585,17 @@
     },
     {
       "month": "2026-06",
-      "total": 33,
-      "answered": 17,
-      "unanswered": 16,
+      "total": 36,
+      "answered": 22,
+      "unanswered": 14,
       "byParty": {
-        "LD": 16,
+        "LD": 19,
         "Con": 8,
         "RUK": 2,
         "Lab": 7
       },
       "byRegion": {
-        "South West": 9,
+        "South West": 12,
         "East of England": 4,
         "North West": 12,
         "South East": 1,
@@ -2608,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-19T09:36:14.947Z",
+    "generatedAt": "2026-06-22T05:32:52.562Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "d336e93d"
+      "2026-06": "22d9d933"
     },
     "byMonth": {
       "2014-06": [],
@@ -5199,16 +5199,16 @@
       "2026-06": [
         {
           "label": "Access and Waiting Times",
-          "count": 9,
-          "score": 0.603081,
-          "volumeScore": 0.272727,
-          "spikeScore": 2
+          "count": 10,
+          "score": 0.631927,
+          "volumeScore": 0.277778,
+          "spikeScore": 2.2
         },
         {
           "label": "Children's Oral Health",
           "count": 4,
-          "score": 0.349986,
-          "volumeScore": 0.121212,
+          "score": 0.343926,
+          "volumeScore": 0.111111,
           "spikeScore": 1
         }
       ]
