@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-23T08:38:34.291Z",
+  "generatedAt": "2026-06-24T06:46:19.659Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -2608,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-23T08:38:34.292Z",
+    "generatedAt": "2026-06-24T06:46:19.659Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "5efed686"
+      "2026-06": "afd304fe"
     },
     "byMonth": {
       "2014-06": [],
@@ -5203,6 +5203,13 @@
           "score": 0.631927,
           "volumeScore": 0.277778,
           "spikeScore": 2.2
+        },
+        {
+          "label": "Workforce Recruitment and Retention",
+          "count": 3,
+          "score": 0.449412,
+          "volumeScore": 0.083333,
+          "spikeScore": 1.714286
         },
         {
           "label": "Children's Oral Health",
