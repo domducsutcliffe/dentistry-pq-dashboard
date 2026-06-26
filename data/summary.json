@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T08:33:42.797Z",
+  "generatedAt": "2026-06-26T06:46:45.205Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3076,
-    "answered": 3062,
-    "unanswered": 14,
+    "questions": 3077,
+    "answered": 3065,
+    "unanswered": 12,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-19"
+    "newestTabled": "2026-06-25"
   },
   "parties": [
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 464,
+      "count": 465,
       "name": "Liberal Democrat"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "key": "South West",
-      "count": 411
+      "count": 412
     },
     {
       "key": "South East",
@@ -2585,17 +2585,17 @@
     },
     {
       "month": "2026-06",
-      "total": 36,
-      "answered": 25,
-      "unanswered": 11,
+      "total": 37,
+      "answered": 28,
+      "unanswered": 9,
       "byParty": {
-        "LD": 19,
+        "LD": 20,
         "Con": 8,
         "RUK": 2,
         "Lab": 7
       },
       "byRegion": {
-        "South West": 12,
+        "South West": 13,
         "East of England": 4,
         "North West": 12,
         "South East": 1,
@@ -2608,7 +2608,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-25T08:33:42.798Z",
+    "generatedAt": "2026-06-26T06:46:45.206Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2741,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "afd304fe"
+      "2026-06": "a1881b5f"
     },
     "byMonth": {
       "2014-06": [],
@@ -5199,23 +5199,23 @@
       "2026-06": [
         {
           "label": "Access and Waiting Times",
-          "count": 10,
-          "score": 0.631927,
-          "volumeScore": 0.277778,
-          "spikeScore": 2.2
+          "count": 11,
+          "score": 0.667889,
+          "volumeScore": 0.297297,
+          "spikeScore": 2.4
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 3,
-          "score": 0.449412,
-          "volumeScore": 0.083333,
+          "score": 0.44806,
+          "volumeScore": 0.081081,
           "spikeScore": 1.714286
         },
         {
           "label": "Children's Oral Health",
           "count": 4,
-          "score": 0.343926,
-          "volumeScore": 0.111111,
+          "score": 0.342124,
+          "volumeScore": 0.108108,
           "spikeScore": 1
         }
       ]
