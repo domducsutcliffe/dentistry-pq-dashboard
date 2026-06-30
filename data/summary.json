@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-29T09:36:15.015Z",
+  "generatedAt": "2026-06-30T06:47:16.700Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,15 +15,15 @@
     }
   },
   "totals": {
-    "questions": 3078,
+    "questions": 3079,
     "answered": 3067,
-    "unanswered": 11,
+    "unanswered": 12,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-26"
+    "newestTabled": "2026-06-29"
   },
   "parties": [
     {
@@ -43,7 +43,7 @@
     },
     {
       "key": "DUP",
-      "count": 41,
+      "count": 42,
       "name": "Democratic Unionist Party"
     },
     {
@@ -133,7 +133,7 @@
     },
     {
       "key": "Northern Ireland",
-      "count": 48
+      "count": 49
     },
     {
       "key": "Scotland",
@@ -2585,16 +2585,18 @@
     },
     {
       "month": "2026-06",
-      "total": 38,
+      "total": 39,
       "answered": 30,
-      "unanswered": 8,
+      "unanswered": 9,
       "byParty": {
+        "DUP": 1,
         "LD": 21,
         "Con": 8,
         "RUK": 2,
         "Lab": 7
       },
       "byRegion": {
+        "Northern Ireland": 1,
         "South East": 2,
         "South West": 13,
         "East of England": 4,
@@ -2608,7 +2610,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-06-29T09:36:15.015Z",
+    "generatedAt": "2026-06-30T06:47:16.701Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2741,7 +2743,7 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "f8c0d249"
+      "2026-06": "3e208f92"
     },
     "byMonth": {
       "2014-06": [],
@@ -5199,23 +5201,23 @@
       "2026-06": [
         {
           "label": "Access and Waiting Times",
-          "count": 12,
-          "score": 0.701847,
-          "volumeScore": 0.315789,
-          "spikeScore": 2.6
+          "count": 13,
+          "score": 0.734,
+          "volumeScore": 0.333333,
+          "spikeScore": 2.8
         },
         {
           "label": "Workforce Recruitment and Retention",
           "count": 3,
-          "score": 0.44678,
-          "volumeScore": 0.078947,
+          "score": 0.445565,
+          "volumeScore": 0.076923,
           "spikeScore": 1.714286
         },
         {
           "label": "Children's Oral Health",
           "count": 4,
-          "score": 0.340417,
-          "volumeScore": 0.105263,
+          "score": 0.338797,
+          "volumeScore": 0.102564,
           "spikeScore": 1
         }
       ]
