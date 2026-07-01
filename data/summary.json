@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T06:55:16.296Z",
+  "generatedAt": "2026-07-01T07:30:12.928Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -2610,7 +2610,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-07-01T06:55:16.297Z",
+    "generatedAt": "2026-07-01T07:30:12.928Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
