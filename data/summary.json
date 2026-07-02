@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T08:52:15.802Z",
+  "generatedAt": "2026-07-02T06:44:37.290Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,20 +15,20 @@
     }
   },
   "totals": {
-    "questions": 3079,
-    "answered": 3067,
-    "unanswered": 12,
+    "questions": 3085,
+    "answered": 3068,
+    "unanswered": 17,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-06-29"
+    "newestTabled": "2026-07-01"
   },
   "parties": [
     {
       "key": "Lab",
-      "count": 1781,
+      "count": 1787,
       "name": "Labour"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "key": "North West",
-      "count": 470
+      "count": 476
     },
     {
       "key": "South West",
@@ -182,12 +182,12 @@
       "count": 43
     },
     {
-      "key": "Mr Tanmanjeet Singh Dhesi",
-      "count": 40
+      "key": "Yasmin Qureshi",
+      "count": 43
     },
     {
-      "key": "Yasmin Qureshi",
-      "count": 37
+      "key": "Mr Tanmanjeet Singh Dhesi",
+      "count": 40
     },
     {
       "key": "Alex Norris",
@@ -2586,8 +2586,8 @@
     {
       "month": "2026-06",
       "total": 39,
-      "answered": 30,
-      "unanswered": 9,
+      "answered": 31,
+      "unanswered": 8,
       "byParty": {
         "DUP": 1,
         "LD": 21,
@@ -2605,12 +2605,24 @@
         "London": 1,
         "Midlands": 2
       }
+    },
+    {
+      "month": "2026-07",
+      "total": 6,
+      "answered": 0,
+      "unanswered": 6,
+      "byParty": {
+        "Lab": 6
+      },
+      "byRegion": {
+        "North West": 6
+      }
     }
   ],
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-07-01T08:52:15.802Z",
+    "generatedAt": "2026-07-02T06:44:37.290Z",
     "monthFingerprints": {
       "2014-06": "18d0280f",
       "2014-07": "fc94a9f5",
@@ -2743,7 +2755,8 @@
       "2026-03": "b4cd79ec",
       "2026-04": "113c0e3d",
       "2026-05": "f24c43e4",
-      "2026-06": "3eb8bbdd"
+      "2026-06": "3eb8bbdd",
+      "2026-07": "ca46a57e"
     },
     "byMonth": {
       "2014-06": [],
@@ -5219,6 +5232,15 @@
           "score": 0.338797,
           "volumeScore": 0.102564,
           "spikeScore": 1
+        }
+      ],
+      "2026-07": [
+        {
+          "label": "Dental Charges and Affordability",
+          "count": 3,
+          "score": 0.895231,
+          "volumeScore": 0.5,
+          "spikeScore": 3.428571
         }
       ]
     }
