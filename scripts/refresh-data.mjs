@@ -3,10 +3,19 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getVertical, DEFAULT_VERTICAL_ID } from "../config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const dataDir = path.join(repoRoot, "data");
+
+// Which vertical are we building? `node refresh-data.mjs --vertical=hospice`
+// (defaults to DEFAULT_VERTICAL_ID). Per-vertical outputs live in data/<id>/;
+// geography files (constituency-*) are shared at data/.
+const verticalArg = process.argv.find((a) => a.startsWith("--vertical="));
+const VERTICAL = getVertical(verticalArg ? verticalArg.split("=")[1] : DEFAULT_VERTICAL_ID);
+const verticalDir = path.join(dataDir, VERTICAL.id);
+console.log(`Building vertical "${VERTICAL.id}" (searchTerm: ${VERTICAL.searchTerm})`);
 
 const QUESTIONS_ENDPOINT =
   "https://questions-statements-api.parliament.uk/api/writtenquestions/questions";
@@ -17,17 +26,25 @@ const CONSTITUENCY_2020_CSV =
   "https://open-geography-portalx-ons.hub.arcgis.com/api/download/v1/items/0dbc00e2529e42b1807e04ddb1da6df5/csv?layers=0";
 const PARL10_TO_PARL25_CSV =
   "https://pages.mysociety.org/2025-constituencies/data/geographic_overlaps/latest/PARL10_PARL25_combo_overlap.csv";
-const TOPIC_TAXONOMY_PATH = path.join(dataDir, "topic-taxonomy.json");
+const TOPIC_TAXONOMY_PATH = path.join(verticalDir, "topic-taxonomy.json");
 
 const PAGE_SIZE = Number(process.env.PAGE_SIZE || 100);
 const SOURCE_PARAMS = {
-  house: "Commons",
-  answeringBodies: "17",
+  house: VERTICAL.house,
+  answeringBodies: VERTICAL.answeringBodies,
   answered: "Any",
   includeWithdrawn: "false",
   expandMember: "true",
-  searchTerm: "dent*",
+  searchTerm: VERTICAL.searchTerm,
 };
+
+// Word-boundary, case-insensitive regex built from the vertical's match roots,
+// used to keep only questions whose heading or text actually mentions the topic.
+const VERTICAL_MATCH = new RegExp(`\\b(${VERTICAL.matchRoots.join("|")})`, "i");
+
+function matchesVertical(q) {
+  return VERTICAL_MATCH.test(q.heading || "") || VERTICAL_MATCH.test(q.questionText || "");
+}
 
 const NHS_REGION_BY_PARLIAMENT_REGION = new Map([
   ["eastern", "East of England"],
@@ -144,7 +161,15 @@ function titleCase(value) {
 }
 
 async function loadTopicTaxonomy() {
-  const raw = await readFile(TOPIC_TAXONOMY_PATH, "utf8");
+  let raw;
+  try {
+    raw = await readFile(TOPIC_TAXONOMY_PATH, "utf8");
+  } catch {
+    // A new vertical may not have a curated taxonomy yet — degrade gracefully so the
+    // dashboard still builds (every question simply falls under "General").
+    console.log(`No topic taxonomy at ${TOPIC_TAXONOMY_PATH}; using empty taxonomy.`);
+    return { version: "none", concepts: [] };
+  }
   const parsed = JSON.parse(raw);
   const concepts = (parsed.concepts || []).map((concept) => ({
     label: concept.label,
@@ -214,7 +239,7 @@ function computeMonthlyTopics(month, monthConceptCounts, monthTotals, orderedMon
 
 async function loadPreviousSummary() {
   try {
-    const payload = await readFile(path.join(dataDir, "summary.json"), "utf8");
+    const payload = await readFile(path.join(verticalDir, "summary.json"), "utf8");
     return JSON.parse(payload);
   } catch {
     return null;
@@ -298,19 +323,25 @@ function parseCsv(text) {
     );
 }
 
-async function fetchJson(url, tries = 3) {
+async function fetchJson(url, tries = 5) {
   let lastError;
   for (let attempt = 1; attempt <= tries; attempt += 1) {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+        const error = new Error(`${response.status} ${response.statusText}`);
+        error.status = response.status;
+        error.retryAfterMs = (Number(response.headers.get("retry-after")) || 0) * 1000;
+        throw error;
       }
       return await response.json();
     } catch (error) {
       lastError = error;
       if (attempt < tries) {
-        await new Promise((resolve) => setTimeout(resolve, attempt * 800));
+        // 429 (rate limited) needs a much longer backoff than transient errors
+        const base = error.status === 429 ? 3000 : 800;
+        const wait = error.retryAfterMs || base * attempt;
+        await new Promise((resolve) => setTimeout(resolve, wait));
       }
     }
   }
@@ -327,7 +358,7 @@ async function fetchText(url) {
 
 async function loadPreviousQuestions() {
   try {
-    const raw = await readFile(path.join(dataDir, "questions.json"), "utf8");
+    const raw = await readFile(path.join(verticalDir, "questions.json"), "utf8");
     return JSON.parse(raw).questions || [];
   } catch {
     return [];
@@ -380,6 +411,65 @@ async function fetchQuestionsPaged(queryParams) {
 
 function getQuestion(item) {
   return item.value || item;
+}
+
+// The list endpoint truncates answerText to ~258 chars (ending in "..."). The full
+// answer (with paragraph markup) is only available from the per-question detail
+// endpoint, so we fetch it for answered questions that still look truncated.
+function needsFullAnswer(q) {
+  if (!q.answered || !q.id || q.answerFull) return false;
+  const text = q.answerText || "";
+  return !text || text.length >= 255 || /\.\.\.$/.test(text);
+}
+
+async function enrichFullAnswers(questions) {
+  const targets = questions.filter(needsFullAnswer);
+  if (!targets.length) {
+    console.log("No answers need full-text enrichment.");
+    return;
+  }
+
+  const concurrency = Number(process.env.ANSWER_CONCURRENCY || 8);
+  const delayMs = Number(process.env.ANSWER_DELAY_MS || 0);
+  console.log(
+    `Fetching full answer text for ${targets.length.toLocaleString()} answered questions (concurrency ${concurrency}, delay ${delayMs}ms)...`,
+  );
+
+  let cursor = 0;
+  let done = 0;
+  let failed = 0;
+
+  async function worker() {
+    while (cursor < targets.length) {
+      const q = targets[cursor];
+      cursor += 1;
+      try {
+        const payload = await fetchJson(`${QUESTIONS_ENDPOINT}/${q.id}`);
+        const full = stripHtml(getQuestion(payload).answerText);
+        if (full) {
+          q.answerText = full;
+        }
+        // Mark as fetched regardless of whether text came back — some answered
+        // questions have no inline answer (holding answers, attachment-only), and
+        // without this they would be re-fetched on every run forever.
+        q.answerFull = true;
+      } catch {
+        failed += 1;
+      }
+      done += 1;
+      if (done % 250 === 0 || done === targets.length) {
+        console.log(`  ...full answers ${done}/${targets.length} (${failed} failed)`);
+      }
+      if (delayMs) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: concurrency }, worker));
+  console.log(
+    `Full answer enrichment complete: ${done - failed} updated, ${failed} failed.`,
+  );
 }
 
 async function buildConstituencyLookup() {
@@ -755,6 +845,28 @@ function classifyQuestions(questions, taxonomy) {
 
 async function main() {
   await mkdir(dataDir, { recursive: true });
+  await mkdir(verticalDir, { recursive: true });
+
+  // --enrich-only: skip the (rate-limit-prone) list fetch and just backfill full
+  // answer text into the existing questions.json. Idempotent — only touches answers
+  // still marked truncated, so it can be re-run until everything is enriched.
+  if (process.argv.includes("--enrich-only")) {
+    const existing = await loadPreviousQuestions();
+    if (!existing.length) {
+      console.log("Enrich-only: no existing questions.json found, nothing to do.");
+      return;
+    }
+    console.log(`Enrich-only mode: loaded ${existing.length.toLocaleString()} questions.`);
+    await enrichFullAnswers(existing);
+    await writeFile(
+      path.join(verticalDir, "questions.json"),
+      `${JSON.stringify({ questions: existing })}\n`,
+      "utf8",
+    );
+    console.log("Enrich-only complete: questions.json updated.");
+    return;
+  }
+
   const taxonomy = await loadTopicTaxonomy();
   const { lookup, records: constituencyRecords } = await buildConstituencyLookup();
 
@@ -784,17 +896,27 @@ async function main() {
 
     const processedNewQuestions = fetchedRawItems
       .map((item) => mapQuestion(item, lookup))
-      .filter((q) => {
-        const heading = q.heading || "";
-        const questionText = q.questionText || "";
-        return /\bdent/i.test(heading) || /\bdent/i.test(questionText);
-      });
+      .filter(matchesVertical);
 
     const mergedMap = new Map();
     for (const q of existingQuestions) {
       mergedMap.set(q.id, q);
     }
     for (const q of processedNewQuestions) {
+      // Freshly mapped questions only carry the list endpoint's truncated answerText
+      // (no answerFull). If we already have the full answer for an unchanged question,
+      // carry it forward so we don't needlessly re-fetch the whole window every run.
+      // The truncated snippet is a prefix of the full answer, so a prefix match means
+      // the answer is unchanged; a mismatch (amended answer) correctly falls through to
+      // re-enrichment.
+      const prior = mergedMap.get(q.id);
+      if (prior && prior.answerFull && !q.answerFull && prior.answerText) {
+        const snippet = (q.answerText || "").replace(/\.\.\.$/, "");
+        if (snippet && prior.answerText.startsWith(snippet)) {
+          q.answerText = prior.answerText;
+          q.answerFull = true;
+        }
+      }
       mergedMap.set(q.id, q);
     }
 
@@ -809,11 +931,7 @@ async function main() {
     const rawQuestions = await fetchQuestionsPaged({});
     questions = rawQuestions
       .map((item) => mapQuestion(item, lookup))
-      .filter((q) => {
-        const heading = q.heading || "";
-        const questionText = q.questionText || "";
-        return /\bdent/i.test(heading) || /\bdent/i.test(questionText);
-      })
+      .filter(matchesVertical)
       .sort((a, b) => {
         const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
         if (dateCompare) return dateCompare;
@@ -821,6 +939,8 @@ async function main() {
       });
     console.log("Full fetch complete. Total: " + questions.length + " questions");
   }
+
+  await enrichFullAnswers(questions);
 
   classifyQuestions(questions, taxonomy);
 
@@ -843,12 +963,12 @@ async function main() {
   );
 
   await writeFile(
-    path.join(dataDir, "questions.json"),
+    path.join(verticalDir, "questions.json"),
     `${JSON.stringify({ questions })}\n`,
     "utf8",
   );
   await writeFile(
-    path.join(dataDir, "summary.json"),
+    path.join(verticalDir, "summary.json"),
     `${JSON.stringify(summary, null, 2)}\n`,
     "utf8",
   );

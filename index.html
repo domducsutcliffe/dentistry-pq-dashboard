@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=policy-topics-1" />
+    <link rel="stylesheet" href="styles.css?v=core-dentistry-1" />
   </head>
   <body>
     <header class="topbar">
@@ -32,7 +32,7 @@
 
       <section class="metrics" aria-label="Summary metrics">
         <article class="metric">
-          <span>Total dentistry PQs</span>
+          <span id="metric-total-label">Total dentistry PQs</span>
           <strong id="metric-total">-</strong>
         </article>
         <article class="metric">
@@ -54,8 +54,9 @@
       </section>
 
       <section class="controls" aria-label="Dashboard filters">
-        <label class="search-label" for="search">Search UIN, member, keyword, party or place</label>
+        <label class="search-label" for="search">Search UIN or keyword</label>
         <input id="search" type="search" autocomplete="off" />
+        <label class="search-scope"><input id="search-question-only" type="checkbox" checked /> Search question text only</label>
         <fieldset class="period-filters" aria-label="Time period">
           <legend>Period</legend>
           <label><input type="checkbox" name="period" value="all" /> All Parliaments</label>
@@ -139,6 +140,6 @@
     </main>
 
     <div id="chart-tooltip" class="chart-tooltip" style="opacity: 0; pointer-events: none; position: absolute; z-index: 1000;"></div>
-    <script src="scripts/app.js?v=policy-topics-1" type="module"></script>
+    <script src="scripts/app.js?v=core-dentistry-1" type="module"></script>
   </body>
 </html>

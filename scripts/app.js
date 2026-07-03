@@ -1,3 +1,10 @@
+import { DEFAULT_VERTICAL_ID, getVertical } from "../config.js";
+
+const VERTICAL = getVertical(DEFAULT_VERTICAL_ID);
+
+// Word-boundary, case-insensitive matcher for the vertical's topic roots.
+const VERTICAL_MATCH = new RegExp(`\\b(${VERTICAL.matchRoots.join("|")})`, "i");
+
 const state = {
   questions: [],
   summary: null,
@@ -6,7 +13,7 @@ const state = {
   region: "",
   answer: "",
   periods: ["current"],
-  searchQuestionOnly: false,
+  searchQuestionOnly: true,
   chartPoints: [],
   selectedMonth: "",
   selectedTopic: "",
@@ -217,10 +224,7 @@ function getScopedQuestions() {
   }
 
   return scoped.filter((question) => {
-    const heading = question.heading || "";
-    const questionTextVal = question.questionText || "";
-    
-    return /\bdent/i.test(heading) || /\bdent/i.test(questionTextVal);
+    return VERTICAL_MATCH.test(question.heading || "") || VERTICAL_MATCH.test(question.questionText || "");
   });
 }
 
@@ -244,13 +248,12 @@ function getFilteredQuestions(excludeMonth = false, excludeTopic = false, exclud
 
     if (query) {
       const words = query.split(/\s+/).filter(Boolean);
-      if (state.searchQuestionOnly) {
-        const textToSearch = (question.questionText || "").toLowerCase();
-        if (!words.every((word) => textToSearch.includes(word))) return false;
-      } else {
-        const textToSearch = questionText(question);
-        if (!words.every((word) => textToSearch.includes(word))) return false;
-      }
+      const questionFields = [question.heading, question.questionText];
+      const fields = state.searchQuestionOnly
+        ? questionFields
+        : [...questionFields, question.answerText];
+      const textToSearch = fields.filter(Boolean).join(" ").toLowerCase();
+      if (!words.every((word) => textToSearch.includes(word))) return false;
     }
 
     if (!excludeMonth && state.selectedMonth) {
@@ -321,7 +324,8 @@ function renderScopeStatus(filteredCount) {
 
   const total = formatNumber.format(state.summary.totals.questions);
   const shown = formatNumber.format(filteredCount);
-  let statusText = `${total} PQs on Dentistry, ${shown} shown, Last refreshed ${refreshed}`;
+  const terms = VERTICAL.plainEnglishTerms.join(", ");
+  let statusText = `${total} ${VERTICAL.house} written questions to ${VERTICAL.answeringBodyLabel} mentioning ${VERTICAL.topic} (${terms}) · ${shown} shown · refreshed ${refreshed}`;
 
   if (filterParts.length > 0) {
     statusText += ` <span style="cursor:pointer; text-decoration:underline; font-weight:bold; margin-left:6px; color:#000000;" id="clear-filters-link">(clear filters)</span>`;
@@ -561,7 +565,11 @@ function renderTable(items) {
         }
         
         const dueCellHtml = dueLabel + (indicators.length ? " " + indicators.join(" ") : "");
-        
+
+        const answerTip = question.answered && question.answerText
+          ? `<span class="answer-tooltip">${escapeHtml(question.answerText)}</span>`
+          : "";
+
         return `
           <tr>
             <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
@@ -574,9 +582,10 @@ function renderTable(items) {
             <td>
               <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
               <div class="question-text">${escapeHtml(question.questionText).slice(0, 220)}${question.questionText.length > 220 ? "..." : ""}</div>
-              <span class="status-pill ${question.answered ? "answered" : "unanswered"}">
+              <span class="status-pill ${question.answered ? "answered" : "unanswered"}${answerTip ? " has-answer-tip" : ""}">
                 <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
                 ${question.answered ? "answered" : "unanswered"}
+                ${answerTip}
               </span>
             </td>
           </tr>
@@ -618,8 +627,8 @@ function render() {
 
 async function loadData() {
   const [summaryResponse, questionsResponse] = await Promise.all([
-    fetch("data/summary.json", { cache: "no-store" }),
-    fetch("data/questions.json", { cache: "no-store" }),
+    fetch(`data/${VERTICAL.id}/summary.json`, { cache: "no-store" }),
+    fetch(`data/${VERTICAL.id}/questions.json`, { cache: "no-store" }),
   ]);
 
   if (!summaryResponse.ok || !questionsResponse.ok) {
@@ -752,9 +761,9 @@ elements.resetFilters.addEventListener("click", () => {
 
   elements.search.value = "";
   if (elements.searchQuestionOnly) {
-    elements.searchQuestionOnly.checked = false;
+    elements.searchQuestionOnly.checked = true;
   }
-  state.searchQuestionOnly = false;
+  state.searchQuestionOnly = true;
 
 
   elements.partyFilter.value = "";
@@ -921,6 +930,16 @@ window.addEventListener("resize", () => {
     render();
   });
 });
+
+// Apply the vertical's branding so a new version only needs config.js edits.
+function applyVerticalBranding() {
+  document.title = VERTICAL.brandTitle;
+  const brand = document.querySelector(".brand");
+  if (brand) brand.textContent = VERTICAL.brandTitle;
+  const totalLabel = document.querySelector("#metric-total-label");
+  if (totalLabel) totalLabel.textContent = `Total ${VERTICAL.topic} PQs`;
+}
+applyVerticalBranding();
 
 loadData()
   .then(() => {
