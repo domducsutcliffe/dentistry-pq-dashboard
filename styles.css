@@ -508,66 +508,79 @@ td {
 }
 
 .status-pill.has-answer-tip {
-  position: relative;
   cursor: help;
 }
 
+/* Body-level popup (positioned via JS) — escapes the table's overflow clipping. */
 .answer-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
-  z-index: 60;
-  width: 400px;
-  max-width: min(400px, 88vw);
-  max-height: 60vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  max-width: min(460px, 92vw);
+  max-height: 70vh;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 12px 14px;
+  padding: 14px 16px;
   background: #15181e;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.6;
   letter-spacing: normal;
   text-transform: none;
   text-align: left;
-  white-space: pre-wrap;
-  word-break: break-word;
-  color: #d7dae0;
+  color: #e7e9ee;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(4px);
-  transition: opacity 0.13s ease, transform 0.13s ease;
+  transition: opacity 0.12s ease;
 }
 
-/* transparent bridge so the cursor can travel into the tooltip to scroll */
-.answer-tooltip::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  height: 8px;
-}
-
-.answer-tooltip::-webkit-scrollbar {
-  width: 8px;
-}
-
-.answer-tooltip::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
-}
-
-.status-pill.has-answer-tip:hover .answer-tooltip {
+.answer-tooltip.visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(0);
+}
+
+.answer-tooltip p {
+  margin: 0 0 0.72em;
+}
+
+.answer-tooltip p:last-child {
+  margin-bottom: 0;
+}
+
+/* Links keep the box's colour — no default browser blue/purple — just underlined
+   so they read as clickable, with a subtle brighten on hover. */
+.answer-tooltip a,
+.answer-tooltip a:visited {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+
+.answer-tooltip a:hover {
+  text-decoration-color: currentColor;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.answer-tooltip::-webkit-scrollbar {
+  width: 9px;
+}
+
+.answer-tooltip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 5px;
+}
+
+.answer-tooltip::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .party-dot {

@@ -106,8 +106,12 @@ const elements = {
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
   tooltip: document.querySelector("#chart-tooltip"),
+  answerTooltip: document.querySelector("#answer-tooltip"),
   resetFilters: document.querySelector("#reset-filters"),
 };
+
+// Full answer text for the hover tooltip, keyed by question id (populated per render).
+const answerByQid = new Map();
 
 const formatNumber = new Intl.NumberFormat("en-GB");
 const formatDate = new Intl.DateTimeFormat("en-GB", {
@@ -572,6 +576,8 @@ function renderBars(container, rows, options = {}) {
 function renderTable(items) {
   const limit = 150;
   const visible = items.slice(0, limit);
+  answerByQid.clear();
+  hideAnswerTip();
   elements.resultsCount.textContent = `showing ${formatNumber.format(visible.length)} of ${formatNumber.format(items.length)}`;
   
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -592,9 +598,10 @@ function renderTable(items) {
         
         const dueCellHtml = dueLabel + (indicators.length ? " " + indicators.join(" ") : "");
 
-        const answerTip = question.answered && question.answerText
-          ? `<span class="answer-tooltip">${escapeHtml(question.answerText)}</span>`
-          : "";
+        const hasAnswer = question.answered && Boolean(question.answerText);
+        if (hasAnswer) {
+          answerByQid.set(String(question.id), question.answerText);
+        }
 
         return `
           <tr>
@@ -607,10 +614,9 @@ function renderTable(items) {
             <td>
               <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
               <div class="question-text">${escapeHtml(question.questionText)}</div>
-              <span class="status-pill ${question.answered ? "answered" : "unanswered"}${answerTip ? " has-answer-tip" : ""}">
+              <span class="status-pill ${question.answered ? "answered" : "unanswered"}${hasAnswer ? " has-answer-tip" : ""}"${hasAnswer ? ` data-qid="${escapeHtml(String(question.id))}"` : ""}>
                 <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
                 ${question.answered ? "answered" : "unanswered"}
-                ${answerTip}
               </span>
             </td>
           </tr>
@@ -618,6 +624,131 @@ function renderTable(items) {
       }
     )
     .join("");
+}
+
+// ── Answer hover tooltip ─────────────────────────────────────────────────────
+// A single body-level (position:fixed) popup, so it escapes the table's overflow
+// clipping and can be positioned anywhere in the viewport.
+let answerTipPill = null;
+let answerTipHideTimer = null;
+
+// Append a string to `parent`, turning bare http(s) URLs into real, clickable links.
+// Built with DOM nodes (no innerHTML), so the API-derived text can't inject markup.
+function appendTextWithLinks(parent, text) {
+  const urlRe = /https?:\/\/[^\s<>]+/g;
+  let last = 0;
+  let m;
+  while ((m = urlRe.exec(text)) !== null) {
+    let url = m[0];
+    // Don't swallow trailing sentence punctuation into the link.
+    const trailing = (url.match(/[.,;:!?)\]}'"]+$/) || [""])[0];
+    if (trailing) url = url.slice(0, url.length - trailing.length);
+    if (m.index > last) parent.appendChild(document.createTextNode(text.slice(last, m.index)));
+    const a = document.createElement("a");
+    a.href = url;
+    a.textContent = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    parent.appendChild(a);
+    if (trailing) parent.appendChild(document.createTextNode(trailing));
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parent.appendChild(document.createTextNode(text.slice(last)));
+}
+
+function setAnswerTipContent(text) {
+  const tip = elements.answerTooltip;
+  tip.textContent = "";
+  // stripHtml separates paragraphs with newlines — render them as real paragraphs
+  // (with spacing) rather than a wall of pre-wrapped text.
+  const paras = String(text).split(/\n+/).map((s) => s.trim()).filter(Boolean);
+  const blocks = paras.length ? paras : [String(text)];
+  for (const p of blocks) {
+    const el = document.createElement("p");
+    appendTextWithLinks(el, p);
+    tip.appendChild(el);
+  }
+}
+
+function positionAnswerTip(pill) {
+  const tip = elements.answerTooltip;
+  const margin = 8;
+  const gap = 8;
+  const vw = document.documentElement.clientWidth;
+  const vh = window.innerHeight;
+  const r = pill.getBoundingClientRect();
+
+  const spaceAbove = r.top - gap - margin;
+  const spaceBelow = vh - r.bottom - gap - margin;
+  const placeAbove = spaceAbove > spaceBelow;
+
+  // Cap the height to the room on the chosen side so the box never overlaps the
+  // pill or spills off-screen; long answers scroll inside.
+  const avail = Math.max(120, placeAbove ? spaceAbove : spaceBelow);
+  tip.style.maxHeight = Math.min(avail, Math.round(vh * 0.7)) + "px";
+
+  const th = tip.offsetHeight;
+  const tw = tip.offsetWidth;
+  let top = placeAbove ? r.top - gap - th : r.bottom + gap;
+  top = Math.max(margin, Math.min(top, vh - th - margin));
+  let left = Math.min(r.left, vw - tw - margin);
+  left = Math.max(margin, left);
+
+  tip.style.left = `${Math.round(left)}px`;
+  tip.style.top = `${Math.round(top)}px`;
+}
+
+function showAnswerTip(pill) {
+  const text = answerByQid.get(pill.getAttribute("data-qid") || "");
+  if (!text) return;
+  clearTimeout(answerTipHideTimer);
+  answerTipPill = pill;
+  setAnswerTipContent(text);
+  elements.answerTooltip.scrollTop = 0;
+  elements.answerTooltip.classList.add("visible");
+  positionAnswerTip(pill);
+}
+
+function hideAnswerTip() {
+  clearTimeout(answerTipHideTimer);
+  answerTipPill = null;
+  if (elements.answerTooltip) elements.answerTooltip.classList.remove("visible");
+}
+
+function scheduleHideAnswerTip() {
+  clearTimeout(answerTipHideTimer);
+  answerTipHideTimer = setTimeout(hideAnswerTip, 120);
+}
+
+if (elements.answerTooltip && elements.table) {
+  elements.table.addEventListener("mouseover", (event) => {
+    const pill = event.target.closest(".has-answer-tip");
+    if (!pill || !elements.table.contains(pill)) return;
+    if (pill === answerTipPill) {
+      clearTimeout(answerTipHideTimer);
+      return;
+    }
+    showAnswerTip(pill);
+  });
+  elements.table.addEventListener("mouseout", (event) => {
+    const pill = event.target.closest(".has-answer-tip");
+    if (!pill) return;
+    const to = event.relatedTarget;
+    if (to && (pill.contains(to) || elements.answerTooltip.contains(to))) return;
+    scheduleHideAnswerTip();
+  });
+  // Hover intent: moving the cursor into the tooltip (to read/scroll) keeps it open.
+  elements.answerTooltip.addEventListener("mouseenter", () => clearTimeout(answerTipHideTimer));
+  elements.answerTooltip.addEventListener("mouseleave", scheduleHideAnswerTip);
+  // Dismiss on page scroll/resize, but ignore scrolling *inside* the tooltip.
+  window.addEventListener(
+    "scroll",
+    (event) => {
+      if (event.target !== elements.answerTooltip) hideAnswerTip();
+    },
+    true,
+  );
+  window.addEventListener("resize", hideAnswerTip);
 }
 
 function render() {
