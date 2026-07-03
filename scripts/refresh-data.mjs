@@ -413,17 +413,22 @@ function getQuestion(item) {
   return item.value || item;
 }
 
-// The list endpoint truncates answerText to ~258 chars (ending in "..."). The full
-// answer (with paragraph markup) is only available from the per-question detail
-// endpoint, so we fetch it for answered questions that still look truncated.
+// The list endpoint truncates answerText to ~258 chars (ending in "...") and
+// questionText to a hard 255-char cap. The full text is only available from the
+// per-question detail endpoint, so we fetch it for rows that still look truncated.
 function needsFullAnswer(q) {
   if (!q.answered || !q.id || q.answerFull) return false;
   const text = q.answerText || "";
   return !text || text.length >= 255 || /\.\.\.$/.test(text);
 }
 
+function needsFullQuestion(q) {
+  if (!q.id || q.questionFull) return false;
+  return (q.questionText || "").length >= 255;
+}
+
 async function enrichFullAnswers(questions) {
-  const targets = questions.filter(needsFullAnswer);
+  const targets = questions.filter((q) => needsFullAnswer(q) || needsFullQuestion(q));
   if (!targets.length) {
     console.log("No answers need full-text enrichment.");
     return;
@@ -445,14 +450,23 @@ async function enrichFullAnswers(questions) {
       cursor += 1;
       try {
         const payload = await fetchJson(`${QUESTIONS_ENDPOINT}/${q.id}`);
-        const full = stripHtml(getQuestion(payload).answerText);
-        if (full) {
-          q.answerText = full;
+        const detail = getQuestion(payload);
+        const fullQuestion = stripHtml(detail.questionText);
+        if (fullQuestion) {
+          q.questionText = fullQuestion;
         }
-        // Mark as fetched regardless of whether text came back — some answered
-        // questions have no inline answer (holding answers, attachment-only), and
-        // without this they would be re-fetched on every run forever.
-        q.answerFull = true;
+        q.questionFull = true;
+        const fullAnswer = stripHtml(detail.answerText);
+        if (fullAnswer) {
+          q.answerText = fullAnswer;
+        }
+        // Mark answers as fetched regardless of whether text came back — some
+        // answered questions have no inline answer (holding answers, attachment-only),
+        // and without this they would be re-fetched on every run forever. Only mark
+        // answered rows, so a question answered later still gets its answer fetched.
+        if (q.answered) {
+          q.answerFull = true;
+        }
       } catch {
         failed += 1;
       }
@@ -915,6 +929,14 @@ async function main() {
         if (snippet && prior.answerText.startsWith(snippet)) {
           q.answerText = prior.answerText;
           q.answerFull = true;
+        }
+      }
+      // Same for question text, which the list endpoint hard-caps at 255 chars.
+      if (prior && prior.questionFull && !q.questionFull && prior.questionText) {
+        const qSnippet = q.questionText || "";
+        if (qSnippet && prior.questionText.startsWith(qSnippet)) {
+          q.questionText = prior.questionText;
+          q.questionFull = true;
         }
       }
       mergedMap.set(q.id, q);

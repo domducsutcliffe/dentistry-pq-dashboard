@@ -581,7 +581,7 @@ function renderTable(items) {
             <td>${escapeHtml(question.region.nhsRegion || "-")}</td>
             <td>
               <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
-              <div class="question-text">${escapeHtml(question.questionText).slice(0, 220)}${question.questionText.length > 220 ? "..." : ""}</div>
+              <div class="question-text">${escapeHtml(question.questionText)}</div>
               <span class="status-pill ${question.answered ? "answered" : "unanswered"}${answerTip ? " has-answer-tip" : ""}">
                 <span class="status-dot ${question.answered ? "green" : "amber"}"></span>
                 ${question.answered ? "answered" : "unanswered"}
