@@ -570,6 +570,13 @@ td {
   transform: translateY(0);
 }
 
+.party-dot {
+  font-size: 9px;
+  vertical-align: middle;
+  margin-right: 2px;
+  cursor: help;
+}
+
 .status-dot {
   width: 5px;
   height: 5px;

@@ -5,6 +5,32 @@ const VERTICAL = getVertical(DEFAULT_VERTICAL_ID);
 // Word-boundary, case-insensitive matcher for the vertical's topic roots.
 const VERTICAL_MATCH = new RegExp(`\\b(${VERTICAL.matchRoots.join("|")})`, "i");
 
+// Party shown as a coloured square next to the member name (party column removed).
+// Emoji squares are a limited palette, so a few minor parties share a colour — the
+// full party name is always available on hover via the title attribute.
+const PARTY_EMOJI = {
+  Lab: "🟥",
+  Con: "🟦",
+  LD: "🟧",
+  SNP: "🟨",
+  Green: "🟩",
+  DUP: "🟥",
+  RUK: "🟦",
+  Ind: "⬜",
+  SDLP: "🟩",
+  PC: "🟩",
+  UUP: "🟦",
+  Alba: "🟦",
+  UKIP: "🟪",
+  CUK: "⬛",
+  RB: "⬜",
+};
+
+function partyEmoji(question) {
+  const abbr = question.member.partyAbbreviation || question.member.party || "";
+  return PARTY_EMOJI[abbr] || "⬜";
+}
+
 const state = {
   questions: [],
   summary: null,
@@ -575,8 +601,7 @@ function renderTable(items) {
             <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
             <td>${escapeHtml(shortDate(question.dateTabled))}</td>
             <td style="white-space: nowrap;">${dueCellHtml}</td>
-            <td>${escapeHtml(question.member.name || "-")}</td>
-            <td>${escapeHtml(question.member.partyAbbreviation || question.member.party || "-")}</td>
+            <td><span class="party-dot" title="${escapeHtml(question.member.party || question.member.partyAbbreviation || "Unknown")}">${partyEmoji(question)}</span> ${escapeHtml(question.member.name || "-")}</td>
             <td>${escapeHtml(question.member.constituency || "-")}</td>
             <td>${escapeHtml(question.region.nhsRegion || "-")}</td>
             <td>
