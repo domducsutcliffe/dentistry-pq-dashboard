@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T10:06:36.176Z",
+  "generatedAt": "2026-07-07T06:41:01.566Z",
   "source": {
     "questionsEndpoint": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions",
     "constituencySource": "https://pages.mysociety.org/2025-constituencies/data/parliament_con_2025/latest/parl_constituencies_2025.csv",
@@ -15,20 +15,20 @@
     }
   },
   "totals": {
-    "questions": 3085,
+    "questions": 3093,
     "answered": 3070,
-    "unanswered": 15,
+    "unanswered": 23,
     "constituenciesInLookup": 650,
     "unmatchedConstituencies": 0
   },
   "dateRange": {
     "oldestTabled": "2014-06-04",
-    "newestTabled": "2026-07-03"
+    "newestTabled": "2026-07-06"
   },
   "parties": [
     {
       "key": "Lab",
-      "count": 1786,
+      "count": 1789,
       "name": "Labour"
     },
     {
@@ -38,7 +38,7 @@
     },
     {
       "key": "LD",
-      "count": 466,
+      "count": 471,
       "name": "Liberal Democrat"
     },
     {
@@ -105,11 +105,11 @@
   "regions": [
     {
       "key": "North East and Yorkshire",
-      "count": 731
+      "count": 734
     },
     {
       "key": "Midlands",
-      "count": 512
+      "count": 517
     },
     {
       "key": "North West",
@@ -147,7 +147,7 @@
   "topMembers": [
     {
       "key": "Rachael Maskell",
-      "count": 246
+      "count": 249
     },
     {
       "key": "Judith Cummins",
@@ -158,16 +158,16 @@
       "count": 54
     },
     {
+      "key": "Helen Morgan",
+      "count": 53
+    },
+    {
       "key": "Luke Pollard",
       "count": 50
     },
     {
       "key": "Steve McCabe",
       "count": 50
-    },
-    {
-      "key": "Helen Morgan",
-      "count": 48
     },
     {
       "key": "Stephen Morgan",
@@ -2608,15 +2608,17 @@
     },
     {
       "month": "2026-07",
-      "total": 6,
+      "total": 14,
       "answered": 0,
-      "unanswered": 6,
+      "unanswered": 14,
       "byParty": {
-        "Con": 1,
-        "Lab": 5
+        "LD": 5,
+        "Lab": 8,
+        "Con": 1
       },
       "byRegion": {
-        "Midlands": 1,
+        "Midlands": 6,
+        "North East and Yorkshire": 3,
         "North West": 5
       }
     }
@@ -2624,7 +2626,7 @@
   "topics": {
     "method": "taxonomy-plus-trends",
     "taxonomyVersion": "2026-05-28-policy-v2",
-    "generatedAt": "2026-07-06T10:06:36.177Z",
+    "generatedAt": "2026-07-07T06:41:01.567Z",
     "monthFingerprints": {
       "2014-06": "894d389a",
       "2014-07": "54e1d0b0",
@@ -2758,7 +2760,7 @@
       "2026-04": "f8ecb10f",
       "2026-05": "7e6bb695",
       "2026-06": "199a6455",
-      "2026-07": "268f4bc9"
+      "2026-07": "d85011c6"
     },
     "byMonth": {
       "2014-06": [],
@@ -4620,10 +4622,10 @@
       "2026-07": [
         {
           "label": "Access and Waiting Times",
-          "count": 3,
-          "score": 0.491829,
-          "volumeScore": 0.5,
-          "spikeScore": 0.615385
+          "count": 6,
+          "score": 0.549498,
+          "volumeScore": 0.428571,
+          "spikeScore": 1.076923
         }
       ]
     }
