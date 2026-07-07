@@ -1,3 +1,75 @@
+// ── Crypto gate ──────────────────────────────────────────────────────────────
+// Data files are AES-256-GCM encrypted at build time.  The password is used to
+// derive the decryption key via PBKDF2.  No password or hash is stored in this
+// source — a wrong password simply fails to decrypt the data.
+const PBKDF2_ITERATIONS = 100_000;
+
+function b64toBytes(b64) {
+  return Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+}
+
+async function deriveKey(password, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
+    baseKey,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"],
+  );
+}
+
+async function decryptPayload(envelope, password) {
+  const { salt, iv, tag, data } = envelope;
+  const saltBytes = b64toBytes(salt);
+  const ivBytes = b64toBytes(iv);
+  const tagBytes = b64toBytes(tag);
+  const cipherBytes = b64toBytes(data);
+
+  // AES-GCM expects ciphertext + authTag concatenated
+  const combined = new Uint8Array(cipherBytes.length + tagBytes.length);
+  combined.set(cipherBytes);
+  combined.set(tagBytes, cipherBytes.length);
+
+  const key = await deriveKey(password, saltBytes);
+  const plainBuf = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ivBytes }, key, combined);
+  return new TextDecoder().decode(plainBuf);
+}
+
+let _resolvePassword;
+const passwordReady = new Promise((resolve) => { _resolvePassword = resolve; });
+
+if (sessionStorage.getItem("pq-auth-ok")) {
+  _resolvePassword(sessionStorage.getItem("pq-auth-ok"));
+} else {
+  document.querySelector(".page").style.display = "none";
+  const overlay = document.createElement("div");
+  overlay.id = "auth-overlay";
+  overlay.innerHTML = `
+    <div style="position:fixed;inset:0;background:var(--page,#f6f6ef);z-index:9999;display:flex;align-items:center;justify-content:center;">
+      <form id="auth-form" style="background:#fff;border:1px solid #d9d4bd;padding:24px 28px;max-width:300px;width:100%;font-family:'Inter',sans-serif;">
+        <h2 style="margin:0 0 12px;font-size:14px;font-weight:700;">🔒 Dashboard Access</h2>
+        <input id="auth-input" type="password" placeholder="Enter password" autofocus
+          style="width:100%;min-height:32px;border:1px solid #d9d4bd;padding:6px 8px;font:inherit;margin-bottom:10px;border-radius:0;">
+        <button type="submit" id="auth-btn"
+          style="width:100%;min-height:32px;background:#ff6600;border:none;color:#fff;font:inherit;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;font-size:12px;">
+          Enter
+        </button>
+        <p id="auth-error" style="color:#bd2130;font-size:11px;margin:8px 0 0;display:none;">Incorrect password</p>
+      </form>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("auth-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const val = document.getElementById("auth-input").value;
+    document.getElementById("auth-btn").textContent = "Decrypting…";
+    document.getElementById("auth-error").style.display = "none";
+    _resolvePassword(val);
+  });
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { DEFAULT_VERTICAL_ID, getVertical } from "../config.js";
 
 const VERTICAL = getVertical(DEFAULT_VERTICAL_ID);
@@ -580,7 +652,12 @@ function renderTable(items) {
   hideAnswerTip();
   elements.resultsCount.textContent = `showing ${formatNumber.format(visible.length)} of ${formatNumber.format(items.length)}`;
   
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
   
   elements.table.innerHTML = visible
     .map(
@@ -603,10 +680,17 @@ function renderTable(items) {
           answerByQid.set(String(question.id), question.answerText);
         }
 
+        let tabledHtml = escapeHtml(shortDate(question.dateTabled));
+        if (question.dateTabled === todayStr) {
+          tabledHtml = `<span class="tabled-badge today" title="Tabled Today">⚡ TODAY</span>`;
+        } else if (question.dateTabled === yesterdayStr) {
+          tabledHtml = `<span class="tabled-badge yesterday" title="Tabled Yesterday">YESTERDAY</span>`;
+        }
+
         return `
           <tr>
             <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
-            <td>${escapeHtml(shortDate(question.dateTabled))}</td>
+            <td style="white-space: nowrap;">${tabledHtml}</td>
             <td style="white-space: nowrap;">${dueCellHtml}</td>
             <td><span class="party-dot" title="${escapeHtml(question.member.party || question.member.partyAbbreviation || "Unknown")}">${partyEmoji(question)}</span> ${escapeHtml(question.member.name || "-")}</td>
             <td>${escapeHtml(question.member.constituency || "-")}</td>
@@ -782,18 +866,68 @@ function render() {
 }
 
 async function loadData() {
+  // Try encrypted files first; fall back to plaintext for local dev
+  const encSummaryResp = await fetch(`data/${VERTICAL.id}/summary.json.enc`, { cache: "no-store" });
+  const encQuestionsResp = await fetch(`data/${VERTICAL.id}/questions.json.enc`, { cache: "no-store" });
+
+  if (encSummaryResp.ok && encQuestionsResp.ok) {
+    // Encrypted mode — need password to decrypt
+    const summaryEnvelope = await encSummaryResp.json();
+    const questionsEnvelope = await encQuestionsResp.json();
+
+    while (true) {
+      const password = await passwordReady;
+      try {
+        const [summaryJson, questionsJson] = await Promise.all([
+          decryptPayload(summaryEnvelope, password),
+          decryptPayload(questionsEnvelope, password),
+        ]);
+        state.summary = JSON.parse(summaryJson);
+        const questionsPayload = JSON.parse(questionsJson);
+        state.questions = questionsPayload.questions || [];
+
+        // Success — store password for session and remove overlay
+        sessionStorage.setItem("pq-auth-ok", password);
+        const overlay = document.getElementById("auth-overlay");
+        if (overlay) overlay.remove();
+        document.querySelector(".page").style.display = "";
+        return;
+      } catch {
+        // Wrong password — reset promise and show error
+        const overlay = document.getElementById("auth-overlay");
+        if (overlay) {
+          document.getElementById("auth-error").style.display = "block";
+          document.getElementById("auth-btn").textContent = "Enter";
+          document.getElementById("auth-input").value = "";
+          document.getElementById("auth-input").focus();
+          // Create a fresh promise for the next attempt
+          const fresh = new Promise((resolve) => { _resolvePassword = resolve; });
+          // Replace the module-level passwordReady — not reassignable, so we
+          // just await the fresh one on next loop iteration.
+          await fresh;
+          continue;
+        }
+        throw new Error("Decryption failed.");
+      }
+    }
+  }
+
+  // Plaintext fallback (local dev without encryption)
   const [summaryResponse, questionsResponse] = await Promise.all([
     fetch(`data/${VERTICAL.id}/summary.json`, { cache: "no-store" }),
     fetch(`data/${VERTICAL.id}/questions.json`, { cache: "no-store" }),
   ]);
-
   if (!summaryResponse.ok || !questionsResponse.ok) {
     throw new Error("Dashboard data could not be loaded.");
   }
-
   state.summary = await summaryResponse.json();
   const questionsPayload = await questionsResponse.json();
   state.questions = questionsPayload.questions || [];
+
+  // No encryption — dismiss overlay if present (cached session)
+  const overlay = document.getElementById("auth-overlay");
+  if (overlay) overlay.remove();
+  document.querySelector(".page").style.display = "";
 }
 
 elements.search.addEventListener("input", (event) => {

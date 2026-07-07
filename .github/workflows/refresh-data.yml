@@ -19,14 +19,19 @@ jobs:
           node-version: "24"
       - name: Refresh committed dashboard data
         run: node scripts/refresh-data.mjs
+      - name: Encrypt data files
+        env:
+          PQ_PASSWORD: ${{ secrets.PQ_PASSWORD }}
+        run: node scripts/encrypt-data.mjs
       - name: Commit data changes
         run: |
-          if git diff --quiet -- data/dentistry/questions.json data/dentistry/summary.json data/constituency-regions.json; then
+          if git diff --quiet -- data/dentistry/*.enc data/constituency-regions.json; then
             echo "No dentistry PQ data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dentistry/questions.json data/dentistry/summary.json data/constituency-regions.json
+          git add data/dentistry/*.enc data/constituency-regions.json
           git commit -m "Refresh dentistry PQ dashboard data"
           git push
+

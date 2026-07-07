@@ -886,9 +886,13 @@ async function main() {
 
   const existingQuestions = await loadPreviousQuestions();
   const forceFull = process.argv.includes("--full");
+  const isOffline = process.argv.includes("--offline");
 
   let questions;
-  if (existingQuestions.length && !forceFull) {
+  if (isOffline) {
+    console.log("Running in offline mode. Merging existing questions with historical database...");
+    questions = existingQuestions;
+  } else if (existingQuestions.length && !forceFull) {
     const newestDate = getNewestTabledDate(existingQuestions);
     const startDate = subtractDays(newestDate, 60);
     console.log(`Performing incremental fetch since ${startDate} (based on newest question date ${newestDate} - 60 days)`);
@@ -942,27 +946,57 @@ async function main() {
       mergedMap.set(q.id, q);
     }
 
-    questions = [...mergedMap.values()].sort((a, b) => {
-      const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
-      if (dateCompare) return dateCompare;
-      return String(b.uin || "").localeCompare(String(a.uin || ""));
-    });
+    questions = [...mergedMap.values()];
     console.log(`Merged incremental PQs. Total: ${questions.length} questions`);
   } else {
     console.log("Performing full fetch of all questions from API...");
     const rawQuestions = await fetchQuestionsPaged({});
     questions = rawQuestions
       .map((item) => mapQuestion(item, lookup))
-      .filter(matchesVertical)
-      .sort((a, b) => {
-        const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
-        if (dateCompare) return dateCompare;
-        return String(b.uin || "").localeCompare(String(a.uin || ""));
-      });
+      .filter(matchesVertical);
     console.log("Full fetch complete. Total: " + questions.length + " questions");
   }
 
-  await enrichFullAnswers(questions);
+  // Always load and merge the historical questions dataset (1990-2014) if available
+  let historicalQuestions = [];
+  try {
+    const histRaw = await readFile(path.join(dataDir, "historical-questions.json"), "utf8");
+    const parsed = JSON.parse(histRaw);
+    historicalQuestions = parsed.questions || parsed || [];
+    console.log(`Loaded ${historicalQuestions.length} historical questions from data/historical-questions.json`);
+  } catch (err) {
+    console.log("No historical-questions.json found, skipping historical merge.");
+  }
+
+  if (historicalQuestions.length) {
+    const finalMap = new Map();
+    // Insert historical questions first
+    for (const q of historicalQuestions) {
+      finalMap.set(q.id, q);
+    }
+    // Overwrite/insert modern questions
+    for (const q of questions) {
+      finalMap.set(q.id, q);
+    }
+    questions = [...finalMap.values()].sort((a, b) => {
+      const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
+      if (dateCompare) return dateCompare;
+      return String(b.uin || "").localeCompare(String(a.uin || ""));
+    });
+    console.log(`Merged historical and modern questions. Total: ${questions.length} questions`);
+  } else {
+    questions.sort((a, b) => {
+      const dateCompare = b.dateTabled.localeCompare(a.dateTabled);
+      if (dateCompare) return dateCompare;
+      return String(b.uin || "").localeCompare(String(a.uin || ""));
+    });
+  }
+
+  if (!isOffline) {
+    await enrichFullAnswers(questions);
+  } else {
+    console.log("Offline mode: skipping live answer enrichment.");
+  }
 
   classifyQuestions(questions, taxonomy);
 
