@@ -350,7 +350,9 @@ function getFilteredQuestions(excludeMonth = false, excludeTopic = false, exclud
 
     if (query) {
       const words = query.split(/\s+/).filter(Boolean);
-      const questionFields = [question.heading, question.questionText];
+      // Member name is always searchable (it's metadata, not question/answer text),
+      // so "Search question text only" still lets you find a member by name.
+      const questionFields = [question.heading, question.questionText, question.member?.name];
       const fields = state.searchQuestionOnly
         ? questionFields
         : [...questionFields, question.answerText];
