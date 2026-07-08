@@ -18,6 +18,14 @@ jobs:
         with:
           node-version: "24"
       - name: Refresh committed dashboard data
+        env:
+          # Lets the refresh decrypt the committed .enc to find its prior state and
+          # run the fast incremental path instead of a full rebuild every run.
+          PQ_PASSWORD: ${{ secrets.PQ_PASSWORD }}
+          # Pace the (now rare) full-rebuild answer enrichment to avoid the
+          # Cloudflare rate limit; incremental runs only enrich a handful.
+          ANSWER_CONCURRENCY: "2"
+          ANSWER_DELAY_MS: "250"
         run: node scripts/refresh-data.mjs
       - name: Encrypt data files
         env:
