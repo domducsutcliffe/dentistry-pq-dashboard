@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { pbkdf2Sync, createDecipheriv } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getVertical, DEFAULT_VERTICAL_ID } from "../config.js";
@@ -237,10 +238,45 @@ function computeMonthlyTopics(month, monthConceptCounts, monthTotals, orderedMon
     .slice(0, TOPIC_LIMIT);
 }
 
+// Decrypt an AES-256-GCM envelope produced by scripts/encrypt-data.mjs
+// ({salt,iv,tag,data} base64 + PBKDF2 iterations). Mirrors the browser's deriveKey.
+function decryptEnvelope(envelopeText, password) {
+  const env = JSON.parse(envelopeText);
+  const salt = Buffer.from(env.salt, "base64");
+  const iv = Buffer.from(env.iv, "base64");
+  const tag = Buffer.from(env.tag, "base64");
+  const data = Buffer.from(env.data, "base64");
+  const key = pbkdf2Sync(password, salt, env.iterations || 100_000, 32, "sha256");
+  const decipher = createDecipheriv("aes-256-gcm", key, iv);
+  decipher.setAuthTag(tag);
+  return Buffer.concat([decipher.update(data), decipher.final()]).toString("utf8");
+}
+
+// Read a vertical data file as text: prefer committed plaintext (local dev), else
+// fall back to decrypting the committed `.enc` with PQ_PASSWORD. On CI only the
+// encrypted files are committed, so without this the refresh can't see its own
+// prior output and re-does a full fetch + full answer enrichment every run.
+async function readVerticalJson(name) {
+  try {
+    return await readFile(path.join(verticalDir, name), "utf8");
+  } catch {
+    // no plaintext — try the encrypted sibling
+  }
+  const password = process.env.PQ_PASSWORD;
+  if (!password) return null;
+  try {
+    const encText = await readFile(path.join(verticalDir, `${name}.enc`), "utf8");
+    return decryptEnvelope(encText, password);
+  } catch (error) {
+    console.warn(`Could not read ${name} (plaintext or .enc): ${error.message}`);
+    return null;
+  }
+}
+
 async function loadPreviousSummary() {
   try {
-    const payload = await readFile(path.join(verticalDir, "summary.json"), "utf8");
-    return JSON.parse(payload);
+    const payload = await readVerticalJson("summary.json");
+    return payload ? JSON.parse(payload) : null;
   } catch {
     return null;
   }
@@ -358,8 +394,8 @@ async function fetchText(url) {
 
 async function loadPreviousQuestions() {
   try {
-    const raw = await readFile(path.join(verticalDir, "questions.json"), "utf8");
-    return JSON.parse(raw).questions || [];
+    const raw = await readVerticalJson("questions.json");
+    return raw ? JSON.parse(raw).questions || [] : [];
   } catch {
     return [];
   }
