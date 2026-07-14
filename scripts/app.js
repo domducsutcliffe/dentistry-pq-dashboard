@@ -38,7 +38,15 @@ async function decryptPayload(envelope, password) {
 }
 
 let _resolvePassword;
-const passwordReady = new Promise((resolve) => { _resolvePassword = resolve; });
+// Deliberately `let`, and re-armed after every failed attempt: a `const` promise resolves
+// once and keeps handing back the FIRST password forever, so a single typo would lock you
+// out of the dashboard until you reloaded the page, however many times you retyped it.
+let passwordReady = new Promise((resolve) => { _resolvePassword = resolve; });
+
+function awaitNextPassword() {
+  passwordReady = new Promise((resolve) => { _resolvePassword = resolve; });
+  return passwordReady;
+}
 
 if (sessionStorage.getItem("pq-auth-ok")) {
   _resolvePassword(sessionStorage.getItem("pq-auth-ok"));
@@ -895,18 +903,14 @@ async function loadData() {
         document.querySelector(".page").style.display = "";
         return;
       } catch {
-        // Wrong password — reset promise and show error
+        // Wrong password — show the error and wait for a genuinely new attempt.
         const overlay = document.getElementById("auth-overlay");
         if (overlay) {
           document.getElementById("auth-error").style.display = "block";
           document.getElementById("auth-btn").textContent = "Enter";
           document.getElementById("auth-input").value = "";
           document.getElementById("auth-input").focus();
-          // Create a fresh promise for the next attempt
-          const fresh = new Promise((resolve) => { _resolvePassword = resolve; });
-          // Replace the module-level passwordReady — not reassignable, so we
-          // just await the fresh one on next loop iteration.
-          await fresh;
+          await awaitNextPassword();
           continue;
         }
         throw new Error("Decryption failed.");
