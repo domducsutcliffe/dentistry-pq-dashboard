@@ -396,7 +396,12 @@ function getFilteredQuestions(excludeMonth = false, excludeTopic = false, exclud
       const words = query.split(/\s+/).filter(Boolean);
       // Member name is always searchable (it's metadata, not question/answer text),
       // so "Search question text only" still lets you find a member by name.
-      const questionFields = [question.heading, question.questionText, question.member?.name];
+      const questionFields = [
+        question.heading,
+        question.questionText,
+        question.member?.name,
+        question.member?.constituency,
+      ];
       const fields = state.searchQuestionOnly
         ? questionFields
         : [...questionFields, question.answerText];
@@ -738,8 +743,8 @@ function renderTable(items) {
             <td><a href="${escapeHtml(question.url)}">${escapeHtml(question.uin)}</a></td>
             <td style="white-space: nowrap;">${tabledHtml}</td>
             <td style="white-space: nowrap;">${dueCellHtml}</td>
-            <td><span class="party-dot" title="${escapeHtml(question.member.party || question.member.partyAbbreviation || "Unknown")}">${partyEmoji(question)}</span> ${escapeHtml(question.member.name || "-")}</td>
-            <td>${escapeHtml(question.member.constituency || "-")}</td>
+            <td><span class="party-dot" title="${escapeHtml(question.member.party || question.member.partyAbbreviation || "Unknown")}">${partyEmoji(question)}</span> ${filterLink(question.member.name)}</td>
+            <td>${filterLink(question.member.constituency)}</td>
             <td>${escapeHtml(question.region.nhsRegion || "-")}</td>
             <td>
               <div class="question-heading">${escapeHtml(question.heading || "Written question")}</div>
@@ -848,6 +853,37 @@ function hideAnswerTip() {
 function scheduleHideAnswerTip() {
   clearTimeout(answerTipHideTimer);
   answerTipHideTimer = setTimeout(hideAnswerTip, 120);
+}
+
+// A member name / constituency rendered as a clickable filter: clicking it fills the
+// search with that text and filters, landing you on that MP's questions as if typed in.
+function filterLink(text) {
+  if (!text) return "-";
+  const safe = escapeHtml(text);
+  return `<span class="filter-link" data-filter="${safe}" role="button" tabindex="0" title="Show questions from ${safe}">${safe}</span>`;
+}
+
+function applyFilterFromLink(link) {
+  const term = link.getAttribute("data-filter") || "";
+  state.query = term;
+  if (elements.search) elements.search.value = term;
+  render();
+}
+
+if (elements.table) {
+  elements.table.addEventListener("click", (event) => {
+    const link = event.target.closest(".filter-link");
+    if (!link || !elements.table.contains(link)) return;
+    event.preventDefault();
+    applyFilterFromLink(link);
+  });
+  elements.table.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const link = event.target.closest(".filter-link");
+    if (!link || !elements.table.contains(link)) return;
+    event.preventDefault();
+    applyFilterFromLink(link);
+  });
 }
 
 if (elements.answerTooltip && elements.table) {

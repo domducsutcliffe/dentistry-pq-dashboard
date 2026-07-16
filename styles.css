@@ -870,3 +870,19 @@ table th {
     display: none;
   }
 }
+
+
+/* Clickable member name / constituency in the questions table — clicking fills the
+   search with that text and filters to that MP. */
+.filter-link {
+  cursor: pointer;
+  border-radius: 2px;
+}
+.filter-link:hover {
+  color: var(--orange);
+  text-decoration: underline;
+}
+.filter-link:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+}
