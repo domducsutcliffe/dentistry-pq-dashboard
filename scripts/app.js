@@ -48,10 +48,13 @@ function awaitNextPassword() {
   return passwordReady;
 }
 
-if (sessionStorage.getItem("pq-auth-ok")) {
-  _resolvePassword(sessionStorage.getItem("pq-auth-ok"));
-} else {
-  document.querySelector(".page").style.display = "none";
+// Build (once) the password overlay and wire its submit. The overlay is opaque and
+// position:fixed, so it covers the dashboard on its own — but we ALSO hide `.page`, and
+// crucially we do that only AFTER the overlay is safely in the DOM. The old order (hide
+// page, then build overlay) meant any hiccup on a cold load left a hidden page with no
+// prompt: a blank screen that only a reload fixed. This order cannot do that.
+function buildAuthOverlay() {
+  if (document.getElementById("auth-overlay")) return;
   const overlay = document.createElement("div");
   overlay.id = "auth-overlay";
   overlay.innerHTML = `
@@ -68,6 +71,8 @@ if (sessionStorage.getItem("pq-auth-ok")) {
       </form>
     </div>`;
   document.body.appendChild(overlay);
+  const page = document.querySelector(".page");
+  if (page) page.style.display = "none";
   document.getElementById("auth-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const val = document.getElementById("auth-input").value;
@@ -75,6 +80,36 @@ if (sessionStorage.getItem("pq-auth-ok")) {
     document.getElementById("auth-error").style.display = "none";
     _resolvePassword(val);
   });
+}
+
+function initAuthGate() {
+  try {
+    const stored = sessionStorage.getItem("pq-auth-ok");
+    if (stored) {
+      _resolvePassword(stored);
+      return;
+    }
+    buildAuthOverlay();
+  } catch (err) {
+    // Never strand the user on a blank page — if the gate fails to initialise, keep the
+    // dashboard visible and try once more to raise the prompt.
+    console.error("Auth gate init failed:", err);
+    const page = document.querySelector(".page");
+    if (page) page.style.display = "";
+    try {
+      buildAuthOverlay();
+    } catch (err2) {
+      console.error("Auth overlay build failed:", err2);
+    }
+  }
+}
+
+// Modules are deferred, so the DOM is normally ready here — but guard anyway, since the
+// gate touching `document.body`/`.page` before they exist is exactly what blanks the page.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAuthGate, { once: true });
+} else {
+  initAuthGate();
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -183,6 +218,7 @@ const elements = {
   regionChart: document.querySelector("#region-chart"),
   themeChart: document.querySelector("#theme-chart"),
   resultsCount: document.querySelector("#results-count"),
+  exportButton: document.querySelector("#export-xlsx"),
   table: document.querySelector("#question-table"),
   footer: document.querySelector("#data-footer"),
   tooltip: document.querySelector("#chart-tooltip"),
@@ -875,6 +911,170 @@ function render() {
   renderTable(filtered);
 }
 
+// ── Export to Excel ───────────────────────────────────────────
+// Downloads the questions currently in scope as an .xlsx. Full answers are already in the
+// dataset for this vertical, so the export needs no live fetching — it is instant. SheetJS
+// (~950KB, vendored) is loaded lazily on the first export, not on every page view.
+const XLSX_SRC = "scripts/vendor/xlsx.full.min.js";
+
+let xlsxLibPromise = null;
+function loadXlsxLib() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (xlsxLibPromise) return xlsxLibPromise;
+  xlsxLibPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = XLSX_SRC;
+    script.onload = () =>
+      window.XLSX ? resolve(window.XLSX) : reject(new Error("spreadsheet library failed to initialise"));
+    script.onerror = () => reject(new Error("could not load the spreadsheet library"));
+    document.head.appendChild(script);
+  });
+  return xlsxLibPromise;
+}
+
+function exportYesNo(value) {
+  return value ? "Yes" : "No";
+}
+
+// One spreadsheet row per question. Key order here IS the column order in the file.
+function exportRow(q, todayStr) {
+  const overdue = !q.answered && q.dateForAnswer && q.dateForAnswer < todayStr;
+  return {
+    UIN: q.uin || "",
+    "Date tabled": q.dateTabled || "",
+    "Date due": q.dateForAnswer || "",
+    "Date answered": q.dateAnswered || "",
+    Status: q.answered ? "Answered" : "Unanswered",
+    Overdue: q.answered ? "" : exportYesNo(overdue),
+    "Named day": exportYesNo(q.isNamedDay),
+    Subject: getQuestionTopic(q),
+    Member: q.member?.name || "",
+    Party: q.member?.party || q.member?.partyAbbreviation || "",
+    Constituency: q.member?.constituency || "",
+    Nation: q.region?.nation || "",
+    "NHS region": q.region?.nhsRegion || "",
+    Heading: q.heading || "",
+    Question: q.questionText || "",
+    Answer: q.answered ? q.answerText || "" : "",
+    "Answer complete": q.answered ? exportYesNo(Boolean(q.answerFull)) : "",
+    URL: q.url || "",
+  };
+}
+
+function exportSlug(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
+function exportScopeSlug() {
+  const period = getPeriodInfo();
+  const periodPart = period.label === "current Parliament" ? "" : period.label;
+  const parts = [
+    state.selectedTopic,
+    state.party,
+    state.region,
+    state.answer,
+    state.selectedMonth,
+    periodPart,
+    state.query.trim(),
+  ]
+    .map(exportSlug)
+    .filter(Boolean);
+  return parts.join("_") || "all";
+}
+
+function exportScopeDescription() {
+  const parts = [];
+  if (state.query.trim()) {
+    parts.push(`search: "${state.query.trim()}"${state.searchQuestionOnly ? " (question text only)" : ""}`);
+  }
+  if (state.selectedTopic) parts.push(`topic: ${state.selectedTopic}`);
+  if (state.party) parts.push(`party: ${state.party}`);
+  if (state.region) parts.push(`NHS region: ${state.region}`);
+  if (state.answer) parts.push(`answer status: ${state.answer}`);
+  if (state.selectedMonth) {
+    const [year, monthNum] = state.selectedMonth.split("-");
+    parts.push(`month: ${MONTH_NAMES[monthNum] || monthNum} ${year}`);
+  }
+  parts.push(`period: ${getPeriodInfo().label}`);
+  return parts.join("; ");
+}
+
+let exportBusy = false;
+function setExportBusy(busy, label) {
+  exportBusy = busy;
+  if (!elements.exportButton) return;
+  elements.exportButton.disabled = busy;
+  const span = elements.exportButton.querySelector(".btn-export-label");
+  if (span) span.textContent = label;
+}
+
+function buildExportWorkbook(XLSX, rows) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const dataRows = rows.map((q) => exportRow(q, todayStr));
+
+  const ws = XLSX.utils.json_to_sheet(dataRows);
+  ws["!cols"] = [8, 12, 12, 12, 11, 8, 10, 22, 22, 8, 26, 14, 22, 30, 60, 90, 9, 46].map((wch) => ({
+    wch,
+  }));
+  ws["!autofilter"] = {
+    ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: dataRows.length, c: 17 } }),
+  };
+
+  const answered = rows.filter((q) => q.answered).length;
+  const about = [
+    [`${VERTICAL.brandTitle} — data export`],
+    [],
+    ["Generated", new Date().toLocaleString("en-GB")],
+    ["Scope (filters)", exportScopeDescription()],
+    ["Questions in scope", rows.length],
+    ["Answered / unanswered", `${answered} / ${rows.length - answered}`],
+    [],
+    ["Source", "UK Parliament Written Questions API (questions-statements-api.parliament.uk)"],
+    ["Answering body", `${VERTICAL.answeringBodyLabel} — House of ${VERTICAL.house}`],
+    ["Scope", `Questions mentioning ${VERTICAL.topic}`],
+    [
+      "Note on answers",
+      "Answer text is the full answer stored in the dataset. A few answered questions may still carry only the ~250-character extract — see the 'Answer complete' column.",
+    ],
+  ];
+  const wsAbout = XLSX.utils.aoa_to_sheet(about);
+  wsAbout["!cols"] = [{ wch: 22 }, { wch: 96 }];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Questions");
+  XLSX.utils.book_append_sheet(wb, wsAbout, "About");
+  return { wb, todayStr };
+}
+
+async function exportInScopeToXlsx() {
+  if (exportBusy) return;
+  const rows = getFilteredQuestions();
+  if (!rows.length) {
+    window.alert("No questions are in scope to export. Adjust the filters and try again.");
+    return;
+  }
+  setExportBusy(true, "Building file…");
+  try {
+    const XLSX = await loadXlsxLib();
+    const { wb, todayStr } = buildExportWorkbook(XLSX, rows);
+    XLSX.writeFile(wb, `${VERTICAL.id}-pqs_${exportScopeSlug()}_${todayStr}.xlsx`);
+    setExportBusy(false, "Exported ✓");
+    setTimeout(() => setExportBusy(false, "Export to Excel"), 2500);
+  } catch (error) {
+    console.error(error);
+    window.alert(`Export failed: ${error.message || error}`);
+    setExportBusy(false, "Export to Excel");
+  }
+}
+
+if (elements.exportButton) {
+  elements.exportButton.addEventListener("click", exportInScopeToXlsx);
+}
+
 async function loadData() {
   // Try encrypted files first; fall back to plaintext for local dev
   const encSummaryResp = await fetch(`data/${VERTICAL.id}/summary.json.enc`, { cache: "no-store" });
@@ -903,7 +1103,12 @@ async function loadData() {
         document.querySelector(".page").style.display = "";
         return;
       } catch {
-        // Wrong password — show the error and wait for a genuinely new attempt.
+        // Decryption failed. This is usually a wrong password, but it also happens when a
+        // stored session password has gone stale — in which case there is no overlay yet,
+        // so build one rather than dead-ending on a blank page. Either way, drop the bad
+        // stored password and wait for a fresh attempt.
+        sessionStorage.removeItem("pq-auth-ok");
+        if (!document.getElementById("auth-overlay")) buildAuthOverlay();
         const overlay = document.getElementById("auth-overlay");
         if (overlay) {
           document.getElementById("auth-error").style.display = "block";
