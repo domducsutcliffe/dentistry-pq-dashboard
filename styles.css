@@ -823,3 +823,50 @@ table th {
 .btn-export:hover:not(:disabled) { background: #fff5eb; border-color: var(--orange); color: var(--orange); }
 .btn-export:disabled { cursor: progress; color: var(--muted); border-color: var(--line); }
 .btn-export svg { flex: none; }
+
+/* ── Mobile refinements ──────────────────────────────────────
+   Layered after the base breakpoints above (same specificity → these win). */
+@media (max-width: 620px) {
+  /* Header: wrap cleanly instead of scrolling off-screen. Brand + Refresh share the top
+     row; the long status line is hidden on mobile — its numbers live in the metric cards
+     and the Questions count just below. */
+  .topbar-inner {
+    flex-wrap: wrap;
+    white-space: normal;
+    overflow-x: visible;
+    gap: 8px;
+  }
+  .data-status-bar { display: none; }
+  .brand-group { flex: 1 1 auto; min-width: 0; flex-wrap: wrap; }
+  .refresh-widget { flex: 0 0 auto; }
+
+  /* Two compact metric cards per row rather than one tall card each. */
+  .metrics { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .metric { padding: 8px 10px; }
+
+  /* Questions header: let the count + export button wrap under the title when tight. */
+  .panel-head { flex-wrap: wrap; row-gap: 4px; }
+  .panel-head-actions { flex-wrap: wrap; }
+
+  /* The questions table stays horizontally scrollable (.table-wrap), but drop the
+     lower-priority columns so the ones that matter fit without a sideways drag.
+     Columns: 1 UIN · 2 Tabled · 3 Due · 4 Member · 5 Constituency · 6 NHS region · 7 Heading.
+     Keep UIN, Tabled, Member, Heading; hide Due / Constituency / NHS region. */
+  table { font-size: 11px; }
+  .table-wrap th, .table-wrap td { padding: 5px 4px; }
+  /* Fixed layout so the 4 kept columns always fit the viewport (no data-dependent
+     horizontal scroll); the heading column takes the remainder and wraps. */
+  .table-wrap table { table-layout: fixed; }
+  .table-wrap th:nth-child(1), #question-table td:nth-child(1) { width: 44px; }
+  .table-wrap th:nth-child(2), #question-table td:nth-child(2) { width: 84px; }
+  .table-wrap th:nth-child(4), #question-table td:nth-child(4) { width: 92px; }
+  .question-heading, .question-text { overflow-wrap: anywhere; }
+  table thead th:nth-child(3),
+  table thead th:nth-child(5),
+  table thead th:nth-child(6),
+  #question-table td:nth-child(3),
+  #question-table td:nth-child(5),
+  #question-table td:nth-child(6) {
+    display: none;
+  }
+}
