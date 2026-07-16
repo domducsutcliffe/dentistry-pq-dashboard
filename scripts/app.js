@@ -374,9 +374,22 @@ function getScopedQuestions() {
   });
 }
 
+// Build the search matchers for a query. Each term must match a WHOLE word — so a
+// two-word search like "Ben Maguire" can't sneak in via "benefit" (matching "ben") plus a
+// "Maguire" somewhere else — except the LAST term, which matches as a prefix so
+// search-as-you-type ("dent" → "dental") still works.
+function buildQueryMatchers(query) {
+  const words = query.split(/\s+/).filter(Boolean);
+  return words.map((word, i) => {
+    const esc = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return i === words.length - 1 ? new RegExp(`\\b${esc}`) : new RegExp(`\\b${esc}\\b`);
+  });
+}
+
 function getFilteredQuestions(excludeMonth = false, excludeTopic = false, excludeParty = false, excludeRegion = false) {
   const query = state.query.trim().toLowerCase();
   const exactUin = query.match(/^(?:uin:?\s*)?(\d{2,})$/)?.[1] || "";
+  const queryMatchers = query ? buildQueryMatchers(query) : [];
 
   return getScopedQuestions().filter((question) => {
     if (!excludeParty && state.party) {
@@ -393,9 +406,10 @@ function getFilteredQuestions(excludeMonth = false, excludeTopic = false, exclud
     }
 
     if (query) {
-      const words = query.split(/\s+/).filter(Boolean);
-      // Member name is always searchable (it's metadata, not question/answer text),
-      // so "Search question text only" still lets you find a member by name.
+      // Member name and constituency are always searchable (they're metadata, not
+      // question/answer text), so "Search question text only" still lets you find a
+      // member by name — and clicking a name/constituency in the table just fills the
+      // search with it.
       const questionFields = [
         question.heading,
         question.questionText,
@@ -406,7 +420,7 @@ function getFilteredQuestions(excludeMonth = false, excludeTopic = false, exclud
         ? questionFields
         : [...questionFields, question.answerText];
       const textToSearch = fields.filter(Boolean).join(" ").toLowerCase();
-      if (!words.every((word) => textToSearch.includes(word))) return false;
+      if (!queryMatchers.every((re) => re.test(textToSearch))) return false;
     }
 
     if (!excludeMonth && state.selectedMonth) {
